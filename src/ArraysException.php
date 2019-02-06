@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use Exception;
+use arrays\exception\Exception;
 
 /**
  * @package arrays
