@@ -7,9 +7,7 @@ use arrays\{
     Arrays, Type,
     ArrayTrait, ArrayInterface, ArraysException };
 use arrays\exception\{
-    MethodException, TypeException,
-    InvalidKeyTypeException as KeyException,
-    InvalidValueTypeException as ValueException };
+    TypeException, MethodException };
 use ArrayIterator;
 
 /**
@@ -24,7 +22,10 @@ abstract class AbstractArray implements ArrayInterface
     protected $items;
     protected $itemsType;
 
-    static protected $methods = ['search', 'has', 'hasKey', 'hasValue'];
+    static protected $methods = ['search', 'has',
+        'hasKey' => '%s(string $key, any $value): bool',
+        'hasValue'
+    ];
 
     public function __construct(?array $items, string $itemsType)
     {
@@ -34,32 +35,42 @@ abstract class AbstractArray implements ArrayInterface
 
     public function __call(string $func, array $funcArgs)
     {
-        $method = in_array($func, self::$methods) ? $func : null;
+        $method = array_key_exists($func, self::$methods) ? $func : null;
         $methodArgs = $funcArgs;
         if ($method == null) {
             throw new MethodException(sprintf('No method such %s::%s()', static::class, $func));
         }
 
+        $methodArgs0 = $methodArgs[0] ?? null;
+        $methodArgs1 = $methodArgs[1] ?? null;
+
         // let's do this shit..
         switch ($method) {
             case 'search':
-                $value = $methodArgs[0] ?? null;
+                $value = $methodArgs0;
                 switch ($this->itemsType) {
-                    case 'IntMap':
+                    case Type::INT_MAP:
                         if (!is_int($value)) {
-                            $this->throwValueException($value, 'search'); }
-                        break;
-                    // default:
+                            $this->throwValueException($value, 'search');
+                        } break;
                 } break;
             case 'has':
-                $value = $methodArgs[0] ?? null;
+                $value = $methodArgs0;
                 switch ($this->itemsType) {
-                    case 'IntMap':
+                    case Type::INT_MAP:
                         if (!is_int($value)) {
-                            $this->throwValueException($value, 'has'); }
-                        break;
-                    // default:
+                            $this->throwValueException($value, 'has');
+                        } break;
                 } break;
+            case 'hasKey':
+                $key = $methodArgs0;
+                switch ($this->itemsType) {
+                    case Type::MAP:
+                        if (!is_string($key)) {
+                            $this->throwArgumentException('hasKey', 1, 'string', $key);
+                        } break;
+                }
+                break;
             // default:
         }
 
@@ -67,31 +78,13 @@ abstract class AbstractArray implements ArrayInterface
         return $this->{'_'.$method}(...$methodArgs);
     }
 
-    public final function setType(int $itemsType): void
-    {
-        $this->itemsType = $itemsType;
-    }
-    public final function getType(): string
-    {
-        return $this->itemsType;
-    }
+    public final function setType(int $itemsType): void { $this->itemsType = $itemsType; }
+    public final function getType(): string { return $this->itemsType; }
 
-    public final function size(): int
-    {
-        return $this->count();
-    }
-    public final function toArray(): array
-    {
-        return $this->items;
-    }
-    public final function toObject(): object
-    {
-        return (object) $this->items;
-    }
-    public final function toJson(): string
-    {
-        return (string) json_encode($this->items);
-    }
+    public final function size(): int { return $this->count(); }
+    public final function toArray(): array { return $this->items; }
+    public final function toObject(): object { return (object) $this->items; }
+    public final function toJson(): string { return (string) json_encode($this->items); }
 
     /**
      * @inheritDoc \IteratorAggregate
@@ -210,17 +203,34 @@ abstract class AbstractArray implements ArrayInterface
         return true;
     }
 
-    protected final function throwKeyExceptionMessage($key): string
+    protected final function throwArgumentException(string $method, int $argNum, string $argType, $input): void
     {
-        return sprintf('%s keys should be int, %s given', $this->itemsType, Type::get($key));
+        $message = sprintf('Argument %s given to %s() must be %s, %s given', $argNum,
+            ($methodPath = static::class .'::'. $method), $argType, Type::get($input));
+
+        $tip = self::$methods[$method] ?? null;
+        if ($tip != null) {
+            $message .= sprintf(" [tip => {$tip}]", substr($methodPath, strpos($methodPath, '\\') + 1));
+        }
+
+        throw new TypeException($message);
+    }
+
+    protected final function throwKeyException($key, string $method = null): void
+    {
+        $message = sprintf('%s keys should be int, %s argument given', $this->itemsType, Type::get($key));
+        if ($method != null) {
+            $message .= sprintf(' [call to %s::%s(%s)]', $this->itemsType, $method, $this->toCallArgument($key));
+        }
+        throw new InvalidKeyTypeException($message);
     }
     protected final function throwValueException($value, string $method = null): void
     {
-        $message = sprintf('%s values should be int, %s given', $this->itemsType, Type::get($value));
+        $message = sprintf('%s values should be int, %s argument given', $this->itemsType, Type::get($value));
         if ($method != null) {
-            $message .= sprintf(' [call to %s::%s(%s)]', $this->itemsType, $method, self::toCallArgument($value));
+            $message .= sprintf(' [call to %s::%s(%s)]', $this->itemsType, $method, $this->toCallArgument($value));
         }
-        throw new ValueException($message);
+        throw new InvalidValueTypeException($message);
     }
 
     protected final function toCallArgument($argument): string
