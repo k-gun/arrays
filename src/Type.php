@@ -25,8 +25,13 @@ final /* static */ class Type extends StaticClass
                     STRING_SET = 'StringSet', BOOL_SET = 'BoolSet',
                  TUPLE = 'Tuple';
 
-    public static function get($input): string
+    public static function get($input, string $otherType = null): string
     {
+        if ($otherType != null) {
+            if ($otherType == 'digit') is_digit($input)) return 'digit';
+            if ($otherType == 'numeric') is_numeric($input)) return 'numeric';
+        }
+
         return strtr(gettype($input), [
             'NULL'    => 'null',
             'integer' => 'int',
