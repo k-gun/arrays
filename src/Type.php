@@ -25,13 +25,8 @@ final /* static */ class Type extends StaticClass
                     STRING_SET = 'StringSet', BOOL_SET = 'BoolSet',
                  TUPLE = 'Tuple';
 
-    public static function get($input, string $otherType = null): string
+    public static function get($input): string
     {
-        if ($otherType != null) {
-            if ($otherType == 'digit' && self::isDigit($input)) return 'digit';
-            if ($otherType == 'numeric' && is_numeric($input)) return 'numeric';
-        }
-
         return strtr(gettype($input), [
             'NULL'    => 'null',
             'integer' => 'int',
@@ -47,12 +42,21 @@ final /* static */ class Type extends StaticClass
         );
     }
 
-    public static function isMapKey($key): bool
+    public static function validateMapKey($key, string &$error = null): bool
     {
-        return is_string($key) && !self::isDigit($key);
+        if (!is_string($key)) {
+            $error = 'string';
+        } elseif (self::isDigit($key)) {
+            $error = 'string|digit';
+        }
+        return $error == null;
     }
-    public static function isSetKey($key): bool
+
+    public static function validateSetKey($key, string &$error = null): bool
     {
-        return is_int($key);
+        if (!is_int($key)) {
+            $error = 'string';
+        }
+        return $error == null;
     }
 }
