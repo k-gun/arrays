@@ -28,8 +28,8 @@ final /* static */ class Type extends StaticClass
     public static function get($input, string $otherType = null): string
     {
         if ($otherType != null) {
-            if ($otherType == 'digit') is_digit($input)) return 'digit';
-            if ($otherType == 'numeric') is_numeric($input)) return 'numeric';
+            if ($otherType == 'digit' && is_digit($input)) return 'digit';
+            if ($otherType == 'numeric' && is_numeric($input)) return 'numeric';
         }
 
         return strtr(gettype($input), [
