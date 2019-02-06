@@ -17,6 +17,12 @@ final class Autoload
     private static $instance;
 
     /**
+     * Is registered.
+     * @var bool
+     */
+    private static $isRegistered = false;
+
+    /**
      * Forbidding idle init & copy actions.
      */
     private function __construct() {}
@@ -42,7 +48,11 @@ final class Autoload
      */
     public function register(): bool
     {
-        return spl_autoload_register(function($object) {
+        if (self::$isRegistered) {
+            return true;
+        }
+
+        self::$isRegistered = spl_autoload_register(function($object) {
             if ($object[0] != '\\') {
                 $object = '\\'. $object;
             }
@@ -64,6 +74,8 @@ final class Autoload
 
             require $objectFile;
         });
+
+        return self::$isRegistered;
     }
 }
 
