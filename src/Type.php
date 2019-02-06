@@ -28,7 +28,7 @@ final /* static */ class Type extends StaticClass
     public static function get($input, string $otherType = null): string
     {
         if ($otherType != null) {
-            if ($otherType == 'digit' && is_digit($input)) return 'digit';
+            if ($otherType == 'digit' && self::isDigit($input)) return 'digit';
             if ($otherType == 'numeric' && is_numeric($input)) return 'numeric';
         }
 
@@ -38,5 +38,21 @@ final /* static */ class Type extends StaticClass
             'double'  => 'float',
             'boolean' => 'bool'
         ]);
+    }
+
+    public static function isDigit($input): bool
+    {
+        return is_int($input) ? true : (
+            is_string($input) ? ctype_digit($input) : false
+        );
+    }
+
+    public static function isMapKey($key): bool
+    {
+        return is_string($key) && !self::isDigit($key);
+    }
+    public static function isSetKey($key): bool
+    {
+        return is_int($key);
     }
 }
