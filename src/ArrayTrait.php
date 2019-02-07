@@ -10,14 +10,13 @@ namespace arrays;
  */
 trait ArrayTrait
 {
-    // @return int|string
+    // @return int|string|null
     protected final function _search($value)
     {
         foreach ($this as $_ => $_value) {
-            if ($_value === $value) {
-                return $value;
-            }
+            if ($value === $_value) { return $value; }
         }
+        return null;
     }
 
     protected final function _has($value): bool

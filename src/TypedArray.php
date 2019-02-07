@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use arrays\{AbstractArray, Type};
-use arrays\exception\{TypeException, ArgumentTypeException};
+use arrays\{AbstractArray, Type, TypeException};
 
 /**
  * @package arrays
@@ -13,16 +12,19 @@ use arrays\exception\{TypeException, ArgumentTypeException};
  */
 class TypedArray extends AbstractArray
 {
-    public function __construct(array $items = null, string $itemsType)
+    protected $type;
+
+    public function __construct(string $type, array $items = null, string $itemsType = null)
     {
+        $this->type = $type;
         $items = $items ?? [];
 
-        // no check for subclass(es)
-        $checked = (self::class !== static::class);
-        if (!$checked && !Type::validateItems($items, $itemsType, $error)) {
-            // throw new TypeException($error);
+        if (!Type::validateItems($this, $items, $itemsType, $error)) {
+            throw new TypeException($error);
         }
 
-        parent::__construct($items, $itemsType);
+        parent::__construct($type, $items);
     }
+
+    public final function type(): string { return $this->type; }
 }

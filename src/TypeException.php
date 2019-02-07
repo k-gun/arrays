@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use IteratorAggregate;
+use Exception;
 
 /**
  * @package arrays
- * @object  arrays\ArrayInterface
+ * @object  arrays\TypeException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-interface ArrayInterface
+final class TypeException extends Exception
 {}

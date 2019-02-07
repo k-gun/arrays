@@ -8,14 +8,14 @@ use arrays\exception\{TypeException, ArgumentTypeException};
 
 /**
  * @package arrays
- * @object  arrays\Map
+ * @object  arrays\Set
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class Map extends TypedArray
+class Set extends TypedArray
 {
     public function __construct(string $type = null, array $items = null, string $itemsType = null)
     {
-        parent::__construct($type ?? Type::MAP, $items, $itemsType);
+        parent::__construct($type ?? Type::SET, $items, $itemsType);
     }
 
     // public function search($value) { return $this->_search($value); }

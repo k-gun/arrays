@@ -9,30 +9,24 @@ use arrays\{
 use arrays\exception\{
     TypeException, MethodException,
     ArgumentException, ArgumentCountException };
-use ArrayObject, ArrayIterator;
-use function arrays\{to_array, to_object, is_digit};
+use ArrayObject;
 
 /**
  * @package arrays
  * @object  arrays\AbstractArray
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-abstract class AbstractArray extends ArrayObject //implements ArrayInterface
+abstract class AbstractArray extends ArrayObject implements ArrayInterface
 {
     use ArrayTrait;
 
-    protected $type;
-
-    public function __construct(?array $items, string $itemsType)
+    public function __construct(string $type, array $items = null)
     {
-        $this->type = $itemsType;
         if (Type::isMapLike($this)) {
-            $items = to_object($items);
+            $items = Type::toObject($items);
         }
         parent::__construct($items);
     }
-
-    public final function type(): string { return $this->type; }
 
     public final function keys(): array { return array_keys($this->toArray()); }
     public final function values(): array { return array_values($this->toArray()); }
@@ -43,7 +37,7 @@ abstract class AbstractArray extends ArrayObject //implements ArrayInterface
         if ($normalize) {
             $digit = false;
             foreach ($ret as $key => $_) {
-                if (is_digit($key)) {
+                if (Type::isDigit($key)) {
                     $digit = true; break; }
             }
             $ret = $digit ? array_values($ret) : $ret;
@@ -52,4 +46,13 @@ abstract class AbstractArray extends ArrayObject //implements ArrayInterface
     }
     public final function toObject(): object { return (object) $this->toArray(true); }
     public final function toJson(): string { return (string) json_encode($this->toArray()); }
+
+    public final function getName(): string
+    {
+        return static::class;
+    }
+    public final function getShortName(): string
+    {
+        return substr($name = $this->getName(), strpos($name, '\\') + 1);
+    }
 }
