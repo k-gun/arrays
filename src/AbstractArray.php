@@ -26,13 +26,16 @@ abstract class AbstractArray extends ArrayObject //implements ArrayInterface
     public function __construct(?array $items, string $itemsType)
     {
         $this->type = $itemsType;
-        if (Type::isMapKind($this)) {
+        if (Type::isMapLike($this)) {
             $items = to_object($items);
         }
         parent::__construct($items);
     }
 
     public final function type(): string { return $this->type; }
+
+    public final function keys(): array { return array_keys($this->toArray()); }
+    public final function values(): array { return array_values($this->toArray()); }
 
     public final function size(): int { return $this->count(); }
     public final function toArray(bool $normalize = false): array {

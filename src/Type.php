@@ -96,9 +96,9 @@ final /* static */ class Type
             $message = 'Argument %s given to %s must be %s, %s given';
         }
         $argType = self::get($arg);
-        $argTypeText = ($arg === null) ? 'null' : $argType .'('. self::export($arg) .')';
         if ($argType != $argTypeMust) {
-            $error = sprintf($message, $argNum, $getMethod(), $argTypeMust, $argTypeText);
+            $error = sprintf($message, $argNum, $getMethod(), $argTypeMust,
+                ($arg === null) ? 'null' : $argType .'('. self::export($arg) .')');
         } elseif ($nonDigit && self::isDigit($arg)) {
             $error = sprintf($message, $argNum, $getMethod(), 'non-digit', 'digit('. $arg .')');
         }
@@ -132,13 +132,13 @@ final /* static */ class Type
         return is_digit($input);
     }
 
-    public static function isMapKind($input): bool
+    public static function isMapLike($input): bool
     {
         try {
             return strpos(get_class($input), 'arrays\Map') === 0;
         } catch (TypeError $e) { return false; }
     }
-    public static function isSetKind($input): bool
+    public static function isSetLike($input): bool
     {
         try {
             return strpos(get_class($input), 'arrays\Set') === 0;

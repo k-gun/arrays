@@ -20,15 +20,6 @@ trait ArrayTrait
         }
     }
 
-    protected final function keys(): array
-    {
-        return array_keys($this->toArray());
-    }
-    protected final function values(): array
-    {
-        return array_values($this->toArray());
-    }
-
     protected final function _has($value): bool
     {
         return in_array($value, $this->values(), true);
