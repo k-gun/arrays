@@ -20,10 +20,25 @@ class Map extends AbstractArray
 
         // no check for subclass(es)
         $checked = (self::class !== static::class);
-        if (!$checked && !$this->validateItems($items, $itemsType, $error)) {
+        if (!$checked && !Type::validateItems($items, $itemsType, $error)) {
             throw new TypeException($error);
         }
 
         parent::__construct($items, $itemsType);
     }
+
+    // function onBeforeCheck(string $method, array &$methodArgs): void {
+    //     $key =& $methodArgs[0];
+    //     if ($key == "x") {
+    //         $key = "a";
+    //         // throw new TypeException("x key forbidden");
+    //     }
+    // }
+    // function onAfterCheck(string $method, array &$methodArgs): void {
+    //     $key =& $methodArgs[0];
+    //     if ($key == "x") {
+    //         $key = "a";
+    //         // throw new TypeException("x key forbidden");
+    //     }
+    // }
 }

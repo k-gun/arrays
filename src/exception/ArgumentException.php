@@ -7,8 +7,8 @@ use arrays\exception\Exception;
 
 /**
  * @package arrays\exception
- * @object  arrays\exception\TypeException
+ * @object  arrays\exception\ArgumentException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class TypeException extends Exception
+class ArgumentException extends Exception
 {}

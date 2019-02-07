@@ -11,14 +11,14 @@ use arrays\exception\TypeException;
  * @object  arrays\IntMap
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-final class IntMap extends Map
+class IntMap extends Map
 {
     public function __construct(array $items = null)
     {
         $items = $items ?? [];
         $itemsType = Type::INT_MAP;
 
-        if (!$this->validateItems($items, $itemsType, $error)) {
+        if (!Type::validateItems($items, $itemsType, $error)) {
             throw new TypeException($error);
         }
 

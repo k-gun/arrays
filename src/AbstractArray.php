@@ -7,8 +7,10 @@ use arrays\{
     Arrays, Type,
     ArrayTrait, ArrayInterface, ArraysException };
 use arrays\exception\{
-    TypeException, MethodException };
+    TypeException, MethodException,
+    ArgumentException, ArgumentCountException };
 use ArrayIterator;
+use function arrays\is_digit;
 
 /**
  * @package arrays
@@ -22,60 +24,126 @@ abstract class AbstractArray implements ArrayInterface
     protected $items;
     protected $itemsType;
 
-    static protected $methods = ['search', 'has',
-        'hasKey' => '%s(string $key, any $value): bool',
-        'hasValue'
+    private static $onBeforeCheckExists;
+    private static $onAfterCheckExists;
+
+    static protected $methods = [
+        'search',
+        'has', 'hasKey', 'hasValue',
+        'set', 'get',
+        'add', 'remove', 'removeAt',
     ];
 
     public function __construct(?array $items, string $itemsType)
     {
         $this->items = $items ?? [];
         $this->itemsType = $itemsType;
+
+        self::$onBeforeCheckExists = method_exists($this, 'onBeforeCheck');
+        self::$onAfterCheckExists = method_exists($this, 'onAfterCheck');
     }
 
     public function __call(string $func, array $funcArgs)
     {
-        $method = array_key_exists($func, self::$methods) ? $func : null;
+        $method = in_array($func, self::$methods) ? $func : null;
         $methodArgs = $funcArgs;
         if ($method == null) {
             throw new MethodException(sprintf('No method such %s::%s()', static::class, $func));
         }
 
-        $methodArgs0 = $methodArgs[0] ?? null;
-        $methodArgs1 = $methodArgs[1] ?? null;
+        // user method (that can override $methodArgs)
+        if (self::$onBeforeCheckExists) {
+            $this->onBeforeCheck($method, $methodArgs);
+        }
 
-        // let's do this shit..
+        $argsv = $methodArgs;
+        $argsc = count($argsv);
+        if ($argsc < 2) {
+            $argsv = array_pad($argsv, 2, null);
+        }
+
+        // let's get that shit done..
         switch ($method) {
             case 'search':
-                $value = $methodArgs0;
-                switch ($this->itemsType) {
-                    case Type::INT_MAP:
-                        if (!is_int($value)) {
-                            $this->throwValueException($value, 'search');
-                        } break;
-                } break;
             case 'has':
-                $value = $methodArgs0;
-                switch ($this->itemsType) {
-                    case Type::INT_MAP:
-                        if (!is_int($value)) {
-                            $this->throwValueException($value, 'has');
-                        } break;
-                } break;
             case 'hasKey':
-                $key = $methodArgs0;
+                $key = $argsv[0];
                 switch ($this->itemsType) {
                     case Type::MAP:
-                        if (!is_string($key)) {
-                            $this->throwArgumentException('hasKey', 1, 'string', $key);
+                        if (!Type::validateMapKey($key, $error)) {
+                            self::throwArgumentException('hasKey', 1, $error, $key);
                         } break;
                 }
+                break;
+            case 'hasValue':
+                break;
+            case 'set':
+            case 'get':
+                $key = $argsv[0]; $value = $argsv[1];
+                if ($method == 'set') {
+                    if ($argsc < 2) {
+                        self::throwArgumentCountException($method, $argsc, 2); }
+                    switch ($this->itemsType) {
+                        case Type::MAP:
+                            if (!Type::validateMapKey($key, $error)) {
+                                self::throwArgumentException($method, 1, $error, $key);
+                            } break;
+                    }
+                } elseif ($method == 'get') {
+                    if ($argsc < 1) {
+                        self::throwArgumentCountException($method, $argsc, 1); }
+                    switch ($this->itemsType) {
+                        case Type::MAP:
+                            if (!Type::validateMapKey($key, $error)) {
+                                self::throwArgumentException($method, 1, $error, $key);
+                            } break;
+                    }
+                }
+                break;
+            case 'add':
+                switch ($this->itemsType) {
+                    case Type::MAP:
+                        throw new MethodException('Cannot call add() method for Maps, use Map::set() instead');
+                }
+                break;
+            case 'remove':
+                break;
+            case 'removeAt':
                 break;
             // default:
         }
 
+        // user method (that can override $methodArgs)
+        if (self::$onAfterCheckExists) {
+            $this->onAfterCheck($method, $methodArgs);
+        }
+
+// function valRef(&$arr) {
+//     $refs = array();
+//     foreach ($arr as $key => $value) {
+//         $refs[$key] = &$arr[$key];
+//     }
+//     return $refs;
+// }
+
+        // $args = [];
+        // $ref = new \ReflectionMethod($this, $method);
+        // foreach ($funcArgs as $i => &$arg) {
+        //     $args[$i] =& $arg;
+        // // foreach ($ref->getParameters() as $i => $arg) {
+        //     // if ($arg->isPassedByReference()) {
+        //     //     $args[$i] =& $funcArgs[$i];
+        //     // } else {
+        //     //     $args[$i] = $funcArgs[$i];
+        //     // }
+        // }
+        // $args = valRef($funcArgs);
+        foreach($funcArgs as &$arg) {}
+        // prd($funcArgs,1);
+
         // finally call private method that comes from ArrayTrait
-        return $this->{'_'.$method}(...$methodArgs);
+        // return $this->{$method}(...$funcArgs);
+        return call_user_func_array([$this, 'removeAt'], [&$funcArgs]);
     }
 
     public final function setType(int $itemsType): void { $this->itemsType = $itemsType; }
@@ -94,152 +162,57 @@ abstract class AbstractArray implements ArrayInterface
         return new ArrayIterator($this->items);
     }
 
-    protected final function validateItems(array $items, string $itemsType, string &$error = null): bool
+    protected static final function throwArgumentCountException(string $method, int $argsNum, int $argsNumMin, bool $showtip = true): void
     {
-        static $mapMessage = '%ss accept associative arrays with string keys,'.
-            ' %s key given (offset: %s)',
-               $setMessage = '%ss accept non-associative arrays with unsigned int keys,'.
-            ' %s key given (offset: %s)';
-
-        $offset = 0;
-        switch ($itemsType) {
-            // maps
-            case Type::MAP:
-                foreach ($items as $key => $value) {
-                    if (!is_string($key)) {
-                        $error = sprintf($mapMessage, Type::MAP, Type::get($key), $offset);
-                            return false; }
-                    $offset++;
-                } break;
-            case Type::INT_MAP:
-                foreach ($items as $key => $value) {
-                    if (!is_string($key)) {
-                        return sprintf($mapMessage, Type::get($key), $offset); }
-                    if (!is_int($value)) {
-                        return sprintf('IntMaps accept associative arrays with int values,'.
-                            ' %s value given (offset: %s)', Type::get($value), $offset); }
-                    $offset++;
-                } break;
-            case Type::FLOAT_MAP:
-                foreach ($items as $key => $value) {
-                    if (!is_string($key)) {
-                        return sprintf($mapMessage, Type::get($key), $offset); }
-                    if (!is_float($value)) {
-                        return sprintf('FloatMaps accept associative arrays with float values,'.
-                            ' %s value given (offset: %s)', Type::get($value), $offset); }
-                    $offset++;
-                } break;
-            case Type::STRING_MAP:
-                foreach ($items as $key => $value) {
-                    if (!is_string($key)) {
-                        return sprintf($mapMessage, Type::get($key), $offset); }
-                    if (!is_string($value)) {
-                        return sprintf('StringMaps accept associative arrays with string values,'.
-                            ' %s value given (offset: %s)', Type::get($value), $offset); }
-                    $offset++;
-                } break;
-            case Type::BOOL_MAP:
-                foreach ($items as $key => $value) {
-                    if (!is_string($key)) {
-                        return sprintf($mapMessage, Type::get($key), $offset); }
-                    if (!is_bool($value)) {
-                        return sprintf('BoolMaps accept associative arrays with bool values,'.
-                            ' %s value given (offset: %s)', Type::get($value), $offset); }
-                    $offset++;
-                } break;
-            // sets
-            case Type::SET:
-                foreach ($items as $key => $value) {
-                    if (!is_int($key)) {
-                        return sprintf($setMessage, Type::get($key), $offset); }
-                    $offset++;
-                } break;
-            case Type::INT_SET:
-                foreach ($items as $key => $value) {
-                    if (!is_int($key) || $key < 0) {
-                        return sprintf($setMessage, Type::get($key), $offset); }
-                    if (!is_int($value)) {
-                        return sprintf('IntSets accept non-associative arrays with int values,'.
-                            ' %s value given (offset: %s)', Type::get($value), $offset); }
-                    $offset++;
-                } break;
-            // others
-            default:
-                $isPrimitiveType = in_array($itemsType, ['int', 'float', 'string', 'bool']);
-                foreach ($items as $key => $value) {
-                    if ($isPrimitiveType) {
-                        if ($itemsType == 'int' && !is_int($value)) {
-                            return sprintf('Each item must be type of int, %s given (offset: %s)',
-                                Type::get($value), $offset);
-                        } elseif ($itemsType == 'float' && !is_float($value)) {
-                            return sprintf('Each item must be type of float, %s given (offset: %s)',
-                                Type::get($value), $offset);
-                        } elseif ($itemsType == 'string' && !is_string($value)) {
-                            return sprintf('Each item must be type of string, %s given (offset: %s)',
-                                Type::get($value), $offset);
-                        } elseif ($itemsType == 'bool' && !is_bool($value)) {
-                            return sprintf('Each item must be type of bool, %s given (offset: %s)',
-                                Type::get($value), $offset);
-                        }
-                    } elseif ($itemsType == 'array' && !is_array($value)) {
-                        return sprintf('Each item must be type of array, %s given (offset: %s)',
-                            Type::get($value), $offset);
-                    } elseif ($itemsType == 'object' && !is_object($value)) {
-                        return sprintf('Each item must be type of object, %s given (offset: %s)',
-                            Type::get($value), $offset);
-                    } else {
-                        // object type check
-                        if (!is_a($value, $itemsType)) {
-                            return sprintf('Each item must be type of %s, %s given (offset: %s)',
-                                $itemsType, ('object' == $valueType = gettype($value))
-                                    ? get_class($value) : Type::get($value), $offset);
-                        }
-                    }
-
-                    $offset++;
-                }
+        $message = sprintf('%s() requires at least %s argument%s, %s given',
+            ($methodPath = static::class .'::'. $method), $argsNumMin, ($argsNumMin > 1 ? 's' : ''), $argsNum);
+        if ($showtip) {
+            $tip = self::getMethodTip($methodPath, $method);
+            if ($tip != null) {
+                $message .= " [tip => {$method}{$tip}]";
+            }
         }
-
-        return true;
+        throw new ArgumentCountException($message);
     }
 
-    protected final function throwArgumentException(string $method, int $argNum, string $argType, $input): void
+    protected static final function throwArgumentException(string $method, int $argNum, string $argType, $input, bool $showtip = true): void
     {
+        if (strpos($argType, '|')) {
+            [$argType, $type] = explode('|', $argType);
+        } else {
+            $type = Type::get($input, $argType);
+        }
+
         $message = sprintf('Argument %s given to %s() must be %s, %s given', $argNum,
-            ($methodPath = static::class .'::'. $method), $argType, Type::get($input));
-
-        $tip = self::$methods[$method] ?? null;
-        if ($tip != null) {
-            $message .= sprintf(" [tip => {$tip}]", substr($methodPath, strpos($methodPath, '\\') + 1));
+            ($methodPath = static::class .'::'. $method), $argType, $type);
+        if ($showtip) {
+            $tip = self::getMethodTip($methodPath, $method);
+            if ($tip != null) {
+                $message .= " [tip => {$method}{$tip}]";
+            }
         }
-
-        throw new TypeException($message);
+        throw new ArgumentException($message);
     }
 
-    protected final function throwKeyException($key, string $method = null): void
+    private static final function getMethodTip(string $methodPath, string &$method = null): ?string
     {
-        $message = sprintf('%s keys should be int, %s argument given', $this->itemsType, Type::get($key));
-        if ($method != null) {
-            $message .= sprintf(' [call to %s::%s(%s)]', $this->itemsType, $method, $this->toCallArgument($key));
+        static $tips;
+        if ($tips == null) {
+            $tips = require_once __dir__ .'/data/tips.php';
         }
-        throw new InvalidKeyTypeException($message);
-    }
-    protected final function throwValueException($value, string $method = null): void
-    {
-        $message = sprintf('%s values should be int, %s argument given', $this->itemsType, Type::get($value));
-        if ($method != null) {
-            $message .= sprintf(' [call to %s::%s(%s)]', $this->itemsType, $method, $this->toCallArgument($value));
-        }
-        throw new InvalidValueTypeException($message);
+        $method = substr($methodPath, strpos($methodPath, '\\') + 1);
+        return $tips[$method] ?? null;
     }
 
-    protected final function toCallArgument($argument): string
-    {
-        if (is_null($argument)) return 'null';
-        if (is_bool($argument)) return $argument ? 'true' : 'false';
-        if (is_string($argument)) return "'{$argument}'";
-        if (is_array($argument)) return 'Array[...]';
-        if (is_object($argument)) return 'Object(...)';
-        return (string) $argument;
-    }
+
+
+    // protected final function toCallArgument($argument): string
+    // {
+    //     if (is_null($argument)) return 'null';
+    //     if (is_bool($argument)) return $argument ? 'true' : 'false';
+    //     if (is_string($argument)) return "'{$argument}'";
+    //     if (is_array($argument)) return 'Array[...]';
+    //     if (is_object($argument)) return 'Object(...)';
+    //     return (string) $argument;
+    // }
 }
