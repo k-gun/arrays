@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use arrays\StaticClass;
+use TypeError;
+use function arrays\is_digit;
 
 /**
  * @package arrays
  * @object  arrays\Type
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-final /* static */ class Type extends StaticClass
+final /* static */ class Type
 {
     /**
      * Types.
@@ -25,21 +26,12 @@ final /* static */ class Type extends StaticClass
                     STRING_SET = 'StringSet', BOOL_SET = 'BoolSet',
                  TUPLE = 'Tuple';
 
-    public static function get($input): string
-    {
-        return strtr(gettype($input), [
-            'NULL'    => 'null',
-            'integer' => 'int',
-            'double'  => 'float',
-            'boolean' => 'bool'
-        ]);
-    }
 
-    public static final function validateItems(array $items, string $itemsType, string &$error = null): bool
+    public static function validateItems(array $items, string $itemsType, string &$error = null): bool
     {
-        static $mapMessage = '%ss accept associative arrays with string keys,'.
-            ' %s key given (offset: %s, key: %s)',
-               $setMessage = '%ss accept non-associative arrays with unsigned-int keys,'.
+        static $mapMessage = '%ss accept associative arrays with non-digit string keys,'.
+            ' %s key given (offset: %s, key: %s)';
+        static $setMessage = '%ss accept non-associative arrays with unsigned-int keys,'.
             ' %s key given (offset: %s, key: %s)';
 
         $offset = 0;
@@ -92,28 +84,64 @@ final /* static */ class Type extends StaticClass
         return true;
     }
 
-    public static function validateMapKey($key, string &$error = null): bool
+    public static function validateArgumentType($arg, int $argNum, string $argTypeMust, string &$error = null, bool $nonDigit = false): bool
     {
-        if (!is_string($key)) {
-            $error = 'string';
-        } elseif (self::isDigit($key)) {
-            $error = 'string|int';
+        static $message = 'Argument %s given to %s must be %s, %s given';
+        static $getMethod;
+        if ($getMethod == null) {
+            $getMethod = function () {
+                $trace =@ end(debug_backtrace(0));
+                return sprintf('%s::%s()', $trace['class'], $trace['function']);
+            };
+            $message = 'Argument %s given to %s must be %s, %s given';
         }
-        return $error == null;
+        $argType = self::get($arg);
+        $argTypeText = ($arg === null) ? 'null' : $argType .'('. self::export($arg) .')';
+        if ($argType != $argTypeMust) {
+            $error = sprintf($message, $argNum, $getMethod(), $argTypeMust, $argTypeText);
+        } elseif ($nonDigit && self::isDigit($arg)) {
+            $error = sprintf($message, $argNum, $getMethod(), 'non-digit', 'digit('. $arg .')');
+        }
+        return ($error == null);
+    }
+    public static function validateArgumentTypeForMap($arg, int $argNum, string &$error = null): bool
+    {
+        return self::validateArgumentType($arg, $argNum, 'string', $error, true);
     }
 
-    public static function validateSetKey($key, string &$error = null): bool
+    public static function get($input): string
     {
-        if (!is_int($key)) {
-            $error = 'string';
-        }
-        return $error == null;
+        return strtr(gettype($input), [
+            'NULL'    => 'null',
+            'integer' => 'int',
+            'double'  => 'float',
+            'boolean' => 'bool'
+        ]);
+    }
+    public static function export($input): string
+    {
+        if (is_null($input)) return 'null';
+        if (is_scalar($input)) return var_export($input, true);
+        if (is_array($input)) return 'array';
+        if (is_object($input)) return get_class($input);
+        return $input;
     }
 
-    private static function isDigit($input): bool
+    public static function isDigit($input): bool
     {
-        return is_int($input) ? true : (
-            is_string($input) ? ctype_digit($input) : false
-        );
+        return is_digit($input);
+    }
+
+    public static function isMapKind($input): bool
+    {
+        try {
+            return strpos(get_class($input), 'arrays\Map') === 0;
+        } catch (TypeError $e) { return false; }
+    }
+    public static function isSetKind($input): bool
+    {
+        try {
+            return strpos(get_class($input), 'arrays\Set') === 0;
+        } catch (TypeError $e) { return false; }
     }
 }

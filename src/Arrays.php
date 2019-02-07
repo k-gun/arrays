@@ -10,7 +10,7 @@ use arrays\ArraysException;
  * @object  arrays\Arrays
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-final /* static */ class Arrays extends StaticClass
+final /* static */ class Arrays
 {
     /**
      * Set (with dot notation support for sub-array paths).

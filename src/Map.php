@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace arrays;
 
 use arrays\{AbstractArray, Type};
-use arrays\exception\TypeException;
+use arrays\exception\{TypeException, ArgumentTypeException};
 
 /**
  * @package arrays
@@ -27,18 +27,17 @@ class Map extends AbstractArray
         parent::__construct($items, $itemsType);
     }
 
-    // function onBeforeCheck(string $method, array &$methodArgs): void {
-    //     $key =& $methodArgs[0];
-    //     if ($key == "x") {
-    //         $key = "a";
-    //         // throw new TypeException("x key forbidden");
-    //     }
-    // }
-    // function onAfterCheck(string $method, array &$methodArgs): void {
-    //     $key =& $methodArgs[0];
-    //     if ($key == "x") {
-    //         $key = "a";
-    //         // throw new TypeException("x key forbidden");
-    //     }
-    // }
+    public function search($value)
+    {
+        return $this->_search($value);
+    }
+
+    public function has($value): bool { return $this->_has($value); }
+    public function hasKey($key): bool {
+        if (!Type::validateArgumentTypeForMap($key, 1, $error)) {
+            throw new ArgumentTypeException($error);
+        }
+        return $this->_hasKey($key);
+    }
+    public function hasValue($value): bool { return $this->_hasValue($value); }
 }

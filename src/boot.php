@@ -7,9 +7,39 @@ namespace arrays;
 //     return $array[$key] ?? $valueDefault;
 // }
 
-function string($input, bool $nullable = true): ?string
+function to_type($input, $type, bool $nullable = true)
 {
-    return ($nullable && $input === null) ? null : (string) $input;
+    if ($nullable && $input === null) {
+        return null;
+    }
+    settype($input, $type);
+    return $input;
+}
+// function to_string($input, bool $nullable = true): ?string
+// {
+//     return ($nullable && $input === null) ? null : (string) $input;
+// }
+
+function to_array($input): array {
+    return (array) ($input ?: []);
+}
+function to_object($input): object {
+    return (object) to_array($input);
+}
+
+function is_digit($input, bool $complex = true): bool
+{
+    if (is_int($input)) {
+        return true;
+    } elseif (is_string($input) && ctype_digit($input)) {
+        return true;
+    } elseif ($complex && is_numeric($input)) {
+        $input = (string) $input;
+        if (strpos($input, '.') === false && ($input < 0)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 use arrays\{Map, IntMap, FloatMap, StringMap, BoolMap};

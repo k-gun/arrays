@@ -11,125 +11,127 @@ namespace arrays;
 trait ArrayTrait
 {
     // @return int|string
-    private final function search($value)
+    protected final function _search($value)
     {
-        return (false !== ($key = array_search($value, $this->items, true)))
-            ? $key : null;
+        foreach ($this as $_ => $_value) {
+            if ($_value === $value) {
+                return $value;
+            }
+        }
     }
 
-    private final function has($value): bool
+    protected final function keys(): array
     {
-        return in_array($value, $this->items, true);
+        return array_keys($this->toArray());
     }
-    private final function hasKey($key): bool
+    protected final function values(): array
     {
-        return array_key_exists($key, $this->items);
-    }
-    private final function hasValue($value): bool
-    {
-        return $this->has($value);
+        return array_values($this->toArray());
     }
 
-    private final function set($key, $value): self
+    protected final function _has($value): bool
+    {
+        return in_array($value, $this->values(), true);
+    }
+    protected final function _hasKey($key): bool
+    {
+        return in_array($key, $this->keys(), true);
+    }
+    protected final function _hasValue($value): bool
+    {
+        return $this->_has($value);
+    }
+
+    protected final function _set($key, $value): self
     {
         $this->items[$key] = $value;
         return $this;
     }
-    private final function get($key, $valueDefault = null)
+    protected final function _get($key, $valueDefault = null, &$ok = null)
     {
-        return $this->items[$key] ?? $valueDefault;
+        if (array_key_exists($key, $this->items)) {
+            $value = $this->items[$key];
+            $ok = true;
+        } else { $ok = false; }
+        return $value ?? $valueDefault;
     }
 
-    private function add($value, int &$size = null): self
+    protected function _add($value, &$size = null): self
     {
-        return $this->append($value, $size);
+        return $this->_append($value, $size);
     }
-    private function remove($value, bool &$ok = null): self
+    protected function _remove($value, &$ok = null): self
     {
-        if (($key = $this->search($value)) !== null) {
-            $this->removeAt($key, $ok);
+        if (($key = $this->_search($value)) !== null) {
+            $this->_removeAt($key, $ok);
         } else { $ok = false; }
         return $this;
     }
-    private function removeAt($key, bool &$ok = null): self
+    protected final function _removeAt($key, &$ok = null): self
     {
-        $args = func_get_args();
-        prd($args);
-        if ($this->hasKey($key)) {
+        if (array_key_exists($key, $this->items)) {
             unset($this->items[$key]);
             $ok = true;
         } else { $ok = false; }
         return $this;
     }
 
-    private function append($value, int &$size = null): self
+    protected final function _append($value, &$size = null): self
     {
-        return $this->unpop(null, $value, $size, 1);
+        return $this->_unpop($value, $size);
     }
-    private function prepend($value, int &$size = null): self
+    protected final function _prepend($value, &$size = null): self
     {
-        return $this->unshift(null, $value, $size, 1);
+        return $this->_unshift($value, $size);
     }
-
-    private final function pop()
+    protected final function _delete($value, &$size = null): self
     {
-        return array_pop($this->items);
-    }
-    private final function unpop($key, $value, int &$size = null, int $type): self
-    {
-        if ($type == 1) { // maps
-            $this->items = array_merge([$key => $value], $this->items);
-        } else { // sets
-            array_push($this->items, $value);
-        }
-        $size = count($this->items);
-        return $this;
-    }
-    private final function shift()
-    {
-        return array_shift($this->items);
-    }
-    private final function unshift($key, $value, int &$size = null, int $type): self
-    {
-        if ($type == 1) {
-            $this->items = array_merge($this->items, [$key => $value]);
-        } else {
-            array_unshift($this->items, $value);
-        }
+        $this->_remove($value, $ok);
         $size = count($this->items);
         return $this;
     }
 
-    private final function put($key, $value): self
+    protected final function _pop(&$size = null)
+    {
+        $value = array_pop($this->items);
+        $size = count($this->items);
+        return $value;
+    }
+    protected final function _unpop($value, &$size = null): self
+    {
+        $size = array_push($this->items, $value);
+        return $this;
+    }
+    protected final function _shift(&$size = null)
+    {
+        $value = array_shift($this->items);
+        $size = count($this->items);
+        return $value;
+    }
+    protected final function _unshift($key, $value, &$size = null): self
+    {
+        $size = array_unshift($this->items, $value);
+        return $this;
+    }
+
+    protected final function _put($key, $value): self
     {
         $this->items[$key] = $value;
         return $this;
     }
-    private final function putValue($value): self
+    protected final function _push($key, $value): self
     {
-        $this->items[] = $value;
+        unset($this->items[$key]);
+        $this->items[$key] = $value;
         return $this;
     }
-
-    private final function push($key, $value): self
+    protected final function _pull($key, $valueDefault = null, &$ok = null)
     {
-        return $this->put($key, $value);
-    }
-    private final function pushValue($value): self
-    {
-        return $this->putValue($value);
-    }
-
-    private final function pull($key, $valueDefault = null)
-    {
-        if ($this->hasKey($key)) {
+        if (array_key_exists($key, $this->items)) {
             $value = $this->items[$key];
             unset($this->items[$key]);
-        }
+            $ok = true;
+        } else { $ok = false; }
         return $value ?? $valueDefault;
-    }
-    private final function pullValue($value, $valueDefault = null)
-    {
-        return $this->pull($this->search($value), $valueDefault);
     }
 }
