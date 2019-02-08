@@ -25,10 +25,10 @@ class TypedArray extends AbstractArray
         $this->readOnly = $readOnly;
         $this->allowNulls = $allowNulls;
 
-        $items = $items ?? [];
-
-        if (!Type::validateItems($this, $items, $itemsType, $error)) {
-            throw new TypeException($error);
+        if ($type != Type::ANY && $items != null) {
+            if (!Type::validateItems($this, $items, $itemsType, $error)) {
+                throw new TypeException($error);
+            }
         }
 
         parent::__construct($type, $items);
