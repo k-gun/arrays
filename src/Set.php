@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace arrays;
 
 use arrays\{AbstractArray, Type};
-use arrays\exception\{TypeException, ArgumentTypeException};
+use arrays\exception\TypeException;
 
 /**
  * @package arrays
@@ -13,14 +13,9 @@ use arrays\exception\{TypeException, ArgumentTypeException};
  */
 class Set extends TypedArray
 {
-    public function __construct(string $type = null, array $items = null, string $itemsType = null)
+    public function __construct(string $type = null, array $items = null, string $itemsType = null,
+        bool $readOnly = false, bool $allowNulls = false)
     {
-        parent::__construct($type ?? Type::SET, $items, $itemsType);
+        parent::__construct($type ?? Type::SET, $items, $itemsType, $readOnly, $allowNulls);
     }
-
-    // public function search($value) { return $this->_search($value); }
-
-    // public function has($value): bool { return $this->_has($value); }
-    // public function hasKey(string $key): bool { return $this->_hasKey($key); }
-    // public function hasValue($value): bool { return $this->_hasValue($value); }
 }
