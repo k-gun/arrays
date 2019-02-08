@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace arrays;
 
 use arrays\{AbstractArray, Type};
-use arrays\exception\{TypeException, ArgumentTypeException};
+use arrays\exception\TypeException;
 
 /**
  * @package arrays
@@ -13,9 +13,10 @@ use arrays\exception\{TypeException, ArgumentTypeException};
  */
 class Map extends TypedArray
 {
-    public function __construct(string $type = null, array $items = null, string $itemsType = null)
+    public function __construct(array $items = null, string $itemsType = null, string $type = null,
+        bool $readOnly = false, bool $allowNulls = false)
     {
-        parent::__construct($type ?? Type::MAP, $items, $itemsType);
+        parent::__construct($type ?? Type::MAP, $items, $itemsType, $readOnly, $allowNulls);
     }
 
     // public function search($value) { return $this->_search($value); }
