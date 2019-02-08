@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use arrays\{AbstractArray, Type, TypeException};
+use arrays\{
+    Type, AbstractArray };
+use arrays\exception\{ TypeException };
 
 /**
  * @package arrays
