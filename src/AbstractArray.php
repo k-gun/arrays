@@ -26,13 +26,26 @@ abstract class AbstractArray extends ArrayObject implements ArrayInterface
         parent::__construct($items);
     }
 
-    public function empty(): void { $this->exchangeArray([]); }
-    public function isEmpty(): bool { return !$this->count(); }
+    public final function item($key) { return @$this->offsetGet($key); }
+    public final function items(bool $simple = true): array {
+        $ret = $this->getArrayCopy();
+        if (!$simple) {
+            $retTmp = [];
+            foreach ($ret as $key => $value) {
+                $retTmp[] = [$key, $value];
+            }
+            $ret = $retTmp;
+        }
+        return $ret;
+    }
+
+    public final function size(): int { return $this->count(); }
+    public final function empty(): void { $this->exchangeArray([]); }
+    public final function isEmpty(): bool { return !$this->count(); }
 
     public final function keys(): array { return array_keys($this->getArrayCopy()); }
     public final function values(): array { return array_values($this->getArrayCopy()); }
 
-    public final function size(): int { return $this->count(); }
     public final function toArray(bool $normalize = false): array {
         $ret = $this->getArrayCopy();
         if ($normalize) {
