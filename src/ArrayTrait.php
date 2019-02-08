@@ -10,33 +10,41 @@ namespace arrays;
  */
 trait ArrayTrait
 {
-    // @return int|string|null
-    protected final function _search($value)
+    // memory-wise index, key search
+    private final function _index($searchValue, $reverse)
     {
-        return (false !== $key = array_search($value, $this->toArray(), true)) ? $key : null;
-    }
-
-    private final function _index($value, $_values, $reverse)
-    {
-        $index = $reverse ? count($_values) - 1 : 0;
-        foreach ($_values as $_value) {
-            if ($_value === $value) { return $index; }
-            $reverse ? $index-- : $index++;
+        if (!$reverse) { $index = 0;
+            foreach ($this->generate() as $key => $value) {
+                if ($value === $searchValue) { return [$index, $key]; } $index++;
+            }
+        } else { $index = $this->size() - 1;
+            foreach ($this->generateReverse() as $key => $value) {
+                if ($value === $searchValue) { return [$index, $key]; } $index--;
+            }
         }
         return null;
     }
+    // @return int|string|null
+    protected final function _search($value)
+    {
+        return $this->_index($value, false)[1] ?? null;
+    }
+    protected final function _searchLast($value)
+    {
+        return $this->_index($value, true)[1] ?? null;
+    }
     protected final function _indexOf($value)
     {
-        return $this->_index($value, $this->values(), false);
+        return $this->_index($value, false)[0] ?? null;
     }
     protected final function _lastIndexOf($value)
     {
-        return $this->_index($value, array_reverse($this->values()), true);
+        return $this->_index($value, true)[0] ?? null;
     }
 
     protected final function _has($value)
     {
-        return in_array($value, $this->values(), true);
+        return $this->_indexOf($value) !== null;
     }
     protected final function _hasKey($key)
     {
@@ -137,4 +145,6 @@ trait ArrayTrait
         }
         return $value ?? $valueDefault;
     }
+
+    //
 }
