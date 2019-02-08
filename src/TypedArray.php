@@ -13,10 +13,16 @@ use arrays\{AbstractArray, Type, TypeException};
 class TypedArray extends AbstractArray
 {
     protected $type;
+    protected $readOnly;
+    protected $allowNulls;
 
-    public function __construct(string $type, array $items = null, string $itemsType = null)
+    public function __construct(string $type, array $items = null, string $itemsType = null,
+        bool $readOnly = false, bool $allowNulls = false)
     {
         $this->type = $type;
+        $this->readOnly = $readOnly;
+        $this->allowNulls = $allowNulls;
+
         $items = $items ?? [];
 
         if (!Type::validateItems($this, $items, $itemsType, $error)) {
@@ -27,4 +33,6 @@ class TypedArray extends AbstractArray
     }
 
     public final function type(): string { return $this->type; }
+    public final function readOnly(): bool { return $this->readOnly; }
+    public final function allowNulls(): bool { return $this->allowNulls; }
 }
