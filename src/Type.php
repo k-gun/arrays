@@ -142,7 +142,7 @@ final /* static */ class Type
         return in_array(strtolower($type), ['int', 'float', 'string', 'bool', 'array', 'object']);
     }
 
-    public static function isDigit($input): bool
+    public static function isDigit($input, bool $complex = true): bool
     {
         if (is_int($input)) {
             return true;

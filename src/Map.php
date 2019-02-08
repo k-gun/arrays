@@ -5,7 +5,7 @@ namespace arrays;
 
 use arrays\{
     Type, TypedArray };
-// use arrays\exception\{ MethodException };
+use arrays\exception\{ MethodException };
 
 /**
  * @package arrays
@@ -36,5 +36,9 @@ class Map extends TypedArray
     public function removeAt(string $key, bool &$ok = null): self { return $this->_removeAt($key, $ok); }
     public function removeAll(array $values, int &$count = null): self { return $this->_removeAll($values, $count); }
 
-    // public function empty(): void { return $this->_empty(); }
+    // public final function append() { throw new MethodException('Not allowed method Map::append()'); }
+    // public final function prepend() { throw new MethodException('Not allowed method Map::prepend()'); }
+
+    public function pop(int &$size = null) { return $this->_pop($size); }
+    public final function unpop() { throw new MethodException('Not allowed method Map::unpop()'); }
 }

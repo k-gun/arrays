@@ -48,44 +48,44 @@ trait ArrayTrait
         return $this->_has($value);
     }
 
-    protected final function _set($key, $value)
+    protected final function _set($key, $value, &$size = null)
     {
-        $this->readOnlyCheck();
-        $this->offsetSet($key, $value);
+        $this->stackCommand('set', $key, $value, $size);
         return $this;
     }
     protected final function _get($key, $valueDefault = null, &$ok = null)
     {
         if ($ok = $this->_hasKey($key)) {
-            $value = $this->offsetGet($key);
+            $this->stackCommand('get', $key, $value);
         }
         return $value ?? $valueDefault;
     }
 
-    protected function _add($value, &$size = null)
+    protected final function _add($value)
     {
-        return $this->_append($value, $size);
+        return $this->_unpop($value);
     }
-    protected function _remove($value, &$ok = null)
+    protected final function _remove($value, &$ok = null)
     {
-        $this->readOnlyCheck();
-        if ($ok = (($key = $this->_search($value)) !== null)) {
-            $this->offsetUnset($key);
+        if ($ok = (null !== $key = $this->_search($value))) {
+            $this->stackCommand('unset', $key);
         }
         return $this;
     }
     protected final function _removeAt($key, &$ok = null)
     {
-        $this->readOnlyCheck();
         if ($ok = $this->_hasKey($key)) {
-            $this->offsetUnset($key);
+            $this->stackCommand('unset', $key);
         }
         return $this;
     }
     protected final function _removeAll($values, &$count = null)
     {
         foreach ($values as $value) {
-            while ($this->remove($value, $ok) && $ok) { $count++; }
+            while (null !== $key = $this->_search($value)) {
+                $this->stackCommand('unset', $key);
+                $count++;
+            }
         }
         return $this;
     }
@@ -98,67 +98,43 @@ trait ArrayTrait
     {
         return $this->_unshift($value, $size);
     }
-    protected final function _delete($value, &$size = null)
-    {
-        $this->_remove($value, $ok);
-        $size = $this->size();
-        return $this;
-    }
 
     protected final function _pop(&$size = null)
     {
-        $this->readOnlyCheck();
-        $value = array_pop($this->items);
-        $size = $this->size();
+        $this->stackCommand('pop', $value, $size);
         return $value;
     }
     protected final function _unpop($value, &$size = null)
     {
-        $this->readOnlyCheck();
-        // ...
-        $size = array_push($this->items, $value);
+        $this->stackCommand('unpop', $value, $size);
         return $this;
     }
     protected final function _shift(&$size = null)
     {
-        $this->readOnlyCheck();
-        // ...
-        $value = array_shift($this->items);
-        $size = $this->size();
+        $this->stackCommand('shift', $value, $size);
         return $value;
     }
-    protected final function _unshift($key, $value, &$size = null)
+    protected final function _unshift($value, &$size = null)
     {
-        $this->readOnlyCheck();
-        // ...
-        $size = array_unshift($this->items, $value);
+        $this->stackCommand('unshift', $value, $size);
         return $this;
     }
 
     protected final function _put($key, $value)
     {
-        $this->readOnlyCheck();
-        // ...
-        $this->items[$key] = $value;
+        $this->stackCommand('put', $key, $value);
         return $this;
     }
     protected final function _push($key, $value)
     {
-        $this->readOnlyCheck();
-        // ...
-        unset($this->items[$key]);
-        $this->items[$key] = $value;
+        $this->stackCommand('push', $key, $value);
         return $this;
     }
     protected final function _pull($key, $valueDefault = null, &$ok = null)
     {
-        $this->readOnlyCheck();
-        // ...
-        if (array_key_exists($key, $this->items)) {
-            $value = $this->items[$key];
-            unset($this->items[$key]);
-            $ok = true;
-        } else { $ok = false; }
+        if ($ok = $this->_hasKey($key)) {
+            $this->stackCommand('pull', $key, $value);
+        }
         return $value ?? $valueDefault;
     }
 }
