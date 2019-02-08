@@ -53,6 +53,7 @@ abstract class AbstractArray extends ArrayObject implements ArrayInterface
     }
     public final function getShortName(): string
     {
-        return substr($name = $this->getName(), strpos($name, '\\') + 1);
+        return substr($name = $this->getName(),
+            (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
     }
 }
