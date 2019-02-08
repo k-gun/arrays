@@ -9,14 +9,14 @@ use arrays\{
     ArrayTrait, ArrayInterface };
 use arrays\exception\{
     ArrayException, TypeException, ArgumentTypeException };
-use ArrayObject;
+use ArrayObject, IteratorAggregate, Generator;
 
 /**
  * @package arrays
  * @object  arrays\AbstractArray
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-abstract class AbstractArray implements ArrayInterface
+abstract class AbstractArray implements ArrayInterface, IteratorAggregate
 {
     use ArrayTrait;
 
@@ -146,5 +146,25 @@ abstract class AbstractArray implements ArrayInterface
             default:
                 throw new ArrayException("Unknown command {$command}");
         }
+    }
+
+    public final function generate(): Generator
+    {
+        foreach ($this->stack as $key => $value) {
+            yield $key => $value;
+        }
+    }
+
+    public final function generateReverse(): Generator
+    {
+        $stack = $this->stack;
+        for (end($stack); (null !== $key = key($stack)); prev($stack)){
+            yield $key => current($stack);
+        }
+    }
+
+    public final function getIterator(bool $reverse = true): Generator
+    {
+        return $this->generate($this->stack);
     }
 }
