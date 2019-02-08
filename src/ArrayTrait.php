@@ -13,11 +13,22 @@ trait ArrayTrait
     // @return int|string|null
     protected final function _search($value)
     {
-        foreach ($this as $_ => $_value) {
-            if ($value === $_value) { return $value; }
+        foreach ($this as $key => $_value) {
+            // make a strict search
+            if ($value === $_value) { return $key; }
         }
         return null;
     }
+
+    protected final function _indexOf($value): ?int
+    {
+        $index = 0;
+        foreach ($this->getArrayCopy() as $key => $value) {
+            //
+        }
+    }
+    protected final function _lastIndexOf($value): ?int
+    {}
 
     protected final function _has($value): bool
     {
@@ -25,8 +36,9 @@ trait ArrayTrait
     }
     protected final function _hasKey($key): bool
     {
-        return in_array($key, $this->keys(), true);
+        return in_array($value, $this->values(), true);
     }
+    // @alias
     protected final function _hasValue($value): bool
     {
         return $this->_has($value);
@@ -34,15 +46,15 @@ trait ArrayTrait
 
     protected final function _set($key, $value): self
     {
-        $this->items[$key] = $value;
+        $this->readOnlyCheck();
+        $this->offsetSet($key, $value);
         return $this;
     }
     protected final function _get($key, $valueDefault = null, &$ok = null)
     {
-        if (array_key_exists($key, $this->items)) {
-            $value = $this->items[$key];
-            $ok = true;
-        } else { $ok = false; }
+        if ($ok = $this->offsetExists($key)) {
+            $value = $this->offsetGet($key);
+        }
         return $value ?? $valueDefault;
     }
 
@@ -52,17 +64,18 @@ trait ArrayTrait
     }
     protected function _remove($value, &$ok = null): self
     {
-        if (($key = $this->_search($value)) !== null) {
-            $this->_removeAt($key, $ok);
-        } else { $ok = false; }
+        $this->readOnlyCheck();
+        if ($ok = (($key = $this->_search($value)) !== null)) {
+            $this->offsetUnset($key);
+        }
         return $this;
     }
     protected final function _removeAt($key, &$ok = null): self
     {
-        if (array_key_exists($key, $this->items)) {
-            unset($this->items[$key]);
-            $ok = true;
-        } else { $ok = false; }
+        $this->readOnlyCheck();
+        if ($ok = $this->offsetExists($key)) {
+            $this->offsetUnset($key);
+        }
         return $this;
     }
 
@@ -77,46 +90,59 @@ trait ArrayTrait
     protected final function _delete($value, &$size = null): self
     {
         $this->_remove($value, $ok);
-        $size = count($this->items);
+        $size = $this->size();
         return $this;
     }
 
     protected final function _pop(&$size = null)
     {
+        $this->readOnlyCheck();
         $value = array_pop($this->items);
-        $size = count($this->items);
+        $size = $this->size();
         return $value;
     }
     protected final function _unpop($value, &$size = null): self
     {
+        $this->readOnlyCheck();
+        // ...
         $size = array_push($this->items, $value);
         return $this;
     }
     protected final function _shift(&$size = null)
     {
+        $this->readOnlyCheck();
+        // ...
         $value = array_shift($this->items);
-        $size = count($this->items);
+        $size = $this->size();
         return $value;
     }
     protected final function _unshift($key, $value, &$size = null): self
     {
+        $this->readOnlyCheck();
+        // ...
         $size = array_unshift($this->items, $value);
         return $this;
     }
 
     protected final function _put($key, $value): self
     {
+        $this->readOnlyCheck();
+        // ...
         $this->items[$key] = $value;
         return $this;
     }
     protected final function _push($key, $value): self
     {
+        $this->readOnlyCheck();
+        // ...
         unset($this->items[$key]);
         $this->items[$key] = $value;
         return $this;
     }
     protected final function _pull($key, $valueDefault = null, &$ok = null)
     {
+        $this->readOnlyCheck();
+        // ...
         if (array_key_exists($key, $this->items)) {
             $value = $this->items[$key];
             unset($this->items[$key]);

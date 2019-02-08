@@ -5,10 +5,8 @@ namespace arrays;
 
 use arrays\{
     Arrays, Type,
-    ArrayTrait, ArrayInterface, ArraysException };
-use arrays\exception\{
-    TypeException, MethodException,
-    ArgumentException, ArgumentCountException };
+    ArrayTrait, ArrayInterface };
+use arrays\exception\{ ArrayException };
 use ArrayObject;
 
 /**
@@ -28,8 +26,8 @@ abstract class AbstractArray extends ArrayObject implements ArrayInterface
         parent::__construct($items);
     }
 
-    public final function keys(): array { return array_keys($this->toArray()); }
-    public final function values(): array { return array_values($this->toArray()); }
+    public final function keys(): array { return array_keys($this->getArrayCopy()); }
+    public final function values(): array { return array_values($this->getArrayCopy()); }
 
     public final function size(): int { return $this->count(); }
     public final function toArray(bool $normalize = false): array {
@@ -55,5 +53,16 @@ abstract class AbstractArray extends ArrayObject implements ArrayInterface
     {
         return substr($name = $this->getName(),
             (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
+    }
+    public final function toString(): string
+    {
+        return sprintf('Object(%s#%s)', $this->getName(), spl_object_id($this));
+    }
+
+    public final function readOnlyCheck(): void
+    {
+        if ($this->readOnly) {
+            throw new ArrayException("Cannot modify read-only {$this->getShortName()}() object");
+        }
     }
 }
