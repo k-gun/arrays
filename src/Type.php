@@ -36,12 +36,16 @@ final /* static */ class Type
         $allowNulls = $array->allowNulls();
         $typeBasic = self::isBasic($type); $isMapLike = $isSetLike = false;
         if (!$typeBasic) {
-            if ($isMapLike = self::isMapLike($array) && !is_associative_array($items)) {
-                $error = sprintf(self::$mapMessage, $type);
-                return false;
-            } elseif ($isSetLike = self::isSetLike($array) && !is_sequential_array($items)) {
-                $error = sprintf(self::$setMessage, $type);
-                return false;
+            if ($isMapLike = self::isMapLike($array)) {
+                if (!is_associative_array($items)) {
+                    $error = sprintf(self::$mapMessage, $type);
+                    return false;
+                }
+            } elseif ($isSetLike = self::isSetLike($array)) {
+                if (!is_sequential_array($items)) {
+                    $error = sprintf(self::$setMessage, $type);
+                    return false;
+                }
             }
         }
 
