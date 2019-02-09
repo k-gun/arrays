@@ -4,8 +4,6 @@ declare(strict_types=0);
 namespace arrays;
 
 use arrays\Type;
-// use arrays\exception\{
-//     ArrayException, TypeException, ArgumentTypeException };
 use Closure;
 
 /**
