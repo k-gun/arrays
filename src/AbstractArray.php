@@ -82,8 +82,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $this;
     }
 
-    public final function count() { return $this->stack->count(); }
-    public final function countValues() { return array_count_values($this->items()); }
+    public final function count(): int { return $this->stack->count(); }
+    public final function countValues(): array { return array_count_values($this->items()); }
 
     public final function keys(): array { return array_keys($this->items()); }
     public final function values(): array { return array_values($this->items()); }
