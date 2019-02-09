@@ -180,6 +180,28 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $this->reset(array_reverse($this->items()));
     }
 
+    public final function sort(callable $func = null, callable $ufunc = null, int $flags = 0): self {
+        $items = $this->items();
+        return $this->reset(Arrays::sort($items, $func, $ufunc, $flags));
+    }
+    public final function sortKey(callable $ufunc = null, int $flags = 0): self {
+        return $this->sort('ksort', $ufunc, $flags);
+    }
+    public final function sortNatural(bool $caseSensitive = true, int $flags = 0): self {
+        $flags += SORT_NATURAL;
+        if (!$caseSensitive) {
+            $flags += SORT_FLAG_CASE;
+        }
+        return $this->sort(null, null, $flags);
+    }
+    public final function sortLocale(string $locale, callable $func = null, callable $ufunc = null, int $flags = 0): self {
+        $localeDefault = setlocale(LC_COLLATE, '');
+        setlocale(LC_COLLATE, $locale);
+        $this->sort($func, $ufunc, $flags += SORT_LOCALE_STRING);
+        setlocale(LC_COLLATE, $localeDefault); // reset locale
+        return $this;
+    }
+
     public final function test(Closure $func) { return Arrays::test($this->toArray(), $func); }
     public final function testAll(Closure $func) { return Arrays::testAll($this->toArray(), $func); }
 

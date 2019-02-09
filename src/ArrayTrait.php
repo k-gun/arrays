@@ -180,9 +180,4 @@ trait ArrayTrait
         }
         return null;
     }
-
-    protected final function _sort(callable $func = null, callable $ufunc = null, int $flags = 0) {
-        // Arrays::sort($this->items, $func, $ufunc, $flags); ?????????
-        return $this;
-    }
 }
