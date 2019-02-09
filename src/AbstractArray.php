@@ -159,7 +159,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return array_slice($this->items(), $offset, $size, $preserveKeys);
     }
 
-    public final function rand(int $size = 1) {
+    public final function rand(int $size = 1, bool $useKeys = false) {
         if ($size < 1) {
             throw new ArgumentException(sprintf('Minimum size could be 1 for %s(), %s given',
                 $this->getMethoName(), $size));
@@ -169,10 +169,14 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
             $keys = array_keys($items);
             shuffle($keys);
             while ($size--) {
-                $ret[] = $items[$keys[$size]];
+                if (!$useKeys) {
+                    $ret[] = $items[$keys[$size]];
+                } else {
+                    $ret[$keys[$size]] = $items[$keys[$size]];
+                }
             }
             if (count($ret) == 1) {
-                $ret = $ret[0];
+                $ret = !$useKeys ? current($ret) : [key($ret), current($ret)];
             }
         }
         return $ret ?? null;
