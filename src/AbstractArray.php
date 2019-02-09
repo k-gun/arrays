@@ -10,7 +10,7 @@ use arrays\{
 use arrays\exception\{
     ArrayException, TypeException,
     ArgumentException, ArgumentTypeException, MethodException };
-use ArrayObject, Countable, IteratorAggregate, Generator, Closure;
+use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
  * @package arrays
@@ -106,11 +106,10 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function toObject(): object { return (object) $this->toArray(true); }
     public final function toJson(): string { return (string) json_encode($this->toArray(true)); }
 
-    // map,reduce
     public final function map(callable $func, bool $breakable = false): self {
         return $this->reset(array_map($func, $this->items()));
     }
-    public final function reduce($initialValue, callable $func = null) {
+    public final function reduce($initialValue = null, callable $func = null) {
         // set sum as default
         $func = $func ?? function ($initialValue, $value) {return is_numeric($value) ? $initialValue += $value : $initialValue;};
         return array_reduce($this->values(), $func, $initialValue);
@@ -118,9 +117,6 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function filter(callable $func = null): self {
         // set empty filter as default
         $func = $func ?? function ($value) { return strlen((string) $value); };
-        return $this->reset(array_filter($this->items(), $func, 1));
-    }
-    public final function filterKey(callable $func): self {
         return $this->reset(array_filter($this->items(), $func, 2));
     }
 
