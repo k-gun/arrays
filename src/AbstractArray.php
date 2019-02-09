@@ -115,6 +115,27 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $this->reset(array_filter($this->stack->getArrayCopy(), $func, 2));
     }
 
+    public final function diff(iterable $stack2, bool $uniq = false): array {
+        $stack1 = $this->stack->getArrayCopy();
+        if ($stack2 instanceof Traversable) {
+            iterator_to_array($stack2);
+        }
+        if ($uniq) {
+            $stack1 = array_unique($stack1);
+            $stack2 = array_unique($stack2);
+        }
+        return array_diff($stack1, $stack2);
+    }
+
+    public final function uniq(): array { return array_unique($this->stack->getArrayCopy()); }
+    public final function ununiq(): array {
+        $items = $this->stack->getArrayCopy();
+        return array_filter($items, function ($value, $key) use ($items) {
+            return array_search($value, $items) !== $key;
+        }, 1);
+    }
+    public final function uniqs() { return array_diff($this->uniq(), $this->ununiq()); }
+
     public final function getName(): string { return static::class; }
     public final function getShortName(): string {
         return substr($name = $this->getName(),
