@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace arrays;
 
 use Error;
-use arrays\{Map, Set, Tuple};
+use arrays\{Map, Set, Tuple, AnyArray};
 use function arrays\{is_sequential_array, is_associative_array};
 
 /**
@@ -23,24 +23,25 @@ final /* static */ class Type
                  SET = 'Set',
                  TUPLE = 'Tuple';
 
+    private static $basics = ['int', 'float', 'string', 'bool', 'array', 'object'];
+
+    private static $mapMessage = '%s() objects accept associative arrays with string keys only, invalid items given';
+    private static $setMessage = '%s() objects accept non-associative items with int keys only, invalid items given';
+    private static $valueMessage = 'All values of %s() must be type of %s, %s given (offset: %s, value: %s)';
+    private static $nullValueMessage = '%s() object do not accept null values, null given (offset: %s)';
 
     public static function validateItems(object $array, array $items, string $itemsType = null, string &$error = null): bool
     {
-        static $mapMessage = '%s() objects accept associative arrays with string keys only, invalid items given';
-        static $setMessage = '%s() objects accept non-associative items with int keys only, invalid items given';
-        static $valueMessage = 'All values of %s() must be type of %s, %s given (offset: %s, value: %s)';
-        static $nullValueMessage = '%s() object do not accept null values, null given (offset: %s)';
-
         $type = $array->type();
         $allowNulls = $array->allowNulls();
         $typeBasic = self::isBasic($type); $isMapLike = $isSetLike = false;
         if (!$typeBasic) {
-            if ($array instanceof Map) {
-                $isMapLike = true;
-                if (!is_associative_array($items)) { $error = sprintf($mapMessage, $type); return false; }
-            } elseif ($array instanceof Set || $array instanceof Tuple) {
-                $isSetLike = true;
-                if (!is_sequential_array($items)) { $error = sprintf($setMessage, $type); return false; }
+            if ($isMapLike = self::isMapLike($array) && !is_associative_array($items)) {
+                $error = sprintf(self::$mapMessage, $type);
+                return false;
+            } elseif ($isSetLike = self::isSetLike($array) && !is_sequential_array($items)) {
+                $error = sprintf(self::$setMessage, $type);
+                return false;
             }
         }
 
@@ -49,13 +50,13 @@ final /* static */ class Type
             if ($value === null) {
                 if ($allowNulls) {
                     $offset++; continue; }
-                $error = sprintf($nullValueMessage, $array->getShortName(), $offset);
+                $error = sprintf(self::$nullValueMessage, $array->getShortName(), $offset);
                 return false;
             }
             $valueType = self::get($value);
             if ($typeBasic) {
                 if ($valueType != $type) {
-                    $error = sprintf($valueMessage, $array->getShortName(), $type, $valueType, $offset,
+                    $error = sprintf(self::$valueMessage, $array->getShortName(), $type, $valueType, $offset,
                         self::export($value));
                     return false;
                 }
@@ -64,18 +65,18 @@ final /* static */ class Type
                     $itemsTypeBasic = self::isBasic($itemsType);
                     if ($itemsTypeBasic) {
                         if ($valueType != $itemsType) {
-                            $error = sprintf($valueMessage, $array->getShortName(), $itemsType, $valueType, $offset,
+                            $error = sprintf(self::$valueMessage, $array->getShortName(), $itemsType, $valueType, $offset,
                                 self::export($value));
                             return false;
                         }
                     } elseif (!is_a($value, $itemsType)) {
-                        $error = sprintf($valueMessage, $array->getShortName(), $itemsType,
+                        $error = sprintf(self::$valueMessage, $array->getShortName(), $itemsType,
                             ($valueType == 'object' ? get_class($value) : $valueType), $offset, self::export($value));
                         return false;
                     }
                 }
             } elseif (!is_a($value, $type)) {
-                $error = sprintf($valueMessage, $array->getShortName(), $type,
+                $error = sprintf(self::$valueMessage, $array->getShortName(), $type,
                     ($valueType == 'object' ? get_class($value) : $valueType), $offset, self::export($value));
                 return false;
             }
@@ -94,7 +95,6 @@ final /* static */ class Type
                 $trace =@ end(debug_backtrace(0));
                 return sprintf('%s::%s()', $trace['class'], $trace['function']);
             };
-            $message = 'Argument %s given to %s must be %s, %s given';
         }
         $argType = self::get($arg);
         if ($argType != $argTypeMust) {
@@ -139,7 +139,7 @@ final /* static */ class Type
 
     public static function isBasic(string $type): bool
     {
-        return in_array(strtolower($type), ['int', 'float', 'string', 'bool', 'array', 'object']);
+        return in_array(strtolower($type), self::$basics);
     }
 
     public static function isDigit($input, bool $complex = true): bool
@@ -157,18 +157,20 @@ final /* static */ class Type
         return false;
     }
 
+    public static function isAny($input): bool
+    {
+        return is_object($input) && $input instanceof AnyArray;
+    }
+    public static function isTuple($input): bool
+    {
+        return is_object($input) && $input instanceof Tuple;
+    }
     public static function isMapLike($input): bool
     {
-        try {
-            return is_object($input) && $input instanceof Map;
-            // return is_object($input) && (false !== strpos($input->type(), 'Map'));
-        } catch (Error $e) { return false; }
+        return is_object($input) && $input instanceof Map;
     }
     public static function isSetLike($input): bool
     {
-        try {
-            return is_object($input) && $input instanceof Set;
-            // return is_object($input) && (false !== strpos($input->type(), 'Set'));
-        } catch (Error $e) { return false; }
+        return is_object($input) && ($input instanceof Set || $input instanceof Tuple);
     }
 }
