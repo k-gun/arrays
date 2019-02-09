@@ -23,6 +23,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     private $stack;
     private static $methods = [];
+    protected static $notAllowedMethods = [];
 
     public function __construct(string $type, array $items = null)
     {
@@ -34,13 +35,19 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     }
 
     public final function __call($method, $methodArgs) {
+        if (in_array($method, self::$notAllowedMethods)) {
+            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
+        }
         if (!isset(self::$methods[$method])) {
-            throw new MethodException("Method {$this->getName()}::{$method}() does not exist");
+            throw new MethodException("Method {$this->getShortName()}::{$method}() does not exist");
         }
         return self::$methods[$method](...$methodArgs);
     }
 
     public final function prototype(string $method, callable $methodFunc): void {
+        if (in_array($method, self::$notAllowedMethods)) {
+            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
+        }
         if (method_exists($this, $method)) {
             throw new MethodException("Method {$this->getShortName()}::{$method}() already exists");
         }
@@ -288,10 +295,9 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     private final function stackCommand(string $command, &...$arguments): void
     {
-        $this->readOnlyCheck();
-
         switch ($command) {
             case 'set':
+                $this->readOnlyCheck();
                 [$key, $value] = $arguments;
                 $this->nullCheck($value);
                 $this->stack->offsetSet($key, $value);
@@ -302,23 +308,27 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
                 $arguments[1] =@ $this->stack->offsetGet($key);
                 break;
             case 'unset':
+                $this->readOnlyCheck();
                 $key = $arguments[0];
                 @ $this->stack->offsetUnset($key);
                 break;
             case 'pop':
             case 'shift':
+                $this->readOnlyCheck();
                 $key = ($command == 'pop') ? $this->lastKey() : $this->firstKey();
                 $arguments[0] =@ $this->stack->offsetGet($key);
                 @ $this->stack->offsetUnset($key);
                 $arguments[1] = $this->stack->count();
                 break;
             case 'unpop':
+                $this->readOnlyCheck();
                 $value = $arguments[0];
                 $this->nullCheck($value);
                 $this->stack->offsetSet(null, $value);
                 $arguments[1] = $this->stack->count();
                 break;
             case 'unshift':
+                $this->readOnlyCheck();
                 $value = $arguments[0];
                 $this->nullCheck($value);
                 $items = array_merge([$value], $this->items());
@@ -326,17 +336,20 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
                 $arguments[1] = $this->stack->count();
                 break;
             case 'put':
+                $this->readOnlyCheck();
                 [$key, $value] = $arguments;
                 $this->nullCheck($value);
                 $this->stack->offsetSet($key, $value);
                 break;
             case 'push':
+                $this->readOnlyCheck();
                 [$key, $value] = $arguments;
                 $this->nullCheck($value);
                 @ $this->stack->offsetUnset($key);
                 $this->stack->offsetSet($key, $value);
                 break;
             case 'pull':
+                $this->readOnlyCheck();
                 $key = $arguments[0];
                 $arguments[1] =@ $this->stack->offsetGet($key);
                 @ $this->stack->offsetUnset($key);
