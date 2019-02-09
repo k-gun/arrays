@@ -67,7 +67,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function size(): int { return $this->stack->count(); }
     public final function empty(): void { $this->reset([]); }
     public final function isEmpty(): bool { return !$this->stack->count(); }
-    public final function reset(array $items): void { $this->stack->exchangeArray($items); }
+    public final function reset(array $items): self { $this->stack->exchangeArray($items); return $this; }
 
     public final function count() { return $this->stack->count(); }
     public final function countValues() { return array_count_values($this->stack->getArrayCopy()); }
@@ -98,16 +98,21 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function toJson(): string { return (string) json_encode($this->toArray(true)); }
 
     // map,reduce
-
+    public final function map(callable $func, bool $breakable = false): self {
+        return $this->reset(array_map($func, $this->stack->getArrayCopy()));
+    }
+    public final function reduce($initialValue, callable $func = null) {
+        // set sum as default
+        $func = $func ?? function ($initialValue, $value) {return is_numeric($value) ? $initialValue += $value : $initialValue;};
+        return array_reduce($this->values(), $func, $initialValue);
+    }
     public final function filter(callable $func = null): self {
         // set empty filter as default
         $func = $func ?? function ($value) { return strlen((string) $value); };
-        $this->reset(array_filter($this->stack->getArrayCopy(), $func, 1));
-        return $this;
+        return $this->reset(array_filter($this->stack->getArrayCopy(), $func, 1));
     }
     public final function filterKey(callable $func): self {
-        $this->reset(array_filter($this->stack->getArrayCopy(), $func, 2));
-        return $this;
+        return $this->reset(array_filter($this->stack->getArrayCopy(), $func, 2));
     }
 
     public final function getName(): string { return static::class; }
