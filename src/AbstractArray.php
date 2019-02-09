@@ -182,7 +182,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         $this->readOnlyCheck();
         $items = $this->items();
         uasort($items, function () {
-            return array_rand([-1, 0, 1]);
+            return array_rand(array_flip([-1, 0, 1]));
         });
         return $this->reset($items);
     }
