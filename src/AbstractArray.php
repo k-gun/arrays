@@ -9,7 +9,7 @@ use arrays\{
     ArrayTrait, ArrayInterface };
 use arrays\exception\{
     ArrayException, TypeException,
-    ArgumentException, ArgumentTypeException, MethodException };
+    ArgumentException, MethodException };
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
@@ -76,7 +76,11 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function size(): int { return $this->stack->count(); }
     public final function empty(): void { $this->reset([]); }
     public final function isEmpty(): bool { return !$this->stack->count(); }
-    public final function reset(array $items): self { $this->stack->exchangeArray($items); return $this; }
+    public final function reset(array $items): self {
+        $this->readOnlyCheck();
+        $this->stack->exchangeArray($items);
+        return $this;
+    }
 
     public final function count() { return $this->stack->count(); }
     public final function countValues() { return array_count_values($this->items()); }
@@ -91,22 +95,21 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     public final function toArray(bool $normalize = false): array {
         $ret = $this->stack->getArrayCopy();
-        if ($normalize) {
-            // $allKeysDigit = null;
-            // foreach ($ret as $key => $_) {
-            //     if (!Type::isDigit($key)) {
-            //         $allKeysDigit = false;
-            //         break;
-            //     }
-            // }
-            // $ret = $allKeysDigit ? array_values($ret) : $ret;
-        }
+        // i do not remember why is this here..
+        // if ($normalize) {
+        //     $allKeysDigit = null;
+        //     foreach ($ret as $key => $_) {
+        //         if (!Type::isDigit($key)) { $allKeysDigit = false; break; }
+        //     }
+        //     $ret = $allKeysDigit ? array_values($ret) : $ret;
+        // }
         return $ret;
     }
     public final function toObject(): object { return (object) $this->toArray(true); }
     public final function toJson(): string { return (string) json_encode($this->toArray(true)); }
 
     public final function map(callable $func, bool $breakable = false): self {
+        $this->readOnlyCheck();
         return $this->reset(array_map($func, $this->items()));
     }
     public final function reduce($initialValue = null, callable $func = null) {
@@ -115,6 +118,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return array_reduce($this->values(), $func, $initialValue);
     }
     public final function filter(callable $func = null): self {
+        $this->readOnlyCheck();
         // set empty filter as default
         $func = $func ?? function ($value) { return strlen((string) $value); };
         return $this->reset(array_filter($this->items(), $func, 2));
@@ -142,8 +146,9 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function uniqs(): array { return array_diff($this->uniq(), $this->ununiq()); }
 
     public final function merge(self $array): self {
+        $this->readOnlyCheck();
         if ($array->type() != $this->type) {
-            throw new ArgumentTypeException("Given {$array->getName()} not mergable with {$this->getName()}");
+            throw new ArgumentException("Given {$array->getName()} not mergable with {$this->getName()}");
         }
         return $this->reset(array_merge($this->items(), $array->items()));
     }
@@ -174,6 +179,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     }
 
     public final function shuffle(): self {
+        $this->readOnlyCheck();
         $items = $this->items();
         uasort($items, function () {
             return array_rand([-1, 0, 1]);
@@ -181,10 +187,12 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $this->reset($items);
     }
     public final function reverse(): self {
+        $this->readOnlyCheck();
         return $this->reset(array_reverse($this->items()));
     }
 
     public final function sort(callable $func = null, callable $ufunc = null, int $flags = 0): self {
+        $this->readOnlyCheck();
         $items = $this->items();
         return $this->reset(Arrays::sort($items, $func, $ufunc, $flags));
     }
@@ -206,8 +214,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $this;
     }
 
-    public final function test(Closure $func) { return Arrays::test($this->toArray(), $func); }
-    public final function testAll(Closure $func) { return Arrays::testAll($this->toArray(), $func); }
+    public final function test(Closure $func): bool { return Arrays::test($this->toArray(), $func); }
+    public final function testAll(Closure $func): bool { return Arrays::testAll($this->toArray(), $func); }
 
     public final function getName(): string { return static::class; }
     public final function getShortName(): string {
@@ -217,12 +225,10 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function getMethoName(string $method = null): string {
         return sprintf('%s::%s', $this->getName(), $method ?? debug_backtrace()[1]['function']);
     }
-    public final function toString(): string { return sprintf('object(%s)#%s', $this->getName(), spl_object_id($this)); }
 
     public final function nullCheck($value): void {
         if ($value === null && !$this->allowNulls) {
-            throw new ArgumentTypeException(sprintf('%s() object do not accept null values, null given',
-                $this->getShortName()));
+            throw new ArgumentException("{$this->getShortName()}() object do not accept null values, null given");
         }
     }
     public final function readOnlyCheck(): void {
