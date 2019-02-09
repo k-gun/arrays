@@ -14,7 +14,7 @@ use arrays\{
  */
 class Set extends TypedArray
 {
-    public function __construct(string $type = null, array $items = null, string $itemsType = null,
+    public function __construct(array $items = null, string $itemsType = null, string $type = null,
         bool $readOnly = false, bool $allowNulls = false)
     {
         parent::__construct($type ?? Type::SET, $items, $itemsType, $readOnly, $allowNulls);

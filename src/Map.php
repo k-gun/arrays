@@ -23,7 +23,7 @@ class Map extends TypedArray
     public function search($value) { return $this->_search($value); }
     public function searchLast($value) { return $this->_searchLast($value); }
     public function indexOf($value): ?int { return $this->_indexOf($value); }
-    public function lastIndexOf($value): ?int { return $this->_lastIndexOf($value); }}
+    public function lastIndexOf($value): ?int { return $this->_lastIndexOf($value); }
 
     public function has($value): bool { return $this->_has($value); }
     public function hasKey(string $key): bool { return $this->_hasKey($key); }

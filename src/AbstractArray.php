@@ -8,7 +8,8 @@ use arrays\{
     AnyArray,
     ArrayTrait, ArrayInterface };
 use arrays\exception\{
-    ArrayException, TypeException, ArgumentTypeException, MethodException };
+    ArrayException, TypeException,
+    ArgumentException, ArgumentTypeException, MethodException };
 use ArrayObject, Countable, IteratorAggregate, Generator, Closure;
 
 /**
@@ -49,9 +50,9 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     }
 
     public final function item($key) { return $this->stack[$key] ?? null; }
-    public final function items(bool $simple = true): array {
+    public final function items(bool $pair = false): array {
         $ret = $this->stack->getArrayCopy();
-        if (!$simple) {
+        if ($pair) {
             $retTmp = [];
             foreach ($ret as $key => $value) {
                 $retTmp[] = [$key, $value];
@@ -70,10 +71,10 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function reset(array $items): self { $this->stack->exchangeArray($items); return $this; }
 
     public final function count() { return $this->stack->count(); }
-    public final function countValues() { return array_count_values($this->stack->getArrayCopy()); }
+    public final function countValues() { return array_count_values($this->items()); }
 
-    public final function keys(): array { return array_keys($this->stack->getArrayCopy()); }
-    public final function values(): array { return array_values($this->stack->getArrayCopy()); }
+    public final function keys(): array { return array_keys($this->items()); }
+    public final function values(): array { return array_values($this->items()); }
 
     public final function first(): array { return $this->values()[0] ?? null; }
     public final function firstKey() { return $this->keys()[0] ?? null; }
@@ -99,7 +100,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     // map,reduce
     public final function map(callable $func, bool $breakable = false): self {
-        return $this->reset(array_map($func, $this->stack->getArrayCopy()));
+        return $this->reset(array_map($func, $this->items()));
     }
     public final function reduce($initialValue, callable $func = null) {
         // set sum as default
@@ -109,14 +110,14 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function filter(callable $func = null): self {
         // set empty filter as default
         $func = $func ?? function ($value) { return strlen((string) $value); };
-        return $this->reset(array_filter($this->stack->getArrayCopy(), $func, 1));
+        return $this->reset(array_filter($this->items(), $func, 1));
     }
     public final function filterKey(callable $func): self {
-        return $this->reset(array_filter($this->stack->getArrayCopy(), $func, 2));
+        return $this->reset(array_filter($this->items(), $func, 2));
     }
 
     public final function diff(iterable $stack2, bool $uniq = false): array {
-        $stack1 = $this->stack->getArrayCopy();
+        $stack1 = $this->items();
         if ($stack2 instanceof Traversable) {
             iterator_to_array($stack2);
         }
@@ -127,19 +128,68 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return array_diff($stack1, $stack2);
     }
 
-    public final function uniq(): array { return array_unique($this->stack->getArrayCopy()); }
+    public final function uniq(): array { return array_unique($this->items()); }
     public final function ununiq(): array {
-        $items = $this->stack->getArrayCopy();
+        $items = $this->items();
         return array_filter($items, function ($value, $key) use ($items) {
             return array_search($value, $items) !== $key;
         }, 1);
     }
-    public final function uniqs() { return array_diff($this->uniq(), $this->ununiq()); }
+    public final function uniqs(): array { return array_diff($this->uniq(), $this->ununiq()); }
+
+    public final function merge(self $array): self {
+        if ($array->type() != $this->type) {
+            throw new ArgumentTypeException("Given {$array->getName()} not mergable with {$this->getName()}");
+        }
+        return $this->reset(array_merge($this->items(), $array->items()));
+    }
+    public final function chunk(int $size, bool $preserveKeys = false) {
+        return array_chunk($this->items(), $size, $preserveKeys);
+    }
+    public final function slice(int $offset, int $size = null, bool $preserveKeys = false) {
+        return array_slice($this->items(), $offset, $size, $preserveKeys);
+    }
+
+    public final function rand(int $size = 1) {
+        if ($size < 1) {
+            throw new ArgumentException(sprintf('Minimum size could be 1 for %s(), %s given',
+                $this->getMethoName(), $size));
+        }
+        $items = $this->items();
+        if ($items != null) {
+            $keys = array_keys($items);
+            shuffle($keys);
+            while ($size--) {
+                $ret[] = $items[$keys[$size]];
+            }
+            if (count($ret) == 1) {
+                $ret = $ret[0];
+            }
+        }
+        return $ret ?? null;
+    }
+
+    public final function shuffle(): self {
+        $items = $this->items();
+        uasort($items, function () {
+            return array_rand([-1, 0, 1]);
+        });
+        return $this->reset($items);
+    }
+    public final function reverse(): self {
+        return $this->reset(array_reverse($this->items()));
+    }
+
+    public final function test(Closure $func) { return Arrays::test($this->toArray(), $func); }
+    public final function testAll(Closure $func) { return Arrays::testAll($this->toArray(), $func); }
 
     public final function getName(): string { return static::class; }
     public final function getShortName(): string {
         return substr($name = $this->getName(),
             (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
+    }
+    public final function getMethoName(string $method = null): string {
+        return sprintf('%s::%s', $this->getName(), $method ?? debug_backtrace()[1]['function']);
     }
     public final function toString(): string { return sprintf('object(%s)#%s', $this->getName(), spl_object_id($this)); }
 
@@ -245,7 +295,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
                 $arguments[1] = $this->stack->count();
                 break;
             case 'unshift':
-                $items = array_merge([$arguments[0]], $this->stack->getArrayCopy());
+                $items = array_merge([$arguments[0]], $this->items());
                 $this->stack->exchangeArray($items);
                 $arguments[1] = $this->stack->count();
                 break;

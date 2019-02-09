@@ -285,4 +285,3 @@ final /* static */ class Arrays
         return (bool) self::get($array, $key, $valueDefault);
     }
 }
-
