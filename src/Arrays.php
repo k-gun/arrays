@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace arrays;
 
 use arrays\ArraysException;
+use Closure;
 
 /**
  * @package arrays
@@ -130,17 +131,13 @@ final /* static */ class Arrays
     /**
      * Test (like JavaScript Array.some()).
      * @param  array    $array
-     * @param  callable $func
+     * @param  Closure $func
      * @return bool
      */
-    public static function test(array $array, callable $func): bool
+    public static function test(array $array, Closure $func): bool
     {
         foreach ($array as $key => $value) {
-            try {
-                if ($func($value, $key)) return true; // try user function
-            } catch (\ArgumentCountError $e) {
-                if ($func($value)) return true; // try an internal single-argument function like is_*
-            }
+            if ($func($value, $key)) { return true; }
         }
         return false;
     }
@@ -148,17 +145,13 @@ final /* static */ class Arrays
     /**
      * Test all (like JavaScript Array.every()).
      * @param  array    $array
-     * @param  callable $func
+     * @param  Closure $func
      * @return bool
      */
-    public static function testAll(array $array, callable $func): bool
+    public static function testAll(array $array, Closure $func): bool
     {
         foreach ($array as $key => $value) {
-            try {
-                if (!$func($value, $key)) return false; // try user function
-            } catch (\ArgumentCountError $e) {
-                if (!$func($value)) return false; // try an internal single-argument function like is_*
-            }
+            if (!$func($value, $key)) { return false; }
         }
         return true;
     }
