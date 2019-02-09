@@ -143,10 +143,10 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         }
         return $this->reset(array_merge($this->items(), $array->items()));
     }
-    public final function chunk(int $size, bool $preserveKeys = false) {
+    public final function chunk(int $size, bool $preserveKeys = false): array {
         return array_chunk($this->items(), $size, $preserveKeys);
     }
-    public final function slice(int $offset, int $size = null, bool $preserveKeys = false) {
+    public final function slice(int $offset, int $size = null, bool $preserveKeys = false): array {
         return array_slice($this->items(), $offset, $size, $preserveKeys);
     }
 
@@ -214,9 +214,6 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return sprintf('%s::%s', $this->getName(), $method ?? debug_backtrace()[1]['function']);
     }
     public final function toString(): string { return sprintf('object(%s)#%s', $this->getName(), spl_object_id($this)); }
-
-    public final function isMapLike(): bool { return Type::isMapLike($this); }
-    public final function isSetLike(): bool { return Type::isSetLike($this); }
 
     public final function nullCheck($value): void {
         if ($value === null && !$this->allowNulls) {
@@ -300,10 +297,12 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
                 $arguments[2] = $this->stack->count();
                 break;
             case 'get':
-                $arguments[1] =@ $this->stack->offsetGet($arguments[0]);
+                $key = $arguments[0];
+                $arguments[1] =@ $this->stack->offsetGet($key);
                 break;
             case 'unset':
-                $this->stack->offsetUnset($arguments[0]);
+                $key = $arguments[0];
+                @ $this->stack->offsetUnset($key);
                 break;
             case 'pop':
             case 'shift':
@@ -313,11 +312,15 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
                 $arguments[1] = $this->stack->count();
                 break;
             case 'unpop':
-                $this->stack->offsetSet(null, $arguments[0]);
+                $value = $arguments[0];
+                $this->nullCheck($value);
+                $this->stack->offsetSet(null, $value);
                 $arguments[1] = $this->stack->count();
                 break;
             case 'unshift':
-                $items = array_merge([$arguments[0]], $this->items());
+                $value = $arguments[0];
+                $this->nullCheck($value);
+                $items = array_merge([$value], $this->items());
                 $this->stack->exchangeArray($items);
                 $arguments[1] = $this->stack->count();
                 break;
@@ -333,7 +336,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
                 $this->stack->offsetSet($key, $value);
                 break;
             case 'pull':
-                $arguments[1] =@ $this->stack->offsetGet($key = $arguments[0]);
+                $key = $arguments[0];
+                $arguments[1] =@ $this->stack->offsetGet($key);
                 @ $this->stack->offsetUnset($key);
                 break;
             default:
