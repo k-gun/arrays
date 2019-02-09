@@ -8,7 +8,7 @@ use arrays\{
     AnyArray,
     ArrayTrait, ArrayInterface };
 use arrays\exception\{
-    ArrayException, TypeException, ArgumentTypeException };
+    ArrayException, TypeException, ArgumentTypeException, MethodException };
 use ArrayObject, Countable, IteratorAggregate, Generator, Closure;
 
 /**
@@ -21,6 +21,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     use ArrayTrait;
 
     private $stack;
+    private static $methods = [];
 
     public function __construct(string $type, array $items = null)
     {
@@ -28,6 +29,23 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
             $items = Type::toObject($items);
         }
         $this->stack = new ArrayObject($items);
+    }
+
+    public final function __call($method, $methodArgs) {
+        if (!isset(self::$methods[$method])) {
+            throw new MethodException("Method {$this->getShortName()}::{$method}() does not exist");
+        }
+        return self::$methods[$method](...$methodArgs);
+    }
+
+    public final function prototype(string $method, callable $methodFunc): void {
+        if (method_exists($this, $method)) {
+            throw new MethodException("Method {$this->getShortName()}::{$method}() already exists");
+        }
+        if ($methodFunc instanceof Closure) {
+            $methodFunc = $methodFunc->bindTo($this);
+        }
+        self::$methods[$method] = $methodFunc;
     }
 
     public final function item($key) { return $this->stack[$key] ?? null; }
@@ -97,7 +115,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return substr($name = $this->getName(),
             (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
     }
-    public final function toString(): string { return sprintf('Object(%s#%s)', $this->getName(), spl_object_id($this)); }
+    public final function toString(): string { return sprintf('object(%s)#%s', $this->getName(), spl_object_id($this)); }
 
     public final function isMapLike(): bool { return Type::isMapLike($this); }
     public final function isSetLike(): bool { return Type::isSetLike($this); }
