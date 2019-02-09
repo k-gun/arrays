@@ -3,6 +3,9 @@ declare(strict_types=0);
 
 namespace arrays;
 
+use arrays\Type;
+// use arrays\exception\{
+//     ArrayException, TypeException, ArgumentTypeException };
 use Closure;
 
 /**
@@ -179,5 +182,20 @@ trait ArrayTrait
             if ($func($key, $value)) { return $index; } $index++;
         }
         return null;
+    }
+
+    protected final function _pad(int $times, $value)
+    {
+        while ($times--) {
+            $this->_unpop($value);
+        }
+        return $this;
+    }
+    protected function _fill(int $times, $value, int $offset = 0)
+    {
+        for ($i = 0; $i < $times; $i++) {
+            $this->_set($offset + $i, $value);
+        }
+        return $this;
     }
 }

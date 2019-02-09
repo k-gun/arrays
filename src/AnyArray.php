@@ -6,6 +6,7 @@ namespace arrays;
 use arrays\{
     Type, TypedArray };
 // use arrays\exception\{ MethodException };
+use Closure;
 
 /**
  * @package arrays
@@ -49,12 +50,23 @@ class AnyArray extends TypedArray
     public function push($key, $value): self { return $this->_push($key, $value); }
     public function pull($key, $valueDefault = null, bool &$ok = null) { return $this->_pull($key, $valueDefault, $ok); }
 
-    public function find(\Closure $func) { return $this->_find($func); }
-    public function findKey(\Closure $func) { return $this->_findKey($func); }
-    public function findIndex(\Closure $func) { return $this->_findIndex($func); }
+    public function find(Closure $func) { return $this->_find($func); }
+    public function findKey(Closure $func) { return $this->_findKey($func); }
+    public function findIndex(Closure $func) { return $this->_findIndex($func); }
 
     public function replace($value, $replaceValue, bool &$ok = null): self { return $this->_replace($value, $replaceValue, $ok); }
     public function replaceAt($key, $replaceValue, bool &$ok = null): self { return $this->_replaceAt($key, $replaceValue, $ok); }
 
-    //
+    public function flip(): self
+    {
+        return $this->reset(array_flip($this->items()));
+    }
+    public function pad(int $times, $value): self
+    {
+        return $this->_pad($times, $value);
+    }
+    public function fill(int $times, $value, int $offset = 0): self
+    {
+        return $this->_fill($times, $value, $offset);
+    }
 }

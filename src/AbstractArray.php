@@ -26,6 +26,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     public function __construct(string $type, array $items = null)
     {
+        $items = $items ?? [];
         if (Type::isMapLike($this)) {
             $items = Type::toObject($items);
         }
@@ -34,7 +35,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     public final function __call($method, $methodArgs) {
         if (!isset(self::$methods[$method])) {
-            throw new MethodException("Method {$this->getShortName()}::{$method}() does not exist");
+            throw new MethodException("Method {$this->getName()}::{$method}() does not exist");
         }
         return self::$methods[$method](...$methodArgs);
     }
