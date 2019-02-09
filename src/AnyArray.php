@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use arrays\{
-    Type, TypedArray };
-// use arrays\exception\{ MethodException };
+use arrays\{Type, TypedArray};
 use Closure;
 
 /**
