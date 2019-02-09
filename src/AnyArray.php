@@ -21,12 +21,12 @@ class AnyArray extends TypedArray
     }
 
     public function search($value) { return $this->_search($value); }
+    public function searchLast($value) { return $this->_searchLast($value); }
     public function indexOf($value): ?int { return $this->_indexOf($value); }
     public function lastIndexOf($value): ?int { return $this->_lastIndexOf($value); }
 
     public function has($value): bool { return $this->_has($value); }
     public function hasKey($key): bool { return $this->_hasKey($key); }
-    public function hasValue($value): bool { return $this->_hasValue($value); }
 
     public function set($key, $value, int &$size = null): self { return $this->_set($key, $value, $size); }
     public function get($key, $valueDefault = null, bool &$ok = null) { return $this->_get($key, $valueDefault, $ok); }
@@ -48,4 +48,13 @@ class AnyArray extends TypedArray
     public function put($key, $value): self { return $this->_put($key, $value); }
     public function push($key, $value): self { return $this->_push($key, $value); }
     public function pull($key, $valueDefault = null, bool &$ok = null) { return $this->_pull($key, $valueDefault, $ok); }
+
+    public function find(\Closure $func) { return $this->_find($func); }
+    public function findKey(\Closure $func) { return $this->_findKey($func); }
+    public function findIndex(\Closure $func) { return $this->_findIndex($func); }
+
+    public function replace($value, $replaceValue, bool &$ok = null): self { return $this->_replace($value, $replaceValue, $ok); }
+    public function replaceAt($key, $replaceValue, bool &$ok = null): self { return $this->_replaceAt($key, $replaceValue, $ok); }
+
+    //
 }

@@ -3,6 +3,8 @@ declare(strict_types=0);
 
 namespace arrays;
 
+use Closure;
+
 /**
  * @package arrays
  * @object  arrays\ArrayTrait
@@ -49,11 +51,6 @@ trait ArrayTrait
     protected final function _hasKey($key)
     {
         return in_array($key, $this->keys(), true);
-    }
-    // @alias
-    protected final function _hasValue($value)
-    {
-        return $this->_has($value);
     }
 
     protected final function _set($key, $value, &$size = null)
@@ -146,5 +143,46 @@ trait ArrayTrait
         return $value ?? $valueDefault;
     }
 
-    //
+    protected final function _replace($value, $replaceValue, &$ok = null)
+    {
+        if ($ok = (null !== $key = $this->_search($value))) {
+            $this->_put($key, $replaceValue);
+        }
+        return $this;
+    }
+    protected final function _replaceAt($key, $replaceValue, &$ok = null)
+    {
+        if ($ok = $this->_hasKey($key)) {
+            $this->_put($key, $replaceValue);
+        }
+        return $this;
+    }
+
+    protected final function _find(Closure $func)
+    {
+        foreach ($this->generate() as $key => $value) {
+            if ($func($key, $value)) { return $value; }
+        }
+        return null;
+    }
+    protected final function _findKey(Closure $func)
+    {
+        foreach ($this->generate() as $key => $value) {
+            if ($func($key, $value)) { return $key; }
+        }
+        return null;
+    }
+    protected final function _findIndex(Closure $func)
+    {
+        $index = 0;
+        foreach ($this->generate() as $key => $value) {
+            if ($func($key, $value)) { return $index; } $index++;
+        }
+        return null;
+    }
+
+    protected final function _sort(callable $func = null, callable $ufunc = null, int $flags = 0) {
+        // Arrays::sort($this->items, $func, $ufunc, $flags); ?????????
+        return $this;
+    }
 }

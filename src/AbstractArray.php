@@ -9,14 +9,14 @@ use arrays\{
     ArrayTrait, ArrayInterface };
 use arrays\exception\{
     ArrayException, TypeException, ArgumentTypeException };
-use ArrayObject, IteratorAggregate, Generator;
+use ArrayObject, Countable, IteratorAggregate, Generator, Closure;
 
 /**
  * @package arrays
  * @object  arrays\AbstractArray
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-abstract class AbstractArray implements ArrayInterface, IteratorAggregate
+abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggregate
 {
     use ArrayTrait;
 
@@ -43,9 +43,16 @@ abstract class AbstractArray implements ArrayInterface, IteratorAggregate
         return $ret;
     }
 
+    public final function copy() { return clone $this; }
+    public final function copyArray() { return $this->stack->getArrayCopy(); }
+
     public final function size(): int { return $this->stack->count(); }
-    public final function empty(): void { $this->stack->exchangeArray([]); }
+    public final function empty(): void { $this->reset([]); }
     public final function isEmpty(): bool { return !$this->stack->count(); }
+    public final function reset(array $items): void { $this->stack->exchangeArray($items); }
+
+    public final function count() { return $this->stack->count(); }
+    public final function countValues() { return array_count_values($this->stack->getArrayCopy()); }
 
     public final function keys(): array { return array_keys($this->stack->getArrayCopy()); }
     public final function values(): array { return array_values($this->stack->getArrayCopy()); }
@@ -72,6 +79,19 @@ abstract class AbstractArray implements ArrayInterface, IteratorAggregate
     public final function toObject(): object { return (object) $this->toArray(true); }
     public final function toJson(): string { return (string) json_encode($this->toArray(true)); }
 
+    // map,reduce
+
+    public final function filter(callable $func = null): self {
+        // set empty filter as default
+        $func = $func ?? function ($value) { return strlen((string) $value); };
+        $this->reset(array_filter($this->stack->getArrayCopy(), $func, 1));
+        return $this;
+    }
+    public final function filterKey(callable $func): self {
+        $this->reset(array_filter($this->stack->getArrayCopy(), $func, 2));
+        return $this;
+    }
+
     public final function getName(): string { return static::class; }
     public final function getShortName(): string {
         return substr($name = $this->getName(),
@@ -88,12 +108,69 @@ abstract class AbstractArray implements ArrayInterface, IteratorAggregate
                 $this->getShortName()));
         }
     }
-
     public final function readOnlyCheck(): void {
         if ($this->readOnly) {
             throw new ArrayException("Cannot modify read-only {$this->getShortName()}() object");
         }
     }
+
+    public final function generate(): Generator
+    {
+        foreach ($this->stack as $key => $value) {
+            yield $key => $value;
+        }
+    }
+    public final function generateReverse(): Generator
+    {
+        $stack = $this->stack;
+        for (end($stack); (null !== $key = key($stack)); prev($stack)) {
+            yield $key => current($stack);
+        }
+    }
+    public final function getIterator(bool $reverse = true): Generator
+    {
+        return $this->generate($this->stack);
+    }
+
+    // some math..
+
+    // @return number
+    public final function min() { return (false !== $ret =@ min(array_filter($this->values(), 'is_numeric'))) ? $ret : null; }
+    public final function max() { return (false !== $ret =@ max(array_filter($this->values(), 'is_numeric'))) ? $ret : null; }
+    public final function calc(string $operator, bool $strict = false, int &$valueCount = null)
+    {
+        $values = $this->values();
+        $ret = array_shift($values);
+        if ($ret === null) return null;
+
+        $valueCount = 1;
+        foreach ($values as $value) {
+            if (!is_numeric($value)) {
+                if ($strict) {
+                    $value = Type::export($value);
+                    throw new ArrayException("A non-numeric value {$value} encountered");
+                }
+                continue;
+            }
+            switch ($operator) {
+                case '+': $ret += $value; break;
+                case '-': $ret -= $value; break;
+                case '/': $ret /= $value; break;
+                case '*': $ret *= $value; break;
+                case '**': $ret **= $value; break;
+                default: throw new ArrayException("Unknown operator {$operator} given");
+            }
+            $valueCount++;
+        }
+        return $ret;
+    }
+    public function calcAvg(string $operator, bool $strict = false, int &$valueCount = null): ?float {
+        return ($calc = $this->calc($operator, $strict, $valueCount)) && $valueCount ? $calc / $valueCount : null;
+    }
+    public function sum(bool $strict = false, int &$valueCount = null) { return $this->calc('+', $strict, $valueCount); }
+    public function sumAvg(bool $strict = false, int &$valueCount = null): ?float { return $this->calcAvg('+', $strict, $valueCount); }
+
+    // ---
 
     private final function stackCommand(string $command, &...$arguments): void
     {
@@ -146,25 +223,5 @@ abstract class AbstractArray implements ArrayInterface, IteratorAggregate
             default:
                 throw new ArrayException("Unknown command {$command}");
         }
-    }
-
-    public final function generate(): Generator
-    {
-        foreach ($this->stack as $key => $value) {
-            yield $key => $value;
-        }
-    }
-
-    public final function generateReverse(): Generator
-    {
-        $stack = $this->stack;
-        for (end($stack); (null !== $key = key($stack)); prev($stack)){
-            yield $key => current($stack);
-        }
-    }
-
-    public final function getIterator(bool $reverse = true): Generator
-    {
-        return $this->generate($this->stack);
     }
 }

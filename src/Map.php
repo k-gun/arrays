@@ -20,13 +20,13 @@ class Map extends TypedArray
         parent::__construct($type ?? Type::MAP, $items, $itemsType, $readOnly, $allowNulls);
     }
 
-    public function search($value): ?string { return $this->_search($value); }
+    public function search($value) { return $this->_search($value); }
+    public function searchLast($value) { return $this->_searchLast($value); }
     public function indexOf($value): ?int { return $this->_indexOf($value); }
-    public function lastIndexOf($value): ?int { return $this->_lastIndexOf($value); }
+    public function lastIndexOf($value): ?int { return $this->_lastIndexOf($value); }}
 
     public function has($value): bool { return $this->_has($value); }
     public function hasKey(string $key): bool { return $this->_hasKey($key); }
-    public function hasValue($value): bool { return $this->_hasValue($value); }
 
     public function set(string $key, $value): self { return $this->_set($key, $value); }
     public function get(string $key, $valueDefault = null, bool &$ok = null) { return $this->_get($key, $valueDefault, $ok); }
