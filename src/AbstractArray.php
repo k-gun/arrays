@@ -88,9 +88,9 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function keys(): array { return array_keys($this->items()); }
     public final function values(): array { return array_values($this->items()); }
 
-    public final function first(): array { return $this->values()[0] ?? null; }
+    public final function first() { return $this->values()[0] ?? null; }
     public final function firstKey() { return $this->keys()[0] ?? null; }
-    public final function last(): array { return $this->values()[$this->size() - 1] ?? null; }
+    public final function last() { return $this->values()[$this->size() - 1] ?? null; }
     public final function lastKey() { return $this->keys()[$this->size() - 1] ?? null; }
 
     public final function toArray(bool $normalize = false): array {
