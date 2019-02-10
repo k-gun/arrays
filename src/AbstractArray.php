@@ -621,19 +621,25 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         }
     }
 
-    public final function generate(): Generator
+    /**
+     * Generate.
+     * @param  bool reverse
+     * @return Generator
+     */
+    public final function generate(bool $reverse = false): Generator
     {
-        foreach ($this->stack as $key => $value) {
-            yield $key => $value;
+        if (!$reverse) {
+            foreach ($this->stack as $key => $value) {
+                yield $key => $value;
+            }
+        } else {
+            $stack = $this->stack;
+            for (end($stack); (null !== $key = key($stack)); prev($stack)) {
+                yield $key => current($stack);
+            }
         }
     }
-    public final function generateReverse(): Generator
-    {
-        $stack = $this->stack;
-        for (end($stack); (null !== $key = key($stack)); prev($stack)) {
-            yield $key => current($stack);
-        }
-    }
+
     public final function getIterator(bool $reverse = true): Generator
     {
         return $this->generate($this->stack);

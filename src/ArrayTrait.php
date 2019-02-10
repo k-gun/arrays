@@ -43,7 +43,7 @@ trait ArrayTrait
                 if ($value === $searchValue) { return [$index, $key]; } $index++;
             }
         } else { $index = $this->size() - 1;
-            foreach ($this->generateReverse() as $key => $value) {
+            foreach ($this->generate(true) as $key => $value) {
                 if ($value === $searchValue) { return [$index, $key]; } $index--;
             }
         }
