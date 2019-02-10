@@ -37,6 +37,15 @@ use Closure;
 final /* static */ class Arrays
 {
     /**
+     * Constructor.
+     * @throws arrays\ArraysException
+     */
+    public function __construct()
+    {
+        throw new ArraysException('Cannot initialize static class arrays\Arrays');
+    }
+
+    /**
      * Set (with dot notation support for sub-array paths).
      * @param  array      &$array
      * @param  int|string $key
@@ -178,6 +187,8 @@ final /* static */ class Arrays
         }
         return true;
     }
+
+
 
     /**
      * Sort.
