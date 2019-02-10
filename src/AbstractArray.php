@@ -185,11 +185,9 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     public final function shuffle(bool $preserveKeys = null): self {
         $this->readOnlyCheck();
-
-        $preserveKeys = $preserveKeys ?? Type::isMapLike($this);
-
         $items = $this->items();
         if ($items != null) {
+            $preserveKeys = $preserveKeys ?? Type::isMapLike($this);
             if ($preserveKeys) {
                 $keys = array_keys($items);
                 shuffle($keys);
@@ -202,7 +200,6 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
             } else {
                 shuffle($items);
             }
-
             // nope.. (cos' killing speed and also randomness)
             // uasort($items, function () {
             //     return rand(-1, 1);
