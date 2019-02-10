@@ -190,13 +190,14 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function isEmpty(): bool
     {
-        return !$this->stack->count();
+        return $this->stack->count() == 0;
     }
 
     /**
      * Reset.
      * @param  array $items
      * @return self
+     * @throws arrays\MutationException
      */
     public final function reset(array $items): self
     {
@@ -322,6 +323,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  callable $func
      * @param  bool     $breakable
      * @return self
+     * @throws arrays\MutationException
      */
     public final function map(callable $func, bool $breakable = false): self
     {
@@ -347,9 +349,10 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     }
 
     /**
-     * Firter.
+     * Filter.
      * @param  callable|null $func
      * @return self
+     * @throws arrays\MutationException
      */
     public final function filter(callable $func = null): self
     {
@@ -418,7 +421,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * Merge.
      * @param  self $array
      * @return self
-     * @throws arrays\ArgumentException
+     * @throws arrays\MutationException,ArgumentException
      */
     public final function merge(self $array): self
     {
@@ -457,6 +460,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     /**
      * Reverse.
      * @return self
+     * @throws arrays\MutationException
      */
     public final function reverse(): self
     {
@@ -467,8 +471,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     /**
      * Rand.
-     * @param  int    $size
-     * @param  bool   $useKeys
+     * @param  int  $size
+     * @param  bool $useKeys
      * @return any
      */
     public final function rand(int $size = 1, bool $useKeys = false)
@@ -480,6 +484,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * Shuffle.
      * @param  bool|null $preserveKeys
      * @return self
+     * @throws arrays\MutationException
      */
     public final function shuffle(bool $preserveKeys = null): self
     {
@@ -499,6 +504,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  callable|null $ufunc
      * @param  int           $flags
      * @return self
+     * @throws arrays\MutationException
      */
     public final function sort(callable $func = null, callable $ufunc = null, int $flags = 0): self
     {
@@ -749,8 +755,13 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $this->calcAvg('+', $numericsOnly, $valueCount);
     }
 
-    // ---
-
+    /**
+     * Stack command.
+     * @param  string     $command
+     * @param  any    &...$arguments
+     * @return void
+     * @throws arrays\MutationException,NullException,ArrayException
+     */
     private final function stackCommand(string $command, &...$arguments): void
     {
         switch ($command) {
