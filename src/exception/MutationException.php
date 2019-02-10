@@ -29,7 +29,7 @@ namespace arrays\exception;
 use arrays\exception\Exception;
 
 /**
- * @package arraysarrays\exception
+ * @package arrays\exception
  * @object  arrays\exception\MutationException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
