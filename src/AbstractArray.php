@@ -27,7 +27,8 @@ declare(strict_types=1);
 namespace arrays;
 
 use arrays\{Util, Type, AnyArray, ArrayTrait, ArrayInterface};
-use arrays\exception\{ArrayException, TypeException, MethodException, ArgumentException};
+use arrays\exception\{ArrayException, TypeException, MethodException, ArgumentException,
+    MutationException, NullException};
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
@@ -596,27 +597,27 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * Null check.
      * @param  any $value
      * @return void
-     * @throws array\ArgumentException
+     * @throws array\NullException
      */
     public final function nullCheck($value): void
     {
-        if ($value === null && !$this->allowNulls) {
-            throw new ArgumentException("{$this->getShortName()}() object do not accept null values,"
-                ." null given");
+        if (!$this->allowNulls && $value === null) {
+            throw new NullException("{$this->getShortName()}() object do not accept null values,".
+                " null given");
         }
     }
 
     /**
      * Read only check.
      * @return void
-     * @throws arrays\ArrayException
+     * @throws arrays\MutationException
      */
     public final function readOnlyCheck(): void
     {
         if ($this->readOnly) {
             $method =@ end(debug_backtrace(0))['function'];
-            throw new ArrayException("Cannot modify read-only {$this->getShortName()}() object [called".
-                " method: {$method}()]");
+            throw new MutationException("Cannot modify read-only {$this->getShortName()}() object".
+                " [called method: {$method}()]");
         }
     }
 
