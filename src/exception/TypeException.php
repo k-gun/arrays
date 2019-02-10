@@ -42,9 +42,9 @@ class TypeException extends Exception
     public final function getType(): ?string
     {
         if (strpos($this->message, 'given')) {
-            $message = preg_replace('~.* (.+)(?: items)? given.*~', '\1', $this->message);
+            $type = preg_replace('~.* (.+)(?: items)? given.*~', '\1', $this->message);
         }
 
-        return $message ?? null;
+        return $type ?? null;
     }
 }
