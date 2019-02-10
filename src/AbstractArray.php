@@ -225,9 +225,6 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return substr($name = $this->getName(),
             (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
     }
-    public final function getMethodName(string $method = null): string {
-        return sprintf('%s::%s', $this->getName(), $method ?? debug_backtrace()[1]['function']);
-    }
 
     public final function nullCheck($value): void {
         if ($value === null && !$this->allowNulls) {
