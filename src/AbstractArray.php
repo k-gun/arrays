@@ -147,150 +147,472 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $ret;
     }
 
-    public final function copy() { return clone $this; }
-    public final function copyArray() { return $this->stack->getArrayCopy(); }
+    /**
+     * Copy.
+     * @return arrays\ArrayInterface
+     */
+    public final function copy(): ArrayInterface
+    {
+        return clone $this;
+    }
 
-    public final function size(): int { return $this->stack->count(); }
-    public final function empty(): void { $this->reset([]); }
-    public final function isEmpty(): bool { return !$this->stack->count(); }
-    public final function reset(array $items): self {
+    /**
+     * Copy array.
+     * @return array
+     */
+    public final function copyArray(): array
+    {
+        return $this->stack->getArrayCopy();
+    }
+
+    /**
+     * Size.
+     * @return int
+     */
+    public final function size(): int
+    {
+        return $this->stack->count();
+    }
+
+    /**
+     * Empty.
+     * @return void.
+     */
+    public final function empty(): void
+    {
+        $this->reset([]);
+    }
+
+    /**
+     * Is empty.
+     * @return bool
+     */
+    public final function isEmpty(): bool
+    {
+        return !$this->stack->count();
+    }
+
+    /**
+     * Reset.
+     * @param  array $items
+     * @return self
+     */
+    public final function reset(array $items): self
+    {
         $this->readOnlyCheck();
         $this->stack->exchangeArray($items);
+
         return $this;
     }
 
-    public final function count(): int { return $this->stack->count(); }
-    public final function countValues(): array { return array_count_values($this->items()); }
+    /**
+     * Count.
+     * @return int
+     */
+    public final function count(): int
+    {
+        return $this->stack->count();
+    }
 
-    public final function keys(): array { return array_keys($this->items()); }
-    public final function values(): array { return array_values($this->items()); }
+    /**
+     * Count values.
+     * @return array
+     */
+    public final function countValues(): array
+    {
+        return array_count_values($this->items());
+    }
 
-    public final function first() { return $this->values()[0] ?? null; }
-    public final function firstKey() { return $this->keys()[0] ?? null; }
-    public final function last() { return $this->values()[$this->size() - 1] ?? null; }
-    public final function lastKey() { return $this->keys()[$this->size() - 1] ?? null; }
+    /**
+     * Keys.
+     * @return array
+     */
+    public final function keys(): array
+    {
+        return array_keys($this->items());
+    }
 
-    public final function toArray(bool $normalize = false): array {
+    /**
+     * Values.
+     * @return array
+     */
+    public final function values(): array
+    {
+        return array_values($this->items());
+    }
+
+    /**
+     * First.
+     * @return any|null
+     */
+    public final function first()
+    {
+        return $this->values()[0] ?? null;
+    }
+
+    /**
+     * First key.
+     * @return int|string|null
+     */
+    public final function firstKey()
+    {
+        return $this->keys()[0] ?? null;
+    }
+
+    /**
+     * Last.
+     * @return any|null
+     */
+    public final function last()
+    {
+        return $this->values()[$this->size() - 1] ?? null;
+    }
+
+    /**
+     * Last key.
+     * @return int|string|null
+     */
+    public final function lastKey()
+    {
+        return $this->keys()[$this->size() - 1] ?? null;
+    }
+
+    /**
+     * To array.
+     * @param  bool $normalize
+     * @return array
+     */
+    public final function toArray(bool $normalize = false): array
+    {
         $ret = $this->stack->getArrayCopy();
+
         // i do not remember why is this here..
-        // if ($normalize) {
-        //     $allKeysDigit = null;
-        //     foreach ($ret as $key => $_) {
-        //         if (!Type::isDigit($key)) { $allKeysDigit = false; break; }
-        //     }
-        //     $ret = $allKeysDigit ? array_values($ret) : $ret;
-        // }
+        if ($normalize) {
+            $allKeysDigit = null;
+            foreach ($ret as $key => $_) {
+                if (!Type::isDigit($key)) { $allKeysDigit = false; break; }
+            }
+            $ret = $allKeysDigit ? array_values($ret) : $ret;
+        }
+
         return $ret;
     }
-    public final function toObject(): object { return (object) $this->toArray(true); }
-    public final function toJson(): string { return (string) json_encode($this->toArray(true)); }
 
-    public final function map(callable $func, bool $breakable = false): self {
+    /**
+     * To object.
+     * @return object
+     */
+    public final function toObject(): object
+    {
+        return (object) $this->toArray();
+    }
+
+    /**
+     * To json.
+     * @return string
+     */
+    public final function toJson(): string
+    {
+        return (string) json_encode($this->toArray());
+    }
+
+    /**
+     * Map.
+     * @param  callable $func
+     * @param  bool     $breakable
+     * @return self
+     */
+    public final function map(callable $func, bool $breakable = false): self
+    {
         $this->readOnlyCheck();
+
         return $this->reset(array_map($func, $this->items()));
     }
-    public final function reduce($initialValue = null, callable $func = null) {
-        // set sum as default
-        $func = $func ?? function ($initialValue, $value) {return is_numeric($value) ? $initialValue += $value : $initialValue;};
+
+    /**
+     * Reduce.
+     * @param  any           $initialValue
+     * @param  callable|null $func
+     * @return any
+     */
+    public final function reduce($initialValue = null, callable $func = null)
+    {
+        // set func to sum as default
+        $func = $func ?? function ($initialValue, $value) {
+            return is_numeric($value) ? $initialValue += $value : $initialValue;
+        };
+
         return array_reduce($this->values(), $func, $initialValue);
     }
-    public final function filter(callable $func = null): self {
+
+    /**
+     * Firter.
+     * @param  callable|null $func
+     * @return self
+     */
+    public final function filter(callable $func = null): self
+    {
         $this->readOnlyCheck();
-        // set empty filter as default
-        $func = $func ?? function ($value) { return strlen((string) $value); };
+
+        // set func to empty check as default
+        $func = $func ?? function ($value) {
+            return strlen((string) $value);
+        };
+
         return $this->reset(array_filter($this->items(), $func, 2));
     }
 
-    public final function diff(iterable $stack2, bool $uniq = false): array {
+    /**
+     * Diff.
+     * @param  iterable $stack2
+     * @param  bool     $uniq
+     * @return array
+     */
+    public final function diff(iterable $stack2, bool $uniq = false): array
+    {
         $stack1 = $this->items();
         if ($stack2 instanceof Traversable) {
             iterator_to_array($stack2);
         }
+
         if ($uniq) {
             $stack1 = array_unique($stack1);
             $stack2 = array_unique($stack2);
         }
+
         return array_diff($stack1, $stack2);
     }
 
-    public final function uniq(): array { return array_unique($this->items()); }
-    public final function ununiq(): array {
+    /**
+     * Uniq.
+     * @return array
+     */
+    public final function uniq(): array
+    {
+        return array_unique($this->items());
+    }
+
+    /**
+     * Ununiq.
+     * @return array
+     */
+    public final function ununiq(): array
+    {
         $items = $this->items();
         return array_filter($items, function ($value, $key) use ($items) {
             return array_search($value, $items) !== $key;
         }, 1);
     }
-    public final function uniqs(): array { return array_diff($this->uniq(), $this->ununiq()); }
 
-    public final function merge(self $array): self {
+    /**
+     * Uniqs.
+     * @return array
+     */
+    public final function uniqs(): array
+    {
+        return array_diff($this->uniq(), $this->ununiq());
+    }
+
+    /**
+     * Merge.
+     * @param  self $array
+     * @return self
+     * @throws arrays\ArgumentException
+     */
+    public final function merge(self $array): self
+    {
         $this->readOnlyCheck();
+
         if ($array->type() != $this->type) {
             throw new ArgumentException("Given {$array->getName()} not mergable with {$this->getName()}");
         }
+
         return $this->reset(array_merge($this->items(), $array->items()));
     }
-    public final function chunk(int $size, bool $preserveKeys = false): array {
+
+    /**
+     * Chunk.
+     * @param  int    $size
+     * @param  bool   $preserveKeys
+     * @return array
+     */
+    public final function chunk(int $size, bool $preserveKeys = false): array
+    {
         return array_chunk($this->items(), $size, $preserveKeys);
     }
-    public final function slice(int $offset, int $size = null, bool $preserveKeys = false): array {
+
+    /**
+     * Slice.
+     * @param  int      $offset
+     * @param  int|null $size
+     * @param  bool     $preserveKeys
+     * @return array
+     */
+    public final function slice(int $offset, int $size = null, bool $preserveKeys = false): array
+    {
         return array_slice($this->items(), $offset, $size, $preserveKeys);
     }
-    public final function reverse(): self {
+
+    /**
+     * Reverse.
+     * @return self
+     */
+    public final function reverse(): self
+    {
         $this->readOnlyCheck();
+
         return $this->reset(array_reverse($this->items()));
     }
 
-    public final function rand(int $size = 1, bool $useKeys = false) {
+    /**
+     * Rand.
+     * @param  int    $size
+     * @param  bool   $useKeys
+     * @return any
+     */
+    public final function rand(int $size = 1, bool $useKeys = false)
+    {
         return Util::rand($this->items(), $size, $useKeys);
     }
 
-    public final function shuffle(bool $preserveKeys = null): self {
+    /**
+     * Shuffle.
+     * @param  bool|null $preserveKeys
+     * @return self
+     */
+    public final function shuffle(bool $preserveKeys = null): self
+    {
         $this->readOnlyCheck();
+
         $items = $this->items();
         if ($items != null) {
             Util::shuffle($items, $preserveKeys ?? Type::isMapLike($this));
         }
+
         return $this->reset($items);
     }
 
-    public final function sort(callable $func = null, callable $ufunc = null, int $flags = 0): self {
+    /**
+     * Sort.
+     * @param  callable|null $func
+     * @param  callable|null $ufunc
+     * @param  int           $flags
+     * @return self
+     */
+    public final function sort(callable $func = null, callable $ufunc = null, int $flags = 0): self
+    {
         $this->readOnlyCheck();
+
         $items = $this->items();
         return $this->reset(Util::sort($items, $func, $ufunc, $flags));
     }
-    public final function sortKey(callable $ufunc = null, int $flags = 0): self {
+
+    /**
+     * Sort key.
+     * @param  callable|null $ufunc
+     * @param  int           $flags
+     * @return self
+     */
+    public final function sortKey(callable $ufunc = null, int $flags = 0): self
+    {
         return $this->sort('ksort', $ufunc, $flags);
     }
-    public final function sortNatural(bool $caseSensitive = true, int $flags = 0): self {
+
+    /**
+     * Sort natural.
+     * @param  bool   $caseSensitive
+     * @param  int    $flags
+     * @return self
+     */
+    public final function sortNatural(bool $caseSensitive = true, int $flags = 0): self
+    {
         $flags += SORT_NATURAL;
         if (!$caseSensitive) {
             $flags += SORT_FLAG_CASE;
         }
+
         return $this->sort(null, null, $flags);
     }
-    public final function sortLocale(string $locale, callable $func = null, callable $ufunc = null, int $flags = 0): self {
+
+    /**
+     * Sort locale.
+     * @param  string        $locale
+     * @param  callable|null $func
+     * @param  callable|null $ufunc
+     * @param  int           $flags
+     * @return self
+     */
+    public final function sortLocale(string $locale, callable $func = null, callable $ufunc = null,
+        int $flags = 0): self
+    {
         $localeDefault = setlocale(LC_COLLATE, '');
         setlocale(LC_COLLATE, $locale);
         $this->sort($func, $ufunc, $flags += SORT_LOCALE_STRING);
         setlocale(LC_COLLATE, $localeDefault); // reset locale
+
         return $this;
     }
 
-    public final function test(Closure $func): bool { return Util::test($this->toArray(), $func); }
-    public final function testAll(Closure $func): bool { return Util::testAll($this->toArray(), $func); }
+    /**
+     * Test.
+     * @param  Closure $func
+     * @return bool
+     */
+    public final function test(Closure $func): bool
+    {
+        return Util::test($this->toArray(), $func);
+    }
 
-    public final function getName(): string { return static::class; }
-    public final function getShortName(): string {
+    /**
+     * Test all.
+     * @param  Closure $func
+     * @return bool
+     */
+    public final function testAll(Closure $func): bool
+    {
+        return Util::testAll($this->toArray(), $func);
+    }
+
+    /**
+     * Get name.
+     * @return string
+     */
+    public final function getName(): string
+    {
+        return static::class;
+    }
+
+    /**
+     * Get short name.
+     * @return string
+     */
+    public final function getShortName(): string
+    {
         return substr($name = $this->getName(),
             (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
     }
 
-    public final function nullCheck($value): void {
+    /**
+     * Null check.
+     * @param  any $value
+     * @return void
+     * @throws array\ArgumentException
+     */
+    public final function nullCheck($value): void
+    {
         if ($value === null && !$this->allowNulls) {
-            throw new ArgumentException("{$this->getShortName()}() object do not accept null values, null given");
+            throw new ArgumentException("{$this->getShortName()}() object do not accept null values,"
+                ." null given");
         }
     }
-    public final function readOnlyCheck(): void {
+
+    /**
+     * Read only check.
+     * @return void
+     * @throws arrays\ArrayException
+     */
+    public final function readOnlyCheck(): void
+    {
         if ($this->readOnly) {
             $method =@ end(debug_backtrace(0))['function'];
             throw new ArrayException("Cannot modify read-only {$this->getShortName()}() object [called".
