@@ -37,47 +37,105 @@ use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
  */
 abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggregate
 {
+    /**
+     * ArrayTrait.
+     * @object arrays\ArrayTrait
+     */
     use ArrayTrait;
 
+    /**
+     * Stack.
+     * @var ArrayObject
+     */
     private $stack;
+
+    /**
+     * Methods.
+     * @var array
+     */
     private static $methods = [];
+
+    /**
+     * Not allowed methods.
+     * @var array
+     */
     protected static $notAllowedMethods = [];
 
+    /**
+     * Constructor.
+     * @param string     $type
+     * @param array|null $items
+     */
     public function __construct(string $type, array $items = null)
     {
         $items = $items ?? [];
         if (Type::isMapLike($this)) {
             $items = Type::toObject($items);
         }
+
         $this->stack = new ArrayObject($items);
     }
 
-    public final function __call($method, $methodArgs) {
+    /**
+     * Call magic.
+     * @param  string $method
+     * @param  array  $methodArgs
+     * @return any
+     * @throws arrays\MethodException
+     */
+    public final function __call(string $method, array $methodArgs)
+    {
         if (in_array($method, self::$notAllowedMethods)) {
             throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
         }
         if (!isset(self::$methods[$method])) {
             throw new MethodException("Method {$this->getShortName()}::{$method}() does not exist", 1);
         }
+
         return self::$methods[$method](...$methodArgs);
     }
 
-    public final function prototype(string $method, callable $methodFunc): void {
+    /**
+     * Prototype (adds new methods to send call magic).
+     * @param  string   $method
+     * @param  callable $methodFunc
+     * @return void
+     * @throws arrays\MethodException
+     */
+    public final function prototype(string $method, callable $methodFunc): void
+    {
         if (in_array($method, self::$notAllowedMethods)) {
             throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
         }
         if (method_exists($this, $method)) {
             throw new MethodException("Method {$this->getShortName()}::{$method}() already exists", 2);
         }
+
         if ($methodFunc instanceof Closure) {
             $methodFunc = $methodFunc->bindTo($this);
         }
+
         self::$methods[$method] = $methodFunc;
     }
 
-    public final function item($key) { return $this->stack[$key] ?? null; }
+    /**
+     * Item.
+     * @param  int|string $key
+     * @return any|null
+     */
+    public final function item($key)
+    {
+        return $this->stack[$key] ?? null;
+    }
+
+    /**
+     * Items.
+     * @param  bool $pair
+     * @return array
+     */
     public final function items(bool $pair = false): array {
         $ret = $this->stack->getArrayCopy();
+
         if ($pair) {
             $retTmp = [];
             foreach ($ret as $key => $value) {
@@ -85,6 +143,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
             }
             $ret = $retTmp;
         }
+
         return $ret;
     }
 
