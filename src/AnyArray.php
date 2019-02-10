@@ -13,10 +13,12 @@ use Closure;
  */
 class AnyArray extends TypedArray
 {
-    public function __construct(array $items = null, string $itemsType = null,
-        bool $readOnly = false, bool $allowNulls = true)
+    public function __construct(array $items = null, bool $readOnly = false, bool $allowNulls = true)
     {
-        parent::__construct(Type::ANY, $items, $itemsType, $readOnly, $allowNulls);
+        // all allowed
+        self::$notAllowedMethods = [];
+
+        parent::__construct(Type::ANY, $items, $itemsType = null, $readOnly, $allowNulls);
     }
 
     public function search($value) { return $this->_search($value); }
