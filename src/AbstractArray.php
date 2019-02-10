@@ -57,7 +57,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
             throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
         }
         if (!isset(self::$methods[$method])) {
-            throw new MethodException("Method {$this->getShortName()}::{$method}() does not exist");
+            throw new MethodException("Method {$this->getShortName()}::{$method}() does not exist", 1);
         }
         return self::$methods[$method](...$methodArgs);
     }
@@ -67,7 +67,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
             throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
         }
         if (method_exists($this, $method)) {
-            throw new MethodException("Method {$this->getShortName()}::{$method}() already exists");
+            throw new MethodException("Method {$this->getShortName()}::{$method}() already exists", 2);
         }
         if ($methodFunc instanceof Closure) {
             $methodFunc = $methodFunc->bindTo($this);
