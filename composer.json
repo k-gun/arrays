@@ -3,7 +3,7 @@
     "type": "library",
     "homepage": "http://github.com/k-gun/arrays",
     "description": "Arrays: An interface that provides to build strictly typed arrays such as Map, Set, Tuple or any type of TypedArray.",
-    "keywords": ["arrays", "typedarray", "map", "set", "tuple"],
+    "keywords": ["arrays", "map", "set", "tuple", "typedarray"],
     "license": "MIT",
     "authors": [
         {"name": "Kerem Güneş", "email": "k-gun@mail.com"}
