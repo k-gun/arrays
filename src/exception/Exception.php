@@ -29,7 +29,7 @@ namespace arrays\exception;
 use Exception as BaseException;
 
 /**
- * @package arrays\exception
+ * @package arrays
  * @object  arrays\exception\Exception
  * @author  Kerem Güneş <k-gun@mail.com>
  */
