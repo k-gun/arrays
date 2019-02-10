@@ -34,19 +34,4 @@ use arrays\exception\Exception;
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class MethodException extends Exception
-{
-    /**
-     * Get method.
-     * @return ?string
-     */
-    public final function getMethod(): ?string
-    {
-        if ($this->code == 0) {
-            $method = preg_replace('~.* (.+)\(\) not.*~', '\1', $this->message);
-        } elseif ($this->code == 1 || $this->code == 2) {
-            $method = preg_replace('~.*::(.+)\(\).*~', '\1', $this->message);
-        }
-
-        return $method ?? null;
-    }
-}
+{}
