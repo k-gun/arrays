@@ -169,10 +169,11 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
             $keys = array_keys($items);
             shuffle($keys);
             while ($size--) {
+                $value = $items[$keys[$size]] ?? null;
                 if (!$useKeys) {
-                    $ret[] = $items[$keys[$size]];
+                    $ret[] = $value;
                 } else {
-                    $ret[$keys[$size]] = $items[$keys[$size]];
+                    $ret[$keys[$size]] = $value;
                 }
             }
             if (count($ret) == 1) {
@@ -182,12 +183,31 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $ret ?? null;
     }
 
-    public final function shuffle(): self {
+    public final function shuffle(bool $preserveKeys = null): self {
         $this->readOnlyCheck();
+
+        $preserveKeys = $preserveKeys ?? Type::isMapLike($this);
+
         $items = $this->items();
-        uasort($items, function () {
-            return array_rand(array_flip([-1, 0, 1]));
-        });
+        if ($items != null) {
+            if ($preserveKeys) {
+                $keys = array_keys($items);
+                shuffle($keys);
+                $values = $this->items();
+                $shuffledItems = [];
+                foreach ($keys as $key) {
+                    $shuffledItems[$key] = $items[$key];
+                }
+                $items = $shuffledItems;
+            } else {
+                shuffle($items);
+            }
+
+            // nope.. (cos' killing speed and also randomness)
+            // uasort($items, function () {
+            //     return rand(-1, 1);
+            // });
+        }
         return $this->reset($items);
     }
     public final function reverse(): self {
