@@ -649,10 +649,6 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $this->generate();
     }
 
-    /*** Some math.. ***/
-
-    // @return number
-
     /**
      * Min.
      * @param  bool $numericsOnly
@@ -683,39 +679,75 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return (false !== $ret =@ max($values)) ? $ret : null;
     }
 
-
-    public final function calc(string $operator, bool $strict = false, int &$valueCount = null)
+    /**
+     * Calc.
+     * @param  string    $operator
+     * @param  bool      $numericsOnly
+     * @param  int|null &$valueCount
+     * @return int|float|null
+     * @throws arrays\ArrayException
+     */
+    public final function calc(string $operator, bool $numericsOnly = true, int &$valueCount = null)
     {
         $values = $this->values();
-        $ret = array_shift($values);
-        if ($ret === null) return null;
-
-        $valueCount = 1;
-        foreach ($values as $value) {
-            if (!is_numeric($value)) {
-                if ($strict) {
-                    $value = Type::export($value);
-                    throw new ArrayException("A non-numeric value {$value} encountered");
-                }
-                continue;
-            }
-            switch ($operator) {
-                case '+': $ret += $value; break;
-                case '-': $ret -= $value; break;
-                case '/': $ret /= $value; break;
-                case '*': $ret *= $value; break;
-                case '**': $ret **= $value; break;
-                default: throw new ArrayException("Unknown operator {$operator} given");
-            }
-            $valueCount++;
+        if ($numericsOnly) {
+            $values = array_filter($values, 'is_numeric');
         }
-        return $ret;
+
+        if ($values != null) {
+            $result = array_shift($values);
+            $valueCount = 1;
+            foreach ($values as $value) {
+                switch ($operator) {
+                    case '+': $result += $value; break;
+                    case '-': $result -= $value; break;
+                    case '/': $result /= $value; break;
+                    case '*': $result *= $value; break;
+                    case '**': $result **= $value; break;
+                    default: throw new ArrayException("Unknown operator {$operator} given");
+                }
+                $valueCount++;
+            }
+        }
+
+        return $result ?? null;
     }
-    public function calcAvg(string $operator, bool $strict = false, int &$valueCount = null): ?float {
-        return ($calc = $this->calc($operator, $strict, $valueCount)) && $valueCount ? $calc / $valueCount : null;
+
+    /**
+     * Calc avg.
+     * @param  string    $operator
+     * @param  bool      $numericsOnly
+     * @param  int|null &$valueCount
+     * @return ?float
+     */
+    public function calcAvg(string $operator, bool $numericsOnly = true, int &$valueCount = null): ?float
+    {
+        $result = $this->calc($operator, $numericsOnly, $valueCount);
+
+        return $valueCount ? $result / $valueCount : null;
     }
-    public function sum(bool $strict = false, int &$valueCount = null) { return $this->calc('+', $strict, $valueCount); }
-    public function sumAvg(bool $strict = false, int &$valueCount = null): ?float { return $this->calcAvg('+', $strict, $valueCount); }
+
+    /**
+     * Sum.
+     * @param  bool      $numericsOnly
+     * @param  int|null &$valueCount
+     * @return int|float|null
+     */
+    public function sum(bool $numericsOnly = true, int &$valueCount = null)
+    {
+        return $this->calc('+', $numericsOnly, $valueCount);
+    }
+
+    /**
+     * Sum avg.
+     * @param  bool      $numericsOnly
+     * @param  int|null &$valueCount
+     * @return ?float
+     */
+    public function sumAvg(bool $numericsOnly = true, int &$valueCount = null): ?float
+    {
+        return $this->calcAvg('+', $numericsOnly, $valueCount);
+    }
 
     // ---
 
