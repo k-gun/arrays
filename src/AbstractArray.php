@@ -182,50 +182,14 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     }
 
     public final function rand(int $size = 1, bool $useKeys = false) {
-        if ($size < 1) {
-            throw new ArgumentException(sprintf('Minimum size could be 1 for %s(), %s given',
-                $this->getMethodName(), $size));
-        }
-        $items = $this->items();
-        if ($items != null) {
-            $keys = array_keys($items);
-            shuffle($keys);
-            while ($size--) {
-                $value = $items[$keys[$size]] ?? null;
-                if (!$useKeys) {
-                    $ret[] = $value;
-                } else {
-                    $ret[$keys[$size]] = $value;
-                }
-            }
-            if (count($ret) == 1) {
-                $ret = !$useKeys ? current($ret) : [key($ret), current($ret)];
-            }
-        }
-        return $ret ?? null;
+        return Arrays::rand($this->items(), $size, $useKeys);
     }
 
     public final function shuffle(bool $preserveKeys = null): self {
         $this->readOnlyCheck();
         $items = $this->items();
         if ($items != null) {
-            $preserveKeys = $preserveKeys ?? Type::isMapLike($this);
-            if ($preserveKeys) {
-                $keys = array_keys($items);
-                shuffle($keys);
-                $values = $this->items();
-                $shuffledItems = [];
-                foreach ($keys as $key) {
-                    $shuffledItems[$key] = $items[$key];
-                }
-                $items = $shuffledItems;
-            } else {
-                shuffle($items);
-            }
-            // nope.. (cos' killing speed and also randomness)
-            // uasort($items, function () {
-            //     return rand(-1, 1);
-            // });
+            Arrays::shuffle($items, $preserveKeys ?? Type::isMapLike($this));
         }
         return $this->reset($items);
     }

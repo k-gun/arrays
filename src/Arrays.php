@@ -188,7 +188,73 @@ final /* static */ class Arrays
         return true;
     }
 
+    /**
+     * Rand.
+     * @param  array  $items
+     * @param  int    $size
+     * @param  bool   $useKeys
+     * @return any|null
+     */
+    public static function rand(array $items, int $size = 1, bool $useKeys = false)
+    {
+        $count = count($items);
+        if ($count == 0) {
+            return null;
+        }
 
+        if ($size < 1) {
+            throw new ArraysException("Minimum size could be 1, {$size} given");
+        }
+        if ($size > $count) {
+            throw new ArraysException("Maximum size cannot be greater than {$count}, given size is".
+                " exceeding the size of given items, {$size} given");
+        }
+
+        $keys = array_keys($items);
+        shuffle($keys);
+        while ($size--) {
+            $key = $keys[$size];
+            if (!$useKeys) {
+                $ret[] = $items[$key];
+            } else {
+                $ret[$key] = $items[$key];
+            }
+        }
+
+        if (count($ret) == 1) { // value       // key => value
+            $ret = !$useKeys ? current($ret) : [key($ret), current($ret)];
+        }
+
+        return $ret ?? null;
+    }
+
+    /**
+     * Shuffle.
+     * @param  array &$items
+     * @param  bool   $preserveKeys
+     * @return array
+     */
+    public static function shuffle(array &$items, bool $preserveKeys = false): array
+    {
+        if ($preserveKeys) {
+            $keys = array_keys($items);
+            shuffle($keys);
+            $shuffledItems = [];
+            foreach ($keys as $key) {
+                $shuffledItems[$key] = $items[$key];
+            }
+            $items = $shuffledItems;
+        } else {
+            shuffle($items);
+        }
+
+        // nope.. (cos' killing speed and also randomness)
+        // uasort($items, function () {
+        //     return rand(-1, 1);
+        // });
+
+        return $items;
+    }
 
     /**
      * Sort.
