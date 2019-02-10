@@ -234,8 +234,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function readOnlyCheck(): void {
         if ($this->readOnly) {
             $method =@ end(debug_backtrace(0))['function'];
-            throw new ArrayException("Cannot modify read-only {$this->getShortName()}() object, called".
-                " method {$method}()");
+            throw new ArrayException("Cannot modify read-only {$this->getShortName()}() object [called".
+                " method: {$method}()]");
         }
     }
 
