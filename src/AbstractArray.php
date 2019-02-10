@@ -623,7 +623,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     /**
      * Generate.
-     * @param  bool reverse
+     * @param  bool $reverse
      * @return Generator
      */
     public final function generate(bool $reverse = false): Generator
@@ -640,16 +640,50 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         }
     }
 
-    public final function getIterator(bool $reverse = true): Generator
+    /**
+     * Get iterator.
+     * @return Generator
+     */
+    public final function getIterator(): Generator
     {
-        return $this->generate($this->stack);
+        return $this->generate();
     }
 
-    // some math..
+    /*** Some math.. ***/
 
     // @return number
-    public final function min() { return (false !== $ret =@ min(array_filter($this->values(), 'is_numeric'))) ? $ret : null; }
-    public final function max() { return (false !== $ret =@ max(array_filter($this->values(), 'is_numeric'))) ? $ret : null; }
+
+    /**
+     * Min.
+     * @param  bool $numericsOnly
+     * @return any|null
+     */
+    public final function min(bool $numericsOnly = false)
+    {
+        $values = $this->values();
+        if ($numericsOnly) {
+            $values = array_filter($values, 'is_numeric');
+        }
+
+        return (false !== $ret =@ min($values)) ? $ret : null;
+    }
+
+    /**
+     * Max.
+     * @param  bool $numericsOnly
+     * @return any|null
+     */
+    public final function max(bool $numericsOnly = false)
+    {
+        $values = $this->values();
+        if ($numericsOnly) {
+            $values = array_filter($values, 'is_numeric');
+        }
+
+        return (false !== $ret =@ max($values)) ? $ret : null;
+    }
+
+
     public final function calc(string $operator, bool $strict = false, int &$valueCount = null)
     {
         $values = $this->values();
