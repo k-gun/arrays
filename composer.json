@@ -1,0 +1,17 @@
+{
+    "name": "k-gun/arrays",
+    "type": "library",
+    "homepage": "http://github.com/k-gun/arrays",
+    "description": "Arrays: An interface that provides to build strictly typed arrays such as Map, Set, Tuple or any type of TypedArray.",
+    "keywords": ["typedarray", "map", "set", "tuple"],
+    "license": "MIT",
+    "authors": [
+        {"name": "Kerem Güneş", "email": "k-gun@mail.com"}
+    ],
+    "require": {
+        "php": "^7.2"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}
