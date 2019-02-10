@@ -26,23 +26,23 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use arrays\ArraysException;
+use arrays\UtilException;
 use Closure;
 
 /**
  * @package arrays
- * @object  arrays\Arrays
+ * @object  arrays\Util
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-final /* static */ class Arrays
+final /* static */ class Util
 {
     /**
      * Constructor.
-     * @throws arrays\ArraysException
+     * @throws arrays\UtilException
      */
     public function __construct()
     {
-        throw new ArraysException('Cannot initialize static class arrays\Arrays');
+        throw new UtilException('Cannot initialize static class arrays\Util');
     }
 
     /**
@@ -104,7 +104,7 @@ final /* static */ class Arrays
     }
 
     /**
-     * Get all (shortcuts like: list(..) = Arrays::getAll(..)).
+     * Get all (shortcuts like: list(..) = Util::getAll(..)).
      * @param  array  $array
      * @param  array  $keys (aka paths)
      * @param  any    $valueDefault
@@ -203,10 +203,10 @@ final /* static */ class Arrays
         }
 
         if ($size < 1) {
-            throw new ArraysException("Minimum size could be 1, {$size} given");
+            throw new UtilException("Minimum size could be 1, {$size} given");
         }
         if ($size > $count) {
-            throw new ArraysException("Maximum size cannot be greater than {$count}, given size is".
+            throw new UtilException("Maximum size cannot be greater than {$count}, given size is".
                 " exceeding the size of given items, {$size} given");
         }
 
@@ -263,7 +263,7 @@ final /* static */ class Arrays
      * @param  callable|null $ufunc
      * @param  int           $flags
      * @return array
-     * @throws arrays\ArraysException
+     * @throws arrays\UtilException
      */
     public static function sort(array &$array, callable $func = null, callable $ufunc = null, int $flags = 0): array
     {
@@ -273,7 +273,7 @@ final /* static */ class Arrays
             usort($array, $func);
         } elseif (is_string($func)) {
             if ($func[0] == 'u' && $ufunc == null) {
-                throw new ArraysException("Second argument must be callable when usort,uasort,".
+                throw new UtilException("Second argument must be callable when usort,uasort,".
                     "uksort given");
             }
             $arguments = [&$array, $flags];

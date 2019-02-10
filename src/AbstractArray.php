@@ -26,8 +26,8 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use arrays\{Arrays, Type, AnyArray, ArrayTrait, ArrayInterface};
-use arrays\exception\{ArrayException, TypeException, ArgumentException, MethodException};
+use arrays\{Util, Type, AnyArray, ArrayTrait, ArrayInterface};
+use arrays\exception\{ArrayException, TypeException, MethodException, ArgumentException};
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
@@ -241,14 +241,14 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     }
 
     public final function rand(int $size = 1, bool $useKeys = false) {
-        return Arrays::rand($this->items(), $size, $useKeys);
+        return Util::rand($this->items(), $size, $useKeys);
     }
 
     public final function shuffle(bool $preserveKeys = null): self {
         $this->readOnlyCheck();
         $items = $this->items();
         if ($items != null) {
-            Arrays::shuffle($items, $preserveKeys ?? Type::isMapLike($this));
+            Util::shuffle($items, $preserveKeys ?? Type::isMapLike($this));
         }
         return $this->reset($items);
     }
@@ -256,7 +256,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function sort(callable $func = null, callable $ufunc = null, int $flags = 0): self {
         $this->readOnlyCheck();
         $items = $this->items();
-        return $this->reset(Arrays::sort($items, $func, $ufunc, $flags));
+        return $this->reset(Util::sort($items, $func, $ufunc, $flags));
     }
     public final function sortKey(callable $ufunc = null, int $flags = 0): self {
         return $this->sort('ksort', $ufunc, $flags);
@@ -276,8 +276,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return $this;
     }
 
-    public final function test(Closure $func): bool { return Arrays::test($this->toArray(), $func); }
-    public final function testAll(Closure $func): bool { return Arrays::testAll($this->toArray(), $func); }
+    public final function test(Closure $func): bool { return Util::test($this->toArray(), $func); }
+    public final function testAll(Closure $func): bool { return Util::testAll($this->toArray(), $func); }
 
     public final function getName(): string { return static::class; }
     public final function getShortName(): string {

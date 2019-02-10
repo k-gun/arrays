@@ -30,8 +30,8 @@ use arrays\exception\Exception;
 
 /**
  * @package arrays
- * @object  arrays\ArraysException
+ * @object  arrays\UtilException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-final class ArraysException extends Exception
+final class UtilException extends Exception
 {}
