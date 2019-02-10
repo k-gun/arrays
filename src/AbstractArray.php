@@ -162,7 +162,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function rand(int $size = 1, bool $useKeys = false) {
         if ($size < 1) {
             throw new ArgumentException(sprintf('Minimum size could be 1 for %s(), %s given',
-                $this->getMethoName(), $size));
+                $this->getMethodName(), $size));
         }
         $items = $this->items();
         if ($items != null) {
@@ -243,7 +243,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
         return substr($name = $this->getName(),
             (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
     }
-    public final function getMethoName(string $method = null): string {
+    public final function getMethodName(string $method = null): string {
         return sprintf('%s::%s', $this->getName(), $method ?? debug_backtrace()[1]['function']);
     }
 
