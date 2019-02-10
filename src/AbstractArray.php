@@ -27,8 +27,8 @@ declare(strict_types=1);
 namespace arrays;
 
 use arrays\{Util, Type, AnyArray, ArrayTrait, ArrayInterface};
-use arrays\exception\{ArrayException, TypeException, MethodException, ArgumentException,
-    MutationException, NullException};
+use arrays\exception\{ArrayException, TypeException, MethodException,
+    ArgumentException, ArgumentTypeException, MutationException, NullException};
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
@@ -597,6 +597,22 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     {
         return substr($name = $this->getName(),
             (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
+    }
+
+    /**
+     * Key check.
+     * @param  int|string $key
+     * @return void
+     * @throws array\ArgumentTypeException
+     */
+    public final function keyCheck($key): void
+    {
+        static $keyTypes = ['int', 'string'];
+
+        $keyType = Type::get($key);
+        if (!in_array($keyType, $keyType)) {
+            throw new ArgumentTypeException("Only int and string keys accepted, {$keyType} given");
+        }
     }
 
     /**
