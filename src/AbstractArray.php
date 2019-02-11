@@ -136,7 +136,8 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  bool $pair
      * @return array
      */
-    public final function items(bool $pair = false): array {
+    public final function items(bool $pair = false): array
+    {
         $ret = $this->stack->getArrayCopy();
 
         if ($pair) {
