@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace objects;
 
-use objects\AbstractObject;
+use objects\{AbstractObject, Type};
 
 /**
  * @package objects
@@ -40,6 +40,12 @@ abstract class AbstractScalarObject extends AbstractObject
      * @var ?scalar
      */
     protected $value;
+
+    /**
+     * Value type.
+     * @var ?string
+     */
+    protected $valueType;
 
     /**
      * Construct.
@@ -58,6 +64,7 @@ abstract class AbstractScalarObject extends AbstractObject
     public final function setValue($value): void
     {
         $this->value = $value;
+        $this->valueType = Type::get($value);
     }
 
     /**
@@ -67,6 +74,15 @@ abstract class AbstractScalarObject extends AbstractObject
     public final function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Get value type.
+     * @return ?string
+     */
+    public final function getValueType(): ?string
+    {
+        return $this->valueType;
     }
 }
 
