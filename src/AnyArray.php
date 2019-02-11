@@ -120,7 +120,7 @@ class AnyArray extends TypedArray
     /**
      * Get.
      * @param  int|string  $key
-     * @param  any         $valueDefault
+     * @param  any|null    $valueDefault
      * @param  bool|null  &$found
      * @return any
      */
@@ -129,32 +129,209 @@ class AnyArray extends TypedArray
         return $this->_get($key, $valueDefault, $found);
     }
 
-    public function add($value) { return $this->_add($value); }
-    public function remove($value, bool &$found = null): self { return $this->_remove($value, $found); }
-    public function removeAt($key, bool &$found = null): self { return $this->_removeAt($key, $found); }
-    public function removeAll(array $values, int &$count = null): self { return $this->_removeAll($values, $count); }
+    /**
+     * Add.
+     * @param  any $value
+     * @return self
+     */
+    public function add($value): self
+    {
+        return $this->_add($value);
+    }
 
-    public function append($value, int &$size = null): self { return $this->_append($value, $size); }
-    public function prepend($value, int &$size = null): self { return $this->_prepend($value, $size); }
+    /**
+     * Remove.
+     * @param  any        $value
+     * @param  bool|null &$found
+     * @return self
+     */
+    public function remove($value, bool &$found = null): self
+    {
+        return $this->_remove($value, $found);
+    }
 
-    public function pop(int &$size = null) { return $this->_pop($size); }
-    public function unpop($value, int &$size = null): self { return $this->_unpop($value, $size); }
+    /**
+     * Remove at.
+     * @param  int|string $key
+     * @param  any        $value
+     * @param  bool|null &$found
+     * @return self
+     */
+    public function removeAt($key, bool &$found = null): self
+    {
+        return $this->_removeAt($key, $found);
+    }
 
-    public function shift(int &$size = null) { return $this->_shift($size); }
-    public function unshift($value, int &$size = null): self { return $this->_unshift($value, $size); }
+    /**
+     * Remove all.
+     * @param  array      $values
+     * @param  bool|null &$count
+     * @return self
+     */
+    public function removeAll(array $values, int &$count = null): self
+    {
+        return $this->_removeAll($values, $count);
+    }
 
-    public function put($key, $value): self { return $this->_put($key, $value); }
-    public function push($key, $value): self { return $this->_push($key, $value); }
-    public function pull($key, $valueDefault = null, bool &$found = null) { return $this->_pull($key, $valueDefault, $found); }
+    /**
+     * Append.
+     * @param  any        $value
+     * @param  bool|null &$size
+     * @return self
+     */
+    public function append($value, int &$size = null): self
+    {
+        return $this->_append($value, $size);
+    }
 
-    public function find(Closure $func) { return $this->_find($func); }
-    public function findKey(Closure $func) { return $this->_findKey($func); }
-    public function findIndex(Closure $func) { return $this->_findIndex($func); }
+    /**
+     * Prepend.
+     * @param  any        $value
+     * @param  bool|null &$size
+     * @return self
+     */
+    public function prepend($value, int &$size = null): self
+    {
+        return $this->_prepend($value, $size);
+    }
 
-    public function replace($value, $replaceValue, bool &$found = null): self { return $this->_replace($value, $replaceValue, $found); }
-    public function replaceAt($key, $replaceValue, bool &$found = null): self { return $this->_replaceAt($key, $replaceValue, $found); }
+    /**
+     * Pop.
+     * @param  bool|null &$size
+     * @return any
+     */
+    public function pop(int &$size = null)
+    {
+        return $this->_pop($size);
+    }
 
-    public function flip(): self {
+    /**
+     * Unpop.
+     * @param  any        $value
+     * @param  bool|null &$size
+     * @return self
+     */
+    public function unpop($value, int &$size = null): self
+    {
+        return $this->_unpop($value, $size);
+    }
+
+    /**
+     * Shift.
+     * @param  bool|null &$size
+     * @return any
+     */
+    public function shift(int &$size = null)
+    {
+        return $this->_shift($size);
+    }
+
+    /**
+     * Unshift.
+     * @param  any        $value
+     * @param  bool|null &$size
+     * @return self
+     */
+    public function unshift($value, int &$size = null): self
+    {
+        return $this->_unshift($value, $size);
+    }
+
+    /**
+     * Put.
+     * @param  int|string $key
+     * @param  any        $value
+     * @return self
+     */
+    public function put($key, $value): self
+    {
+        return $this->_put($key, $value);
+    }
+
+    /**
+     * Push.
+     * @param  int|string $key
+     * @param  any        $value
+     * @return self
+     */
+    public function push($key, $value): self
+    {
+        return $this->_push($key, $value);
+    }
+
+    /**
+     * Pull.
+     * @param  int|string $key
+     * @param  any|null   $valueDefault
+     * @param  bool|null &$found
+     * @return any|null
+     */
+    public function pull($key, $valueDefault = null, bool &$found = null)
+    {
+        return $this->_pull($key, $valueDefault, $found);
+    }
+
+    /**
+     * Find.
+     * @param  Closure $func
+     * @return any|null
+     */
+    public function find(Closure $func)
+    {
+        return $this->_find($func);
+    }
+
+    /**
+     * Find key.
+     * @param  Closure $func
+     * @return int|string|null
+     */
+    public function findKey(Closure $func)
+    {
+        return $this->_findKey($func);
+    }
+
+    /**
+     * Find index.
+     * @param  Closure $func
+     * @return ?int
+     */
+    public function findIndex(Closure $func): ?int
+    {
+        return $this->_findIndex($func);
+    }
+
+    /**
+     * Replace.
+     * @param  any        $value
+     * @param  any        $replaceValue
+     * @param  bool|null &$found
+     * @return self
+     */
+    public function replace($value, $replaceValue, bool &$found = null): self
+    {
+        return $this->_replace($value, $replaceValue, $found);
+    }
+
+    /**
+     * Replace at.
+     * @param  int|string $key
+     * @param  any        $replaceValue
+     * @param  bool|null &$found
+     * @return self
+     */
+    public function replaceAt($key, $replaceValue, bool &$found = null): self
+    {
+        return $this->_replaceAt($key, $replaceValue, $found);
+    }
+
+    /**
+     * Flip.
+     * @return self
+     * @throws arrays\exception\TypeException
+     */
+    public function flip(): self
+    {
         $items = $this->items();
         foreach ($items as $key => $value) {
             if (!is_int($value) && !is_string($value)) {
@@ -164,6 +341,27 @@ class AnyArray extends TypedArray
         }
         return $this->reset(array_flip($items));
     }
-    public function pad(int $times, $value): self { return $this->_pad($times, $value); }
-    public function fill(int $times, $value, int $offset = 0): self { return $this->_fill($times, $value, $offset); }
+
+    /**
+     * Pad.
+     * @param  int $times
+     * @param  any $value
+     * @return self
+     */
+    public function pad(int $times, $value): self
+    {
+        return $this->_pad($times, $value);
+    }
+
+    /**
+     * Fill.
+     * @param  int $times
+     * @param  any $value
+     * @param  int $offset
+     * @return self
+     */
+    public function fill(int $times, $value, int $offset = 0): self
+    {
+        return $this->_fill($times, $value, $offset);
+    }
 }
