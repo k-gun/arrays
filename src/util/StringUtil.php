@@ -102,4 +102,22 @@ class StringUtil extends Util
     {
         return ($search === substr($source, -strlen($search)));
     }
+
+    /**
+     * Trim search.
+     * @param  string $source
+     * @param  string $search
+     * @param  bool   $caseSensitive
+     * @param  int    $side
+     * @return string
+     */
+    public static function trimSearch(string $source, string $search, bool $caseSensitive = true,
+        int $side = 0): string
+    {
+        $search = preg_quote($search);
+        $pattern = sprintf('~%s~%s', $side == 0 ? "^{$search}|{$search}$" : (
+            $side == 1 ? "^{$search}" : "{$search}$"), $caseSensitive ? '' : 'i');
+
+        return (string) preg_replace($pattern, '', $source);
+    }
 }
