@@ -37,12 +37,12 @@ use Closure;
  */
 class AnyArray extends TypedArray
 {
-    public function __construct(array $items = null, bool $readOnly = false, bool $allowNulls = true)
+    public function __construct(array $items = null, bool $readOnly = false)
     {
         // all allowed
         self::$notAllowedMethods = [];
 
-        parent::__construct(Type::ANY, $items, $itemsType = null, $readOnly, $allowNulls);
+        parent::__construct(Type::ANY, $items, $itemsType = null, $readOnly, $allowNulls = true);
     }
 
     /**
