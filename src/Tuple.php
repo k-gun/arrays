@@ -37,11 +37,12 @@ class Tuple extends TypedArray
 {
     public function __construct(array $items = null, string $itemsType = null, bool $allowNulls = false)
     {
-        self::$notAllowedMethods = ['search', 'searchLast', 'set', 'add', 'remove', 'removeAt', 'removeAll',
-            'append', 'prepend', 'pop', 'unpop', 'shift', 'unshift', 'put', 'push', 'pull', 'find', 'findKey',
-            'findIndex', 'replace', 'replaceAt', 'flip', 'pad', 'fill',
-                // and base methods
-                'reset', 'resetItems', 'empty', 'map', 'filter', 'merge', 'reverse', 'shuffle'];
+        self::$notAllowedMethods = [
+            /* base methods */ 'reset', 'resetItems', 'empty', 'map', 'filter', 'merge', 'reverse', 'shuffle',
+            'search', 'searchLast', 'set', 'add', 'remove', 'removeAt', 'removeAll', 'append', 'prepend', 'pop',
+            'unpop', 'shift', 'unshift', 'put', 'push', 'pull', 'find', 'findKey', 'findIndex', 'replace', 'replaceAt',
+            'flip', 'pad', 'fill'
+        ];
 
         parent::__construct(Type::TUPLE, $items, $itemsType, $readOnly = true, $allowNulls);
     }
