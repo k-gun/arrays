@@ -35,7 +35,7 @@ abstract class AbstractObject
 {
     /**
      * To string magic.
-     * @return ?string
+     * @return string
      */
     public function __toString()
     {
@@ -103,15 +103,12 @@ abstract class AbstractObject
 
     /**
      * To string.
-     * @return ?string
+     * @return string
      */
-    public function toString(): ?string
+    public function toString(): string
     {
         if (property_exists($this, 'value')) {
-            if (is_null($this->value)) {
-                return null;
-            }
-            if (is_scalar($this->value)) {
+            if (is_null($this->value) || is_scalar($this->value)) {
                 return (string) $this->value;
             }
         }
