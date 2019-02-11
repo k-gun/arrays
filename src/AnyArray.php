@@ -107,18 +107,31 @@ class AnyArray extends TypedArray
 
     /**
      * Set.
-     * @param int|string $key
-     * @param [type]   $value
-     * @param int|null &$size
+     * @param  int|string $key
+     * @param  any        $value
+     * @param  int|null  &$size
+     * @return self
      */
     public function set($key, $value, int &$size = null): self
-    { return $this->_set($key, $value, $size); }
-    public function get($key, $valueDefault = null, bool &$ok = null)
-    { return $this->_get($key, $valueDefault, $ok); }
+    {
+        return $this->_set($key, $value, $size);
+    }
+
+    /**
+     * Get.
+     * @param  int|string  $key
+     * @param  any         $valueDefault
+     * @param  bool|null  &$found
+     * @return any
+     */
+    public function get($key, $valueDefault = null, bool &$found = null)
+    {
+        return $this->_get($key, $valueDefault, $found);
+    }
 
     public function add($value) { return $this->_add($value); }
-    public function remove($value, bool &$ok = null): self { return $this->_remove($value, $ok); }
-    public function removeAt($key, bool &$ok = null): self { return $this->_removeAt($key, $ok); }
+    public function remove($value, bool &$found = null): self { return $this->_remove($value, $found); }
+    public function removeAt($key, bool &$found = null): self { return $this->_removeAt($key, $found); }
     public function removeAll(array $values, int &$count = null): self { return $this->_removeAll($values, $count); }
 
     public function append($value, int &$size = null): self { return $this->_append($value, $size); }
@@ -132,14 +145,14 @@ class AnyArray extends TypedArray
 
     public function put($key, $value): self { return $this->_put($key, $value); }
     public function push($key, $value): self { return $this->_push($key, $value); }
-    public function pull($key, $valueDefault = null, bool &$ok = null) { return $this->_pull($key, $valueDefault, $ok); }
+    public function pull($key, $valueDefault = null, bool &$found = null) { return $this->_pull($key, $valueDefault, $found); }
 
     public function find(Closure $func) { return $this->_find($func); }
     public function findKey(Closure $func) { return $this->_findKey($func); }
     public function findIndex(Closure $func) { return $this->_findIndex($func); }
 
-    public function replace($value, $replaceValue, bool &$ok = null): self { return $this->_replace($value, $replaceValue, $ok); }
-    public function replaceAt($key, $replaceValue, bool &$ok = null): self { return $this->_replaceAt($key, $replaceValue, $ok); }
+    public function replace($value, $replaceValue, bool &$found = null): self { return $this->_replace($value, $replaceValue, $found); }
+    public function replaceAt($key, $replaceValue, bool &$found = null): self { return $this->_replaceAt($key, $replaceValue, $found); }
 
     public function flip(): self {
         $items = $this->items();
