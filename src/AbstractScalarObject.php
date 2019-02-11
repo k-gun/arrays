@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace xobjects;
 
 use xobjects\{AbstractObject, Type};
+use xobjects\exception\ArgumentTypeException;
 
 /**
  * @package xobjects
@@ -37,29 +38,33 @@ abstract class AbstractScalarObject extends AbstractObject
 {
     /**
      * Value.
-     * @var ?scalar
+     * @var scalar
      */
     protected $value;
 
     /**
      * Value type.
-     * @var ?string
+     * @var string
      */
     protected $valueType;
 
     /**
      * Construct.
-     * @param scalar|null $value
+     * @param scalar $value
      */
-    public function __construct($value = null)
+    public function __construct($value)
     {
+        if (!is_scalar($value)) {
+            throw new ArgumentTypeException('Given value is not scalar');
+        }
+
         $this->value = $value;
         $this->valueType = Type::get($value);
     }
 
     /**
      * Value.
-     * @return scalar|null
+     * @return scalar
      */
     public final function value()
     {
