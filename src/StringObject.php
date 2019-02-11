@@ -59,8 +59,8 @@ class StringObject extends AbstractScalarObject
      */
     public final function test(string $pattern): ?bool
     {
-        return (false !== $result =@ preg_match($pattern, $this->value)) ?
-            !!$result : null; // error
+        return (false !== $result =@ preg_match($pattern, $this->value))
+            ? !!$result : null; // error
     }
 
     /**
