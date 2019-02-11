@@ -28,7 +28,7 @@ namespace xobjects;
 
 use xobjects\{Type, AbstractObject};
 use xobjects\util\ArrayUtil;
-use xobjects\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
+use xobjects\exception\{TypeException, MethodException, ArgumentException, KeyException,
     MutationException, NullException};
 use xobjects\ArrayException;
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
@@ -608,12 +608,12 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Key check.
      * @param  int|string $key
      * @return void
-     * @throws array\ArgumentTypeException
+     * @throws xobjects\exception\KeyException
      */
     public final function keyCheck($key): void
     {
         if ($message = ArrayUtil::keyCheck($key, false)) {
-            throw new ArgumentTypeException($message);
+            throw new KeyException($message);
         }
     }
 
@@ -621,7 +621,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Null check.
      * @param  any $value
      * @return void
-     * @throws array\NullException
+     * @throws xobjects\exception\NullException
      */
     public final function nullCheck($value): void
     {
