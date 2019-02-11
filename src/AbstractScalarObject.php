@@ -100,15 +100,6 @@ abstract class AbstractScalarObject extends AbstractObject
     }
 
     /**
-     * Is null.
-     * @return bool
-     */
-    public final function isNull(): bool
-    {
-        return $this->value === null;
-    }
-
-    /**
      * Equals to.
      * @param  scalar $value
      * @return bool
