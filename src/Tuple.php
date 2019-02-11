@@ -40,8 +40,7 @@ class Tuple extends TypedArray
         self::$notAllowedMethods = [
             /* base methods */ 'reset', 'resetItems', 'empty', 'map', 'filter', 'merge', 'reverse', 'shuffle',
             'search', 'searchLast', 'set', 'add', 'remove', 'removeAt', 'removeAll', 'append', 'prepend', 'pop',
-            'unpop', 'shift', 'unshift', 'put', 'push', 'pull', 'find', 'findKey', 'findIndex', 'replace', 'replaceAt',
-            'flip', 'pad'
+            'unpop', 'shift', 'unshift', 'put', 'push', 'pull', 'replace', 'replaceAt', 'flip', 'pad'
         ];
 
         parent::__construct(Type::TUPLE, $items, $itemsType, $readOnly = true, $allowNulls);

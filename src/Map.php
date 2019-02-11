@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace xo;
 
 use xo\{TypedArray, Type};
-use Closure;
 
 /**
  * @package xo
@@ -224,36 +223,6 @@ class Map extends TypedArray
     public function pull(string $key, $valueDefault = null, bool &$found = null)
     {
         return $this->_pull($key, $valueDefault, $found);
-    }
-
-    /**
-     * Find.
-     * @param  Closure $func
-     * @return any|null
-     */
-    public function find(Closure $func)
-    {
-        return $this->_find($func);
-    }
-
-    /**
-     * Find key.
-     * @param  Closure $func
-     * @return int|string
-     */
-    public function findKey(Closure $func)
-    {
-        return $this->_findKey($func);
-    }
-
-    /**
-     * Find index.
-     * @param  Closure $func
-     * @return ?int
-     */
-    public function findIndex(Closure $func): ?int
-    {
-        return $this->_findIndex($func);
     }
 
     /**

@@ -604,6 +604,53 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     }
 
     /**
+     * Find.
+     * @param  Closure $func
+     * @return any|null
+     */
+    public final function find(Closure $func)
+    {
+        foreach ($this->generate() as $key => $value) {
+            if ($func($value, $key)) {
+                return $value;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Find key.
+     * @param  Closure $func
+     * @return int|string|null
+     */
+    public final function findKey(Closure $func)
+    {
+        foreach ($this->generate() as $key => $value) {
+            if ($func($value, $key)) {
+                return $key;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Find index.
+     * @param  Closure $func
+     * @return ?int
+     */
+    public final function findIndex(Closure $func): ?int
+    {
+        $index = 0;
+        foreach ($this->generate() as $key => $value) {
+            if ($func($value, $key)) {
+                return $index;
+            }
+            $index++;
+        }
+        return null;
+    }
+
+    /**
      * Key check.
      * @param  int|string $key
      * @return void

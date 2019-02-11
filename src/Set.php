@@ -74,10 +74,6 @@ class Set extends TypedArray
     public function push(int $key, $value): self { return $this->_push($key, $value); }
     public function pull(int $key, $valueDefault = null, bool &$ok = null) { return $this->_pull($key, $valueDefault, $ok); }
 
-    public function find(Closure $func) { return $this->_find($func); }
-    public function findKey(Closure $func) { return $this->_findKey($func); }
-    public function findIndex(Closure $func) { return $this->_findIndex($func); }
-
     public function replace($value, $replaceValue, bool &$ok = null): self { return $this->_replace($value, $replaceValue, $ok); }
     public function replaceAt(int $key, $replaceValue, bool &$ok = null): self { return $this->_replaceAt($key, $replaceValue, $ok); }
 

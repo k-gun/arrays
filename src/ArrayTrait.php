@@ -27,7 +27,6 @@ declare(strict_types=0);
 namespace xo;
 
 use xo\ArrayInterface;
-use Closure;
 
 /**
  * @package xo
@@ -371,54 +370,6 @@ trait ArrayTrait
         }
 
         return $this;
-    }
-
-    /**
-     * Find.
-     * @param  Closure $func
-     * @return any|null
-     */
-    protected final function _find(Closure $func)
-    {
-        foreach ($this->generate() as $key => $value) {
-            if ($func($value, $key)) {
-                return $value;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Find key.
-     * @param  Closure $func
-     * @return int|string
-     */
-    protected final function _findKey(Closure $func)
-    {
-        foreach ($this->generate() as $key => $value) {
-            if ($func($value, $key)) {
-                return $key;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Find index.
-     * @param  Closure $func
-     * @return ?int
-     */
-    protected final function _findIndex(Closure $func): ?int
-    {
-        $index = 0;
-        foreach ($this->generate() as $key => $value) {
-            if ($func($value, $key)) {
-                return $index;
-            }
-            $index++;
-        }
-
-        return null;
     }
 
     /**
