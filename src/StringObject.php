@@ -27,6 +27,8 @@ declare(strict_types=1);
 namespace xobjects;
 
 use xobjects\AbstractScalarObject;
+use xobjects\exception\ArgumentException;
+use xobjects\util\StringUtil;
 
 /**
  * @package xobjects
@@ -35,26 +37,212 @@ use xobjects\AbstractScalarObject;
  */
 class StringObject extends AbstractScalarObject
 {
-    // public const TRIM_CHARS = " \t\n\r\0\x0B";
+    /**
+     * Trim chars.
+     * @const string
+     */
+    public const TRIM_CHARS = " \t\n\r\0\x0B";
 
+    /**
+     * Constructor.
+     * @param string|null $value
+     */
     public function __construct(string $value = null)
     {
-        $this->setValue($value);
+        parent::__construct($value);
     }
 
-    public final function test(string $pattern, bool $esc = false, string $escChars = null): bool {}
-    public final function match(string $pattern, int $flags = null, bool $esc = false, string $escChars = null): bool {}
-    public final function matchAll(string $pattern, int $flags = null, bool $esc = false, string $escChars = null): bool {}
+    /**
+     * Test.
+     * @param  string $pattern
+     * @return ?bool
+     */
+    public final function test(string $pattern): ?bool
+    {
+        return (false !== $result =@ preg_match($pattern, $this->value)) ?
+            !!$result : null; // error
+    }
 
-    public final function indexOf(string $search, bool $caseSensitive = true): ?int {}
-    public final function lastIndexOf(string $search, bool $caseSensitive = true): ?int {}
+    /**
+     * Match.
+     * @param  string $pattern
+     * @param  int    $flags
+     * @return ?array
+     */
+    public final function match(string $pattern, int $flags = 0): ?array
+    {
+        return (false !== $result =@ preg_match($pattern, $this->value, $matches, $flags))
+            ? $matches : null; // error
+    }
 
-    public final function trim(string $chars = null, int $side = 0): string {}
-    public final function trimLeft(string $chars = null): string {}
-    public final function trimRight(string $chars = null): string {}
+    /**
+     * Match all.
+     * @param  string $pattern
+     * @param  int    $flags
+     * @return ?array
+     */
+    public final function matchAll(string $pattern, int $flags = 0): ?array
+    {
+        return (false !== $result =@ preg_match_all($pattern, $this->value, $matches, $flags))
+            ? $matches : null; // error
+    }
 
-    public final function trimWord(string $word, int $side = 0): string {}
-    public final function trimWords(array $words, int $side = 0): string {}
+    /**
+     * Index of.
+     * @param  string $search
+     * @param  bool   $caseSensitive
+     * @return ?int
+     */
+    public final function indexOf(string $search, bool $caseSensitive = true): ?int
+    {
+        if ($search === '') {
+            throw new ArgumentException('Empty search value given');
+        }
 
-    public final function replace($search, $replace): string {}
+        return (false !== $index = ($caseSensitive ? strpos((string) $this->value, $search)
+            : stripos((string) $this->value, $search))) ? $index : null;
+    }
+
+    /**
+     * Last index of.
+     * @param  string $search
+     * @param  bool   $caseSensitive
+     * @return ?int
+     */
+    public final function lastIndexOf(string $search, bool $caseSensitive = true): ?int
+    {
+        if ($search === '') {
+            throw new ArgumentException('Empty search value given');
+        }
+
+        return (false !== $index = ($caseSensitive ? strrpos((string) $this->value, $search)
+            : strripos((string) $this->value, $search))) ? $index : null;
+    }
+
+    /**
+     * Trim.
+     * @param  string|null $chars
+     * @param  int         $side
+     * @return string
+     */
+    public final function trim(string $chars = null, int $side = 0): string
+    {
+        $value = (string) $this->value;
+        $chars = $chars ?? self::TRIM_CHARS;
+
+        return $side == 0 ? trim($value, $chars) : (
+            $side == 1 ? ltrim($value, $chars) : rtrim($value, $chars));
+    }
+
+    /**
+     * Trim left.
+     * @param  string|null $chars
+     * @return string
+     */
+    public final function trimLeft(string $chars = null): string
+    {
+        return $this->trim($chars, 1);
+    }
+
+    /**
+     * Trim right.
+     * @param  string|null $chars
+     * @return string
+     */
+    public final function trimRight(string $chars = null): string
+    {
+        return $this->trim($chars, 2);
+    }
+
+    /**
+     * Trim search.
+     * @param  string $search
+     * @param  bool   $caseSensitive
+     * @param  int    $side
+     * @return string
+     */
+    public final function trimSearch(string $search, bool $caseSensitive = true, int $side = 0): string
+    {
+        return StringUtil::trimSearch((string) $this->value, $search, $caseSensitive, $side);
+    }
+
+    /**
+     * Trim searches.
+     * @param  string $searches
+     * @param  bool   $caseSensitive
+     * @param  int    $side
+     * @return string
+     */
+    public final function trimSearches(array $searches, bool $caseSensitive = true, int $side = 0): string
+    {
+        $value = (string) $this->value;
+        foreach ($searches as $search) {
+            $value = StringUtil::trimSearch($value, $search, $caseSensitive, $side);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Contains.
+     * @param  string $search
+     * @param  bool   $caseSensitive
+     * @return bool
+     */
+    public final function contains(string $search, bool $caseSensitive = true): bool
+    {
+        return StringUtil::contains((string) $this->value, $search, $caseSensitive);
+    }
+
+    /**
+     * Contains any.
+     * @param  array  $searches
+     * @param  bool   $caseSensitive
+     * @return bool
+     */
+    public final function containsAny(array $searches, bool $caseSensitive = true): bool
+    {
+        return StringUtil::containsAny((string) $this->value, $searches, $caseSensitive);
+    }
+
+    /**
+     * Contains all.
+     * @param  array  $searches
+     * @param  bool   $caseSensitive
+     * @return bool
+     */
+    public final function containsAll(array $searches, bool $caseSensitive = true): bool
+    {
+        return StringUtil::containsAny((string) $this->value, $searches, $caseSensitive);
+    }
+
+    /**
+     * Equal to.
+     * @param  string $value
+     * @return bool
+     */
+    public final function equalTo(string $value): bool
+    {
+        return $this->value !== null && $this->value === $value;
+    }
+
+    /**
+     * Starts with.
+     * @param  string $search
+     * @return bool
+     */
+    public final function startsWith(string $search): bool
+    {
+        return StringUtil::startsWith((string) $this->value, $search);
+    }
+
+    /**
+     * Ends with.
+     * @param  string $search
+     * @return bool
+     */
+    public final function endsWith(string $search): bool
+    {
+        return StringUtil::endsWith((string) $this->value, $search);
+    }
 }
