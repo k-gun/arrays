@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects;
+namespace xobjects;
 
-use objects\exception\Exception;
+use xobjects\exception\Exception;
 
 /**
- * @package objects
- * @object  objects\ArrayException
+ * @package xobjects
+ * @object  xobjects\ArrayException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class ArrayException extends Exception

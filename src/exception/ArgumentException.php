@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects\exception;
+namespace xobjects\exception;
 
-use objects\exception\Exception;
+use xobjects\exception\Exception;
 
 /**
- * @package objects\exception
- * @object  objects\exception\ArgumentException
+ * @package xobjects\exception
+ * @object  xobjects\exception\ArgumentException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class ArgumentException extends Exception

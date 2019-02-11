@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects;
+namespace xobjects;
 
-use objects\{AbstractObject, Type};
+use xobjects\{AbstractObject, Type};
 
 /**
- * @package objects
- * @object  objects\AbstractScalarObject
+ * @package xobjects
+ * @object  xobjects\AbstractScalarObject
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 abstract class AbstractScalarObject extends AbstractObject

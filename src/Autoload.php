@@ -24,18 +24,18 @@
  */
 declare(strict_types=1);
 
-namespace objects;
+namespace xobjects;
 
 /**
- * @package objects
- * @object  objects\Autoload
+ * @package xobjects
+ * @object  xobjects\Autoload
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 final class Autoload
 {
     /**
      * Instance.
-     * @var objects\Autoload
+     * @var xobjects\Autoload
      */
     private static $instance;
 
@@ -80,10 +80,10 @@ final class Autoload
                 $object = '\\'. $object;
             }
 
-            $ns  = '\objects';
+            $ns  = '\xobjects';
             $dir = __dir__;
 
-            // objects objects only
+            // xobjects objects only
             if (strpos($object, $ns) !== 0) {
                 return;
             }

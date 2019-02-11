@@ -24,16 +24,15 @@
  */
 declare(strict_types=1);
 
-namespace objects;
+namespace xobjects;
 
-use objects\StaticClass;
-use objects\{AnyArray, Map, Set, Tuple};
-use objects\util\ArrayUtil;
+use xobjects\{StaticClass, AnyArray, Map, Set, Tuple};
+use xobjects\util\ArrayUtil;
 use Error;
 
 /**
- * @package objects
- * @object  objects\Type
+ * @package xobjects
+ * @object  xobjects\Type
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Type extends StaticClass

@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects\util;
+namespace xobjects\util;
 
-use objects\exception\Exception;
+use xobjects\exception\Exception;
 
 /**
- * @package objects\util
- * @object  objects\util\UtilException
+ * @package xobjects\util
+ * @object  xobjects\util\UtilException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 final class UtilException extends Exception

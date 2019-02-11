@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects\exception;
+namespace xobjects\exception;
 
 use Exception as BaseException;
 
 /**
- * @package objects\exception
- * @object  objects\exception\Exception
+ * @package xobjects\exception
+ * @object  xobjects\exception\Exception
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Exception extends BaseException

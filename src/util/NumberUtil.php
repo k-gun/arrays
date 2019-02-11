@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects\util;
+namespace xobjects\util;
 
-use objects\util\Util;
+use xobjects\util\Util;
 
 /**
- * @package objects\util
- * @object  objects\util\NumberUtil
+ * @package xobjects\util
+ * @object  xobjects\util\NumberUtil
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class NumberUtil extends Util

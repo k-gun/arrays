@@ -24,25 +24,25 @@
  */
 declare(strict_types=1);
 
-namespace objects;
+namespace xobjects;
 
-use objects\{Type, AbstractObject};
-use objects\util\ArrayUtil;
-use objects\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
+use xobjects\{Type, AbstractObject};
+use xobjects\util\ArrayUtil;
+use xobjects\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
     MutationException, NullException};
-use objects\ArrayException;
+use xobjects\ArrayException;
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
- * @package objects
- * @object  objects\AbstractArray
+ * @package xobjects
+ * @object  xobjects\AbstractArray
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 abstract class AbstractArray extends AbstractObject implements ArrayInterface, Countable, IteratorAggregate
 {
     /**
      * ArrayTrait.
-     * @object objects\ArrayTrait
+     * @object xobjects\ArrayTrait
      */
     use ArrayTrait;
 
@@ -84,7 +84,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  string $method
      * @param  array  $methodArgs
      * @return any
-     * @throws objects\exception\MethodException
+     * @throws xobjects\exception\MethodException
      */
     public final function __call(string $method, array $methodArgs)
     {
@@ -102,12 +102,12 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  string   $method
      * @param  callable $methodFunc
      * @return void
-     * @throws objects\exception\MethodException
+     * @throws xobjects\exception\MethodException
      */
     public final function prototype(string $method, callable $methodFunc): void
     {
         if (in_array($method, self::$notAllowedMethods)) {
-            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
+            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() xobjects");
         }
         if (method_exists($this, $method)) {
             throw new MethodException("Method {$this->getShortName()}::{$method}() already exists", 2);
@@ -155,7 +155,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Reset.
      * @param  array $items
      * @return self
-     * @throws objects\exception\MutationException
+     * @throws xobjects\exception\MutationException
      */
     public final function reset(array $items): self
     {
@@ -171,7 +171,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Reset items (alias of reset()).
      * @param  array $items
      * @return self
-     * @throws objects\exception\MutationException
+     * @throws xobjects\exception\MutationException
      */
     public final function resetItems(array $items): self
     {
@@ -182,7 +182,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
     /**
      * Copy.
-     * @return objects\ArrayInterface
+     * @return xobjects\ArrayInterface
      */
     public final function copy(): ArrayInterface
     {
@@ -342,7 +342,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  callable $func
      * @param  bool     $breakable
      * @return self
-     * @throws objects\exception\MutationException
+     * @throws xobjects\exception\MutationException
      */
     public final function map(callable $func): self
     {
@@ -372,7 +372,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Filter.
      * @param  callable|null $func
      * @return self
-     * @throws objects\exception\MutationException
+     * @throws xobjects\exception\MutationException
      */
     public final function filter(callable $func = null): self
     {
@@ -442,7 +442,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Merge.
      * @param  self $array
      * @return self
-     * @throws objects\exception\MutationException,ArgumentException
+     * @throws xobjects\exception\MutationException,ArgumentException
      */
     public final function merge(self $array): self
     {
@@ -482,7 +482,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     /**
      * Reverse.
      * @return self
-     * @throws objects\exception\MutationException
+     * @throws xobjects\exception\MutationException
      */
     public final function reverse(): self
     {
@@ -507,7 +507,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Shuffle.
      * @param  bool|null $preserveKeys
      * @return self
-     * @throws objects\exception\MutationException
+     * @throws xobjects\exception\MutationException
      */
     public final function shuffle(bool $preserveKeys = null): self
     {
@@ -528,7 +528,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  callable|null $ufunc
      * @param  int           $flags
      * @return self
-     * @throws objects\exception\MutationException
+     * @throws xobjects\exception\MutationException
      */
     public final function sort(callable $func = null, callable $ufunc = null, int $flags = 0): self
     {
@@ -635,19 +635,19 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Method check.
      * @param  string $method
      * @return void
-     * @throws objects\exception\MethodException
+     * @throws xobjects\exception\MethodException
      */
     public final function methodCheck(string $method): void
     {
         if (self::$notAllowedMethods && in_array($method, self::$notAllowedMethods)) {
-            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
+            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() xobjects");
         }
     }
 
     /**
      * Read only check.
      * @return void
-     * @throws objects\exception\MutationException
+     * @throws xobjects\exception\MutationException
      */
     public final function readOnlyCheck(): void
     {
@@ -722,7 +722,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  bool      $numericsOnly
      * @param  int|null &$valueCount
      * @return number|null
-     * @throws objects\ArrayException
+     * @throws xobjects\ArrayException
      */
     public final function calc(string $operator, bool $numericsOnly = true, int &$valueCount = null)
     {
@@ -791,8 +791,8 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  string     $command
      * @param  any    &...$arguments
      * @return void
-     * @throws objects\exception\MutationException,NullException
-     * @throws objects\ArrayException
+     * @throws xobjects\exception\MutationException,NullException
+     * @throws xobjects\ArrayException
      */
     private final function stackCommand(string $command, &...$arguments): void
     {

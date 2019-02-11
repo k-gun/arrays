@@ -24,14 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects;
+namespace xobjects;
 
-use objects\Type;
-use objects\TypedArray;
+use xobjects\{TypedArray, Type};
 
 /**
- * @package objects
- * @object  objects\Tuple
+ * @package xobjects
+ * @object  xobjects\Tuple
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Tuple extends TypedArray

@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects;
+namespace xobjects;
 
-use objects\exception\Exception;
+use xobjects\exception\Exception;
 
 /**
- * @package objects
- * @object  objects\StaticClassException
+ * @package xobjects
+ * @object  xobjects\StaticClassException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 final class StaticClassException extends Exception

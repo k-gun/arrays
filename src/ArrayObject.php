@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects;
+namespace xobjects;
 
-use objects\AnyArray;
+use xobjects\AnyArray;
 
 /**
- * @package objects
- * @object  objects\ArrayObject
+ * @package xobjects
+ * @object  xobjects\ArrayObject
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class ArrayObject extends AnyArray
