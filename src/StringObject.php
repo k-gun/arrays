@@ -213,7 +213,7 @@ class StringObject extends AbstractScalarObject
      */
     public final function containsAll(array $searches, bool $caseSensitive = true): bool
     {
-        return StringUtil::containsAny((string) $this->value, $searches, $caseSensitive);
+        return StringUtil::containsAll((string) $this->value, $searches, $caseSensitive);
     }
 
     /**
