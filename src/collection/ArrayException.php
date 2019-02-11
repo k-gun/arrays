@@ -30,8 +30,8 @@ use objects\exception\Exception;
 
 /**
  * @package objects\collection
- * @object  objects\collection\CollectionException
+ * @object  objects\collection\ArrayException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class CollectionException extends Exception
+class ArrayException extends Exception
 {}

@@ -30,7 +30,7 @@ use objects\{Type, TheObject};
 use objects\util\ArrayUtil;
 use objects\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
     MutationException, NullException};
-use objects\collection\CollectionException;
+use objects\collection\ArrayException;
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
@@ -722,7 +722,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
      * @param  bool      $numericsOnly
      * @param  int|null &$valueCount
      * @return number|null
-     * @throws objects\collection\CollectionException
+     * @throws objects\collection\ArrayException
      */
     public final function calc(string $operator, bool $numericsOnly = true, int &$valueCount = null)
     {
@@ -741,7 +741,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
                     case '/': $result /= $value; break;
                     case '*': $result *= $value; break;
                     case '**': $result **= $value; break;
-                    default: throw new CollectionException("Unknown operator {$operator} given");
+                    default: throw new ArrayException("Unknown operator {$operator} given");
                 }
                 $valueCount++;
             }
@@ -792,7 +792,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
      * @param  any    &...$arguments
      * @return void
      * @throws objects\exception\MutationException,NullException
-     * @throws objects\collection\CollectionException
+     * @throws objects\collection\ArrayException
      */
     private final function stackCommand(string $command, &...$arguments): void
     {
@@ -856,7 +856,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
                 @ $this->stack->offsetUnset($key);
                 break;
             default:
-                throw new CollectionException("Unknown command {$command}");
+                throw new ArrayException("Unknown command {$command}");
         }
     }
 }
