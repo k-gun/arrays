@@ -53,34 +53,24 @@ abstract class AbstractScalarObject extends AbstractObject
      */
     public function __construct($value = null)
     {
-        $this->setValue($value);
-    }
-
-    /**
-     * Set value.
-     * @param  ?scalar $value
-     * @return void
-     */
-    public final function setValue($value): void
-    {
         $this->value = $value;
         $this->valueType = Type::get($value);
     }
 
     /**
-     * Get value.
+     * Value.
      * @return ?scalar
      */
-    public final function getValue()
+    public final function value()
     {
         return $this->value;
     }
 
     /**
-     * Get value type.
+     * Value type.
      * @return ?string
      */
-    public final function getValueType(): ?string
+    public final function valueType(): ?string
     {
         return $this->valueType;
     }
