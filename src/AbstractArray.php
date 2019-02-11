@@ -107,7 +107,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     public final function prototype(string $method, callable $methodFunc): void
     {
         if (in_array($method, self::$notAllowedMethods)) {
-            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() xobjects");
+            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
         }
         if (method_exists($this, $method)) {
             throw new MethodException("Method {$this->getShortName()}::{$method}() already exists", 2);
