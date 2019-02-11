@@ -36,10 +36,32 @@ use xo\exception\TypeException;
  */
 class TypedArray extends AbstractArray
 {
+    /**
+     * Type.
+     * @var string
+     */
     protected $type;
+
+    /**
+     * Read only.
+     * @var bool
+     */
     protected $readOnly;
+
+    /**
+     * Allow nulls.
+     * @var bool
+     */
     protected $allowNulls;
 
+    /**
+     * Constructor.
+     * @param string      $type
+     * @param array|null  $items
+     * @param string|null $itemsType
+     * @param bool        $readOnly
+     * @param bool        $allowNulls
+     */
     public function __construct(string $type, array $items = null, string $itemsType = null,
         bool $readOnly = false, bool $allowNulls = false)
     {
@@ -56,7 +78,31 @@ class TypedArray extends AbstractArray
         parent::__construct($type, $items);
     }
 
-    public final function type(): string { return $this->type; }
-    public final function readOnly(): bool { return $this->readOnly; }
-    public final function allowNulls(): bool { return $this->allowNulls; }
+    /**
+     * Type.
+     * @return string
+     */
+    public final function type(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * Read only.
+     * @return bool
+     */
+    public final function readOnly(): bool
+    {
+        return $this->readOnly;
+    }
+
+    /**
+     * Allow nulls.
+     * @return bool
+     */
+    public final function allowNulls(): bool
+    {
+        return $this->allowNulls;
+    }
+
 }
