@@ -2,7 +2,7 @@
     "name": "k-gun/xobjects",
     "type": "library",
     "homepage": "http://github.com/k-gun/xobjects",
-    "description": "XObjects: A few cool extended objects that makes easy to build strictly typed arrays such as Map, Set, Tuple or any type of TypedArray, and also String and Number's.",
+    "description": "XObjects: A few extended objects that makes easy to build strictly typed arrays such as Map, Set, Tuple or any type of TypedArray, and also String and Number's.",
     "keywords": ["arrays", "strings", "numbers", "map", "set", "tuple", "typedarray", "arrayobject", "stringobject", "numberobject", "arrayutil"," ""stringutil", "numberutil"],
     "license": "MIT",
     "authors": [
