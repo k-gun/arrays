@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace objects\collection;
+namespace objects;
 
-use objects\collection\AnyArray;
+use objects\AnyArray;
 
 /**
- * @package objects\collection
- * @object  objects\collection\Collection
+ * @package objects
+ * @object  objects\Collection
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Collection extends AnyArray

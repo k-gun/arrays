@@ -24,25 +24,25 @@
  */
 declare(strict_types=1);
 
-namespace objects\collection;
+namespace objects;
 
 use objects\{Type, TheObject};
 use objects\util\ArrayUtil;
 use objects\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
     MutationException, NullException};
-use objects\collection\ArrayException;
+use objects\ArrayException;
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
- * @package objects\collection
- * @object  objects\collection\AbstractArray
+ * @package objects
+ * @object  objects\AbstractArray
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 abstract class AbstractArray extends TheObject implements ArrayInterface, Countable, IteratorAggregate
 {
     /**
      * ArrayTrait.
-     * @object objects\collection\ArrayTrait
+     * @object objects\ArrayTrait
      */
     use ArrayTrait;
 
@@ -182,7 +182,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
 
     /**
      * Copy.
-     * @return objects\collection\ArrayInterface
+     * @return objects\ArrayInterface
      */
     public final function copy(): ArrayInterface
     {
@@ -722,7 +722,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
      * @param  bool      $numericsOnly
      * @param  int|null &$valueCount
      * @return number|null
-     * @throws objects\collection\ArrayException
+     * @throws objects\ArrayException
      */
     public final function calc(string $operator, bool $numericsOnly = true, int &$valueCount = null)
     {
@@ -792,7 +792,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
      * @param  any    &...$arguments
      * @return void
      * @throws objects\exception\MutationException,NullException
-     * @throws objects\collection\ArrayException
+     * @throws objects\ArrayException
      */
     private final function stackCommand(string $command, &...$arguments): void
     {

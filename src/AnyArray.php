@@ -24,15 +24,15 @@
  */
 declare(strict_types=1);
 
-namespace objects\collection;
+namespace objects;
 
 use objects\{Type, TypedArray};
-use objects\collection\ArrayException;
+use objects\ArrayException;
 use Closure;
 
 /**
- * @package objects\collection
- * @object  objects\collection\AnyArray
+ * @package objects
+ * @object  objects\AnyArray
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class AnyArray extends TypedArray
@@ -328,7 +328,7 @@ class AnyArray extends TypedArray
     /**
      * Flip.
      * @return self
-     * @throws objects\collection\ArrayException
+     * @throws objects\ArrayException
      */
     public function flip(): self
     {

@@ -24,15 +24,15 @@
  */
 declare(strict_types=1);
 
-namespace objects\collection;
+namespace objects;
 
 use objects\Type;
-use objects\collection\AbstractArray;
+use objects\AbstractArray;
 use objects\exception\TypeException;
 
 /**
- * @package objects\collection
- * @object  objects\collection\Map
+ * @package objects
+ * @object  objects\Map
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class TypedArray extends AbstractArray

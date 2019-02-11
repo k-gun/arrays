@@ -24,11 +24,11 @@
  */
 declare(strict_types=1);
 
-namespace objects\collection;
+namespace objects;
 
 /**
- * @package objects\collection
- * @object  objects\collection\ArrayInterface
+ * @package objects
+ * @object  objects\ArrayInterface
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 interface ArrayInterface

@@ -24,14 +24,14 @@
  */
 declare(strict_types=1);
 
-namespace objects\collection;
+namespace objects;
 
 use objects\Type;
-use objects\collection\TypedArray;
+use objects\TypedArray;
 
 /**
- * @package objects\collection
- * @object  objects\collection\Set
+ * @package objects
+ * @object  objects\Set
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Set extends TypedArray

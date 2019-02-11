@@ -27,8 +27,8 @@ declare(strict_types=1);
 namespace objects;
 
 use objects\StaticClass;
+use objects\{AnyArray, Map, Set, Tuple};
 use objects\util\ArrayUtil;
-use objects\collection\{AnyArray, Map, Set, Tuple};
 use Error;
 
 /**
@@ -36,7 +36,7 @@ use Error;
  * @object  objects\Type
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-final /* static */ class Type extends StaticClass
+class Type extends StaticClass
 {
     /**
      * Types.
