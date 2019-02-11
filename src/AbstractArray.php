@@ -86,9 +86,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function __call(string $method, array $methodArgs)
     {
-        if (in_array($method, self::$notAllowedMethods)) {
-            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
-        }
+        $this->methodCheck($method);
+
         if (!isset(self::$methods[$method])) {
             throw new MethodException("Method {$this->getShortName()}::{$method}() does not exist", 1);
         }
@@ -151,6 +150,35 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     }
 
     /**
+     * Reset.
+     * @param  array $items
+     * @return self
+     * @throws arrays\MutationException
+     */
+    public final function reset(array $items): self
+    {
+        $this->methodCheck('reset');
+        $this->readOnlyCheck();
+
+        $this->stack->exchangeArray($items);
+
+        return $this;
+    }
+
+    /**
+     * Reset items (alias of reset()).
+     * @param  array $items
+     * @return self
+     * @throws arrays\MutationException
+     */
+    public final function resetItems(array $items): self
+    {
+        $this->methodCheck('resetItems');
+
+        return $this->reset($items);
+    }
+
+    /**
      * Copy.
      * @return arrays\ArrayInterface
      */
@@ -183,6 +211,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function empty(): void
     {
+        $this->methodCheck('empty');
         $this->reset([]);
     }
 
@@ -193,20 +222,6 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     public final function isEmpty(): bool
     {
         return $this->stack->count() == 0;
-    }
-
-    /**
-     * Reset.
-     * @param  array $items
-     * @return self
-     * @throws arrays\MutationException
-     */
-    public final function reset(array $items): self
-    {
-        $this->readOnlyCheck();
-        $this->stack->exchangeArray($items);
-
-        return $this;
     }
 
     /**
@@ -329,6 +344,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function map(callable $func): self
     {
+        $this->methodCheck('map');
         $this->readOnlyCheck();
 
         return $this->reset(array_map($func, $this->items()));
@@ -358,6 +374,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function filter(callable $func = null): self
     {
+        $this->methodCheck('filter');
         $this->readOnlyCheck();
 
         // set func to empty check as default
@@ -427,6 +444,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function merge(self $array): self
     {
+        $this->methodCheck('merge');
         $this->readOnlyCheck();
 
         if ($array->type() != $this->type) {
@@ -466,6 +484,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function reverse(): self
     {
+        $this->methodCheck('reverse');
         $this->readOnlyCheck();
 
         return $this->reset(array_reverse($this->items()));
@@ -490,6 +509,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function shuffle(bool $preserveKeys = null): self
     {
+        $this->methodCheck('shuffle');
         $this->readOnlyCheck();
 
         $items = $this->items();
@@ -629,6 +649,19 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     }
 
     /**
+     * Method check.
+     * @param  string $method
+     * @return void
+     * @throws arrays\MethodException
+     */
+    public final function methodCheck(string $method): void
+    {
+        if (self::$notAllowedMethods && in_array($method, self::$notAllowedMethods)) {
+            throw new MethodException("Method {$method}() not allowed for {$this->getShortName()}() objects");
+        }
+    }
+
+    /**
      * Read only check.
      * @return void
      * @throws arrays\MutationException
@@ -705,7 +738,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  string    $operator
      * @param  bool      $numericsOnly
      * @param  int|null &$valueCount
-     * @return int|float|null
+     * @return number|null
      * @throws arrays\ArrayException
      */
     public final function calc(string $operator, bool $numericsOnly = true, int &$valueCount = null)
@@ -752,7 +785,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * Sum.
      * @param  bool      $numericsOnly
      * @param  int|null &$valueCount
-     * @return int|float|null
+     * @return number|null
      */
     public final function sum(bool $numericsOnly = true, int &$valueCount = null)
     {
