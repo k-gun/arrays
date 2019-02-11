@@ -27,7 +27,7 @@ declare(strict_types=1);
 namespace xo;
 
 use xo\{StaticClass, AnyArray, Map, Set, Tuple};
-use xo\util\ArrayUtil;
+use xo\util\{ArrayUtil, NumberUtil};
 use Error;
 
 /**
@@ -39,21 +39,53 @@ class Type extends StaticClass
 {
     /**
      * Types.
-     * const int
+     * @const string
      */
     public const ANY = 'Any',
                  MAP = 'Map',
                  SET = 'Set',
                  TUPLE = 'Tuple';
 
+    /**
+     * Basics.
+     * @var array[string]
+     */
     private static $basics = ['int', 'float', 'string', 'bool', 'array', 'object'];
 
+    /**
+     * Map message.
+     * @var string
+     */
     private static $mapMessage = '%s() objects accept associative arrays with string keys only, invalid items given';
+
+    /**
+     * Set message.
+     * @var string
+     */
     private static $setMessage = '%s() objects accept non-associative items with int keys only, invalid items given';
+
+    /**
+     * Value message.
+     * @var string
+     */
     private static $valueMessage = 'All values of %s() must be type of %s, %s given (offset: %s, value: %s)';
+
+    /**
+     * Null value message.
+     * @var string
+     */
     private static $nullValueMessage = '%s() object do not accept null values, null given (offset: %s)';
 
-    public static function validateItems(object $object, array $items, string $itemsType = null, string &$error = null): bool
+    /**
+     * Validate items.
+     * @param  object       $object
+     * @param  array        $items
+     * @param  string|null  $itemsType
+     * @param  string|null &$error
+     * @return bool
+     */
+    public static function validateItems(object $object, array $items, string $itemsType = null,
+        string &$error = null): bool
     {
         $type = $object->type();
         $allowNulls = $object->allowNulls();
@@ -80,6 +112,7 @@ class Type extends StaticClass
                 $error = sprintf(self::$nullValueMessage, $object->getShortName(), $offset);
                 return false;
             }
+
             $valueType = self::get($value);
             if ($typeBasic) {
                 if ($valueType != $type) {
@@ -113,30 +146,11 @@ class Type extends StaticClass
         return true;
     }
 
-    public static function validateArgumentType($arg, int $argNum, string $argTypeMust, string &$error = null, bool $nonDigit = false): bool
-    {
-        static $message = 'Argument %s given to %s must be %s, %s given';
-        static $getMethod;
-        if ($getMethod == null) {
-            $getMethod = function () {
-                $trace =@ end(debug_backtrace(0));
-                return sprintf('%s::%s()', $trace['class'], $trace['function']);
-            };
-        }
-        $argType = self::get($arg);
-        if ($argType != $argTypeMust) {
-            $error = sprintf($message, $argNum, $getMethod(), $argTypeMust,
-                ($arg === null) ? 'null' : $argType .'('. self::export($arg) .')');
-        } elseif ($nonDigit && self::isDigit($arg)) {
-            $error = sprintf($message, $argNum, $getMethod(), 'non-digit', 'digit('. $arg .')');
-        }
-        return ($error == null);
-    }
-    public static function validateArgumentTypeForMap($arg, int $argNum, string &$error = null): bool
-    {
-        return self::validateArgumentType($arg, $argNum, 'string', $error, true);
-    }
-
+    /**
+     * Get.
+     * @param  any $input
+     * @return string
+     */
     public static function get($input): string
     {
         return strtr(gettype($input), [
@@ -146,56 +160,87 @@ class Type extends StaticClass
             'boolean' => 'bool'
         ]);
     }
+
+    /**
+     * Export.
+     * @param  any $input
+     * @return string
+     */
     public static function export($input): string
     {
         if (is_null($input))   return 'null';
         if (is_scalar($input)) return var_export($input, true);
         if (is_array($input))  return 'array';
         if (is_object($input)) return 'object('. get_class($input) .')';
-        return $input;
+        return (string) $input;
     }
 
-    public static function toArray($input): array
+    /**
+     * Make array.
+     * @param  array|object $input
+     * @return array
+     */
+    public static function makeArray($input): array
     {
         return (array) ($input ?: []);
     }
-    public static function toObject($input): object
+
+    /**
+     * Make object.
+     * @param  array|object $input
+     * @return object
+     */
+    public static function makeObject($input): object
     {
-        return (object) self::toArray($input);
+        return (object) self::makeArray($input);
     }
 
+    /**
+     * Is basic.
+     * @param  string $type
+     * @return bool
+     */
     public static function isBasic(string $type): bool
     {
         return in_array(strtolower($type), self::$basics);
     }
 
+    /**
+     * Is digit
+     * @param  [type] $input
+     * @param  bool   $complex
+     * @return bool
+     */
     public static function isDigit($input, bool $complex = true): bool
     {
-        if (is_int($input)) {
-            return true;
-        } elseif (is_string($input) && ctype_digit($input)) {
-            return true;
-        } elseif ($complex && is_numeric($input)) {
-            $input = (string) $input;
-            if (strpos($input, '.') === false && ($input < 0)) {
-                return true;
-            }
-        }
-        return false;
+        return NumberUtil::isDigit($input);
     }
 
-    public static function isAny($input): bool
-    {
-        return is_object($input) && $input instanceof AnyArray;
-    }
+    /**
+     * Is tuple.
+     * @param  any $input
+     * @return bool
+     */
     public static function isTuple($input): bool
     {
         return is_object($input) && $input instanceof Tuple;
     }
+
+    /**
+     * Is map like.
+     * @param  any $input
+     * @return bool
+     */
     public static function isMapLike($input): bool
     {
         return is_object($input) && $input instanceof Map;
     }
+
+    /**
+     * Is set like.
+     * @param  any $input
+     * @return bool
+     */
     public static function isSetLike($input): bool
     {
         return is_object($input) && ($input instanceof Set || $input instanceof Tuple);

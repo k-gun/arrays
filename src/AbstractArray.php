@@ -72,7 +72,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     {
         $items = $items ?? [];
         if (Type::isMapLike($this)) {
-            $items = Type::toObject($items);
+            $items = Type::makeObject($items);
         }
 
         $this->stack = new ArrayObject($items);
