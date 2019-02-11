@@ -71,19 +71,22 @@ trait ArrayTrait
     {
         return $this->_indexOf($value) !== null;
     }
-    protected final function _hasKey($key)
+    protected final function _hasKey($key, $keyCheck = true)
     {
+        $keyCheck && $this->keyCheck($key);
         return in_array($key, $this->keys(), true);
     }
 
     protected final function _set($key, $value, &$size = null)
     {
+        $this->keyCheck($key);
         $this->stackCommand('set', $key, $value, $size);
         return $this;
     }
     protected final function _get($key, $valueDefault = null, &$found = null)
     {
-        if ($found = $this->_hasKey($key)) {
+        $this->keyCheck($key);
+        if ($found = $this->_hasKey($key, false)) {
             $this->stackCommand('get', $key, $value);
         }
         return $value ?? $valueDefault;
@@ -102,7 +105,8 @@ trait ArrayTrait
     }
     protected final function _removeAt($key, &$found = null)
     {
-        if ($found = $this->_hasKey($key)) {
+        $this->keyCheck($key);
+        if ($found = $this->_hasKey($key, false)) {
             $this->stackCommand('unset', $key);
         }
         return $this;
@@ -150,17 +154,20 @@ trait ArrayTrait
 
     protected final function _put($key, $value)
     {
+        $this->keyCheck($key);
         $this->stackCommand('put', $key, $value);
         return $this;
     }
     protected final function _push($key, $value)
     {
+        $this->keyCheck($key);
         $this->stackCommand('push', $key, $value);
         return $this;
     }
     protected final function _pull($key, $valueDefault = null, &$found = null)
     {
-        if ($found = $this->_hasKey($key)) {
+        $this->keyCheck($key);
+        if ($found = $this->_hasKey($key, false)) {
             $this->stackCommand('pull', $key, $value);
         }
         return $value ?? $valueDefault;
@@ -175,7 +182,8 @@ trait ArrayTrait
     }
     protected final function _replaceAt($key, $replaceValue, &$found = null)
     {
-        if ($found = $this->_hasKey($key)) {
+        $this->keyCheck($key);
+        if ($found = $this->_hasKey($key, false)) {
             $this->_put($key, $replaceValue);
         }
         return $this;
