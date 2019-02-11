@@ -355,12 +355,12 @@ class AnyArray extends TypedArray
 
     /**
      * Fill.
-     * @param  int $times
-     * @param  any $value
-     * @param  int $offset
+     * @param  int      $times
+     * @param  any      $value
+     * @param  int|null $offset
      * @return self
      */
-    public function fill(int $times, $value, int $offset = 0): self
+    public function fill(int $times, $value, int $offset = null): self
     {
         return $this->_fill($times, $value, $offset);
     }

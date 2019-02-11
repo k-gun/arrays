@@ -211,8 +211,9 @@ trait ArrayTrait
         }
         return $this;
     }
-    protected function _fill(int $times, $value, int $offset = 0)
+    protected function _fill(int $times, $value, int $offset = null)
     {
+        $offset = $offset ?? $this->size();
         for ($i = 0; $i < $times; $i++) {
             $this->_set($offset + $i, $value);
         }
