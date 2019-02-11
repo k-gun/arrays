@@ -81,7 +81,7 @@ abstract class AbstractScalarObject extends AbstractObject
     }
 
     /**
-     * Equals to.
+     * Equal to.
      * @param  scalar $value
      * @return bool
      */
