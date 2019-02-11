@@ -71,33 +71,6 @@ abstract class AbstractObject
     }
 
     /**
-     * Get value.
-     * @return any|null
-     */
-    public function getValue()
-    {
-        if (property_exists($this, 'value')) {
-            return $this->value;
-        }
-        return null;
-    }
-
-    /**
-     * Get value type.
-     * @return ?string
-     */
-    public function getValueType(): ?string
-    {
-        if (property_exists($this, 'valueType')) {
-            return $this->valueType;
-        }
-        if (property_exists($this, 'value')) {
-            return gettype($this->value);
-        }
-        return null;
-    }
-
-    /**
      * Clone.
      * @return object
      */
@@ -114,6 +87,18 @@ abstract class AbstractObject
     public final function equals(object $object): bool
     {
         return $object == $this;
+    }
+
+    /**
+     * To value.
+     * @return ?any
+     */
+    public function toValue()
+    {
+        if (property_exists($this, 'value')) {
+            return $this->value;
+        }
+        return null;
     }
 
     /**
