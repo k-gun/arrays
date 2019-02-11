@@ -26,6 +26,8 @@ declare(strict_types=1);
 
 namespace xo;
 
+use RuntimeException;
+
 /**
  * @package xo
  * @object  xo\Autoload
@@ -67,7 +69,7 @@ final class Autoload
     /**
      * Register.
      * @return bool
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function register(): bool
     {
@@ -92,7 +94,7 @@ final class Autoload
             $objectFile = strtr("{$dir}/{$object}.php", ['\\' => '/']);
 
             if (!file_exists($objectFile)) {
-                throw new \RuntimeException("Object file '{$objectFile}' not found");
+                throw new RuntimeException("Object file '{$objectFile}' not found");
             }
 
             require $objectFile;
