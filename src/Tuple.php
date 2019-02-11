@@ -35,6 +35,12 @@ use xo\{TypedArray, Type};
  */
 class Tuple extends TypedArray
 {
+    /**
+     * Constructor.
+     * @param array|null  $items
+     * @param string|null $itemsType
+     * @param bool        $allowNulls
+     */
     public function __construct(array $items = null, string $itemsType = null, bool $allowNulls = false)
     {
         self::$notAllowedMethods = [
@@ -46,11 +52,55 @@ class Tuple extends TypedArray
         parent::__construct(Type::TUPLE, $items, $itemsType, $readOnly = true, $allowNulls);
     }
 
-    public function indexOf($value): ?int { return $this->_indexOf($value); }
-    public function lastIndexOf($value): ?int { return $this->_lastIndexOf($value); }
+    /**
+     * Index of.
+     * @param  any $value
+     * @return ?int
+     */
+    public function indexOf($value): ?int
+    {
+        return $this->_indexOf($value);
+    }
 
-    public function has($value): bool { return $this->_has($value); }
-    public function hasKey(int $key): bool { return $this->_hasKey($key); }
+    /**
+     * Last index of.
+     * @param  any $value
+     * @return ?int
+     */
+    public function lastIndexOf($value): ?int
+    {
+        return $this->_lastIndexOf($value);
+    }
 
-    public function get($key, $valueDefault = null, bool &$ok = null) { return $this->_get($key, $valueDefault, $ok); }
+    /**
+     * Has.
+     * @param  any $value
+     * @return bool
+     */
+    public function has($value): bool
+    {
+        return $this->_has($value);
+    }
+
+    /**
+     * Has key.
+     * @param  int $key
+     * @return bool
+     */
+    public function hasKey(int $key): bool
+    {
+        return $this->_hasKey($key);
+    }
+
+    /**
+     * Get.
+     * @param  int         $key
+     * @param  any|null    $valueDefault
+     * @param  bool|null  &$found
+     * @return any|null
+     */
+    public function get($key, $valueDefault = null, bool &$found = null)
+    {
+        return $this->_get($key, $valueDefault, $found);
+    }
 }

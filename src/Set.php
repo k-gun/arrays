@@ -103,7 +103,7 @@ class Set extends TypedArray
         return $this->_has($value);
     }
 
-     /**
+    /**
      * Has key.
      * @param  int $key
      * @return bool
