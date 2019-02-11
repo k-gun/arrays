@@ -81,9 +81,9 @@ trait ArrayTrait
         $this->stackCommand('set', $key, $value, $size);
         return $this;
     }
-    protected final function _get($key, $valueDefault = null, &$ok = null)
+    protected final function _get($key, $valueDefault = null, &$found = null)
     {
-        if ($ok = $this->_hasKey($key)) {
+        if ($found = $this->_hasKey($key)) {
             $this->stackCommand('get', $key, $value);
         }
         return $value ?? $valueDefault;
@@ -93,16 +93,16 @@ trait ArrayTrait
     {
         return $this->_unpop($value);
     }
-    protected final function _remove($value, &$ok = null)
+    protected final function _remove($value, &$found = null)
     {
-        if ($ok = (null !== $key = $this->_search($value))) {
+        if ($found = (null !== $key = $this->_search($value))) {
             $this->stackCommand('unset', $key);
         }
         return $this;
     }
-    protected final function _removeAt($key, &$ok = null)
+    protected final function _removeAt($key, &$found = null)
     {
-        if ($ok = $this->_hasKey($key)) {
+        if ($found = $this->_hasKey($key)) {
             $this->stackCommand('unset', $key);
         }
         return $this;
@@ -158,24 +158,24 @@ trait ArrayTrait
         $this->stackCommand('push', $key, $value);
         return $this;
     }
-    protected final function _pull($key, $valueDefault = null, &$ok = null)
+    protected final function _pull($key, $valueDefault = null, &$found = null)
     {
-        if ($ok = $this->_hasKey($key)) {
+        if ($found = $this->_hasKey($key)) {
             $this->stackCommand('pull', $key, $value);
         }
         return $value ?? $valueDefault;
     }
 
-    protected final function _replace($value, $replaceValue, &$ok = null)
+    protected final function _replace($value, $replaceValue, &$found = null)
     {
-        if ($ok = (null !== $key = $this->_search($value))) {
+        if ($found = (null !== $key = $this->_search($value))) {
             $this->_put($key, $replaceValue);
         }
         return $this;
     }
-    protected final function _replaceAt($key, $replaceValue, &$ok = null)
+    protected final function _replaceAt($key, $replaceValue, &$found = null)
     {
-        if ($ok = $this->_hasKey($key)) {
+        if ($found = $this->_hasKey($key)) {
             $this->_put($key, $replaceValue);
         }
         return $this;
