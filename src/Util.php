@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use arrays\{Type, UtilException};
+use arrays\{StaticClass, Type, UtilException};
 use Closure;
 
 /**
@@ -34,17 +34,8 @@ use Closure;
  * @object  arrays\Util
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-final /* static */ class Util
+final /* static */ class Util extends StaticClass
 {
-    /**
-     * Constructor.
-     * @throws arrays\UtilException
-     */
-    public function __construct()
-    {
-        throw new UtilException('Cannot initialize static class arrays\Util');
-    }
-
     /**
      * Key check.
      * @param  int|string $key
