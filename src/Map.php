@@ -40,7 +40,7 @@ class Map extends TypedArray
     {
         self::$notAllowedMethods = [
             /* base methods */ 'flip',
-            'add', 'append', 'prepend', 'unpop', 'unshift', 'flip', 'pad', 'fill'
+            'add', 'append', 'prepend', 'unpop', 'unshift', 'flip', 'pad'
         ];
 
         parent::__construct($type ?? Type::MAP, $items, $itemsType, $readOnly, $allowNulls);

@@ -81,6 +81,5 @@ class Set extends TypedArray
     public function replace($value, $replaceValue, bool &$ok = null): self { return $this->_replace($value, $replaceValue, $ok); }
     public function replaceAt(int $key, $replaceValue, bool &$ok = null): self { return $this->_replaceAt($key, $replaceValue, $ok); }
 
-    public function pad(int $times, $value): self { return $this->_pad($times, $value); }
-    public function fill(int $times, $value, int $offset = 0): self { return $this->_fill($times, $value, $offset); }
+    public function pad(int $times, $value, int $offset = null): self { return $this->_pad($times, $value, $offset); }
 }

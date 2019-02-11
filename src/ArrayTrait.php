@@ -423,31 +423,21 @@ trait ArrayTrait
 
     /**
      * Pad.
-     * @param  int $times
-     * @param  any $value
-     * @return xobjects\ArrayInterface
-     */
-    protected final function _pad(int $times, $value): ArrayInterface
-    {
-        while ($times--) {
-            $this->_unpop($value);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Fill.
      * @param  int      $times
      * @param  any      $value
      * @param  int|null $offset
      * @return xobjects\ArrayInterface
      */
-    protected function _fill(int $times, $value, int $offset = null): ArrayInterface
+    protected final function _pad(int $times, $value, int $offset = null): ArrayInterface
     {
-        $offset = $offset ?? $this->size();
-        for ($i = 0; $i < $times; $i++) {
-            $this->_set($offset + $i, $value);
+        if ($offset === null) {
+            while ($times--) {
+                $this->_unpop($value);
+            }
+        } else {
+            for ($i = 0; $i < $times; $i++) {
+                $this->_set($offset + $i, $value);
+            }
         }
 
         return $this;

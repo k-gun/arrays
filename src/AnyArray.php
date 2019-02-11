@@ -344,24 +344,13 @@ class AnyArray extends TypedArray
 
     /**
      * Pad.
-     * @param  int $times
-     * @param  any $value
-     * @return self
-     */
-    public function pad(int $times, $value): self
-    {
-        return $this->_pad($times, $value);
-    }
-
-    /**
-     * Fill.
      * @param  int      $times
      * @param  any      $value
      * @param  int|null $offset
      * @return self
      */
-    public function fill(int $times, $value, int $offset = null): self
+    public function pad(int $times, $value, int $offset = null): self
     {
-        return $this->_fill($times, $value, $offset);
+        return $this->_pad($times, $value, $offset);
     }
 }
