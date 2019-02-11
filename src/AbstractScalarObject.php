@@ -49,7 +49,7 @@ abstract class AbstractScalarObject extends AbstractObject
 
     /**
      * Construct.
-     * @param scalar $value
+     * @param scalar|null $value
      */
     public function __construct($value = null)
     {
@@ -59,7 +59,7 @@ abstract class AbstractScalarObject extends AbstractObject
 
     /**
      * Value.
-     * @return ?scalar
+     * @return scalar|null
      */
     public final function value()
     {
@@ -68,9 +68,9 @@ abstract class AbstractScalarObject extends AbstractObject
 
     /**
      * Value type.
-     * @return ?string
+     * @return string
      */
-    public final function valueType(): ?string
+    public final function valueType(): string
     {
         return $this->valueType;
     }
