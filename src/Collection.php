@@ -34,4 +34,6 @@ use xo\AnyArray;
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Collection extends AnyArray
-{}
+{
+    // alias of AnyArray
+}
