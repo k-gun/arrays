@@ -67,7 +67,7 @@ trait ArrayTrait
     /**
      * Search.
      * @param  any $value
-     * @return ?int|?string
+     * @return int|string|null
      */
     protected final function _search($value)
     {
@@ -77,7 +77,7 @@ trait ArrayTrait
     /**
      * Search last.
      * @param  any $value
-     * @return ?int|?string
+     * @return int|string|null
      */
     protected final function _searchLast($value)
     {
