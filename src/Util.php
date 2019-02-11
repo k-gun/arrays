@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use arrays\UtilException;
+use arrays\{Type, UtilException};
 use Closure;
 
 /**
@@ -46,6 +46,28 @@ final /* static */ class Util
     }
 
     /**
+     * Key check.
+     * @param  int|string $key
+     * @param  bool       $throw
+     * @return ?string
+     * @throws array\UtilException
+     */
+    public static function keyCheck($key, bool $throw = true): ?string
+    {
+        static $keyTypes = ['int', 'string'];
+
+        $keyType = Type::get($key);
+        if (!in_array($keyType, $keyTypes)) {
+            $message = "Arrays accept int and string keys only, {$keyType} given";
+            if ($throw) {
+                throw new UtilException($message);
+            }
+        }
+
+        return $message ?? null;
+    }
+
+    /**
      * Set (with dot notation support for sub-array paths).
      * @param  array      &$array
      * @param  int|string $key
@@ -54,6 +76,8 @@ final /* static */ class Util
      */
     public static function set(array &$array, $key, $value): array
     {
+        self::keyCheck($key);
+
         if (array_key_exists($key, $array)) { // direct access
             $array[$key] = $value;
         } else {
@@ -79,9 +103,12 @@ final /* static */ class Util
      * @param  int|string $key
      * @param  any        $valueDefault
      * @return any
+     *
      */
     public static function get(array $array, $key, $valueDefault = null)
     {
+        self::keyCheck($key);
+
         if (array_key_exists($key, $array)) { // direct access
             $value = $array[$key];
         } else {
@@ -132,6 +159,8 @@ final /* static */ class Util
      */
     public static function pull(array &$array, $key, $valueDefault = null)
     {
+        self::keyCheck($key);
+
         if (array_key_exists($key, $array)) {
             $value = $array[$key];
             unset($array[$key]); // remove pulled item
@@ -236,7 +265,9 @@ final /* static */ class Util
      */
     public static function shuffle(array &$items, bool $preserveKeys = false): array
     {
-        if ($preserveKeys) {
+        if (!$preserveKeys) {
+            shuffle($items);
+        } else {
             $keys = array_keys($items);
             shuffle($keys);
             $shuffledItems = [];
@@ -244,14 +275,12 @@ final /* static */ class Util
                 $shuffledItems[$key] = $items[$key];
             }
             $items = $shuffledItems;
-        } else {
-            shuffle($items);
-        }
 
-        // nope.. (cos' killing speed and also randomness)
-        // uasort($items, function () {
-        //     return rand(-1, 1);
-        // });
+            // nope.. (cos' killing speed and also randomness)
+            // uasort($items, function () {
+            //     return rand(-1, 1);
+            // });
+        }
 
         return $items;
     }

@@ -607,11 +607,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function keyCheck($key): void
     {
-        static $keyTypes = ['int', 'string'];
-
-        $keyType = Type::get($key);
-        if (!in_array($keyType, $keyTypes)) {
-            throw new ArgumentTypeException("Arrays accept int and string keys only, {$keyType} given");
+        if ($message = Util::keyCheck($key, false)) {
+            throw new ArgumentTypeException($message);
         }
     }
 
