@@ -27,7 +27,7 @@ declare(strict_types=1);
 namespace xobjects;
 
 use xobjects\AbstractScalarObject;
-use xobjects\exception\TypeException;
+use xobjects\exception\ArgumentException;
 
 /**
  * @package xobjects
@@ -43,8 +43,8 @@ class NumberObject extends AbstractScalarObject
     public function __construct($value = null)
     {
         if ($value !== null && !is_numeric($value)) {
-            throw new TypeException("{$this->getShortName()}() value must be numeric, non-numeric ".
-                "value given");
+            throw new ArgumentException("{$this->getShortName()}() value must be numeric, non-numeric".
+                " value given");
         }
 
         parent::__construct($value);
