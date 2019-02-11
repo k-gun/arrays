@@ -35,6 +35,14 @@ use xo\{TypedArray, Type};
  */
 class Set extends TypedArray
 {
+    /**
+     * Constructor.
+     * @param array|null  $items
+     * @param string|null $itemsType
+     * @param string|null $type
+     * @param bool        $readOnly
+     * @param bool        $allowNulls
+     */
     public function __construct(array $items = null, string $itemsType = null, string $type = null,
         bool $readOnly = false, bool $allowNulls = false)
     {
@@ -45,37 +53,264 @@ class Set extends TypedArray
         parent::__construct($type ?? Type::SET, $items, $itemsType, $readOnly, $allowNulls);
     }
 
-    public function search($value) { return $this->_search($value); }
-    public function searchLast($value) { return $this->_searchLast($value); }
-    public function indexOf($value): ?int { return $this->_indexOf($value); }
-    public function lastIndexOf($value): ?int { return $this->_lastIndexOf($value); }
+    /**
+     * Search.
+     * @param  any $value
+     * @return int|string|null
+     */
+    public function search($value)
+    {
+        return $this->_search($value);
+    }
 
-    public function has($value): bool { return $this->_has($value); }
-    public function hasKey(int $key): bool { return $this->_hasKey($key); }
+    /**
+     * Search last.
+     * @param  any $value
+     * @return int|string|null
+     */
+    public function searchLast($value)
+    {
+        return $this->_searchLast($value);
+    }
 
-    public function set(int $key, $value, int &$size = null): self { return $this->_set($key, $value, $size); }
-    public function get(int $key, $valueDefault = null, bool &$ok = null) { return $this->_get($key, $valueDefault, $ok); }
+    /**
+     * Index of.
+     * @param  any $value
+     * @return ?int
+     */
+    public function indexOf($value): ?int
+    {
+        return $this->_indexOf($value);
+    }
 
-    public function add($value): self { return $this->_add($value); }
-    public function remove($value, bool &$ok = null): self { return $this->_remove($value, $ok); }
-    public function removeAt(int $key, bool &$ok = null): self { return $this->_removeAt($key, $ok); }
-    public function removeAll(array $values, int &$count = null): self { return $this->_removeAll($values, $count); }
+    /**
+     * Last index of.
+     * @param  any $value
+     * @return ?int
+     */
+    public function lastIndexOf($value): ?int
+    {
+        return $this->_lastIndexOf($value);
+    }
 
-    public function append($value, int &$size = null): self { return $this->_append($value, $size); }
-    public function prepend($value, int &$size = null): self { return $this->_prepend($value, $size); }
+    /**
+     * Has.
+     * @param  any $value
+     * @return bool
+     */
+    public function has($value): bool
+    {
+        return $this->_has($value);
+    }
 
-    public function pop(int &$size = null) { return $this->_pop($size); }
-    public function unpop($value, int &$size = null): self { return $this->_unpop($value, $size); }
+     /**
+     * Has key.
+     * @param  int $key
+     * @return bool
+     */
+    public function hasKey(int $key): bool
+    {
+        return $this->_hasKey($key);
+    }
 
-    public function shift(int &$size = null) { return $this->_shift($size); }
-    public function unshift($value, int &$size = null): self { return $this->_unshift($value, $size); }
+    /**
+     * Set.
+     * @param  int        $key
+     * @param  any        $value
+     * @param  int|null  &$size
+     * @return self
+     */
+    public function set(int $key, $value, int &$size = null): self
+    {
+        return $this->_set($key, $value, $size);
+    }
 
-    public function put(int $key, $value): self { return $this->_put($key, $value); }
-    public function push(int $key, $value): self { return $this->_push($key, $value); }
-    public function pull(int $key, $valueDefault = null, bool &$ok = null) { return $this->_pull($key, $valueDefault, $ok); }
+    /**
+     * Get.
+     * @param  int         $key
+     * @param  any|null    $valueDefault
+     * @param  bool|null  &$found
+     * @return any|null
+     */
+    public function get(int $key, $valueDefault = null, bool &$found = null)
+    {
+        return $this->_get($key, $valueDefault, $found);
+    }
 
-    public function replace($value, $replaceValue, bool &$ok = null): self { return $this->_replace($value, $replaceValue, $ok); }
-    public function replaceAt(int $key, $replaceValue, bool &$ok = null): self { return $this->_replaceAt($key, $replaceValue, $ok); }
+    /**
+     * Add.
+     * @param  any $value
+     * @return self
+     */
+    public function add($value): self
+    {
+        return $this->_add($value);
+    }
 
-    public function pad(int $times, $value, int $offset = null): self { return $this->_pad($times, $value, $offset); }
+    /**
+     * Remove.
+     * @param  any        $value
+     * @param  bool|null &$found
+     * @return self
+     */
+    public function remove($value, bool &$found = null): self
+    {
+        return $this->_remove($value, $found);
+    }
+
+    /**
+     * Remove at.
+     * @param  int        $key
+     * @param  bool|null &$found
+     * @return self
+     */
+    public function removeAt(int $key, bool &$found = null): self
+    {
+        return $this->_removeAt($key, $found);
+    }
+
+    /**
+     * Remove all.
+     * @param  array     $values
+     * @param  int|null &$count
+     * @return self
+     */
+    public function removeAll(array $values, int &$count = null): self
+    {
+        return $this->_removeAll($values, $count);
+    }
+
+    /**
+     * Append.
+     * @param  any       $value
+     * @param  int|null &$size
+     * @return self
+     */
+    public function append($value, int &$size = null): self
+    {
+        return $this->_append($value, $size);
+    }
+
+    /**
+     * Prepend.
+     * @param  any       $value
+     * @param  int|null &$size
+     * @return self
+     */
+    public function prepend($value, int &$size = null): self
+    {
+        return $this->_prepend($value, $size);
+    }
+
+    /**
+     * Pop.
+     * @param  int|null &$size
+     * @return any
+     */
+    public function pop(int &$size = null)
+    {
+        return $this->_pop($size);
+    }
+
+    /**
+     * Unpop.
+     * @param  any       $value
+     * @param  int|null &$size
+     * @return self
+     */
+    public function unpop($value, int &$size = null): self
+    {
+        return $this->_unpop($value, $size);
+    }
+
+    /**
+     * Shift.
+     * @param  int|null &$size
+     * @return any
+     */
+    public function shift(int &$size = null)
+    {
+        return $this->_shift($size);
+    }
+
+    /**
+     * Unshift.
+     * @param  any       $value
+     * @param  int|null &$size
+     * @return self
+     */
+    public function unshift($value, int &$size = null): self
+    {
+        return $this->_unshift($value, $size);
+    }
+
+    /**
+     * Put.
+     * @param  int $key
+     * @param  any $value
+     * @return self
+     */
+    public function put(int $key, $value): self
+    {
+        return $this->_put($key, $value);
+    }
+
+    /**
+     * Push.
+     * @param  int $key
+     * @param  any $value
+     * @return self
+     */
+    public function push(int $key, $value): self
+    {
+        return $this->_push($key, $value);
+    }
+
+    /**
+     * Pull.
+     * @param  int         $key
+     * @param  any|null    $valueDefault
+     * @param  bool|null  &$found
+     * @return any|null
+     */
+    public function pull(int $key, $valueDefault = null, bool &$found = null)
+    {
+        return $this->_pull($key, $valueDefault, $found);
+    }
+
+    /**
+     * Replace.
+     * @param  any        $value
+     * @param  any        $replaceValue
+     * @param  bool|null &$found
+     * @return self
+     */
+    public function replace($value, $replaceValue, bool &$found = null): self
+    {
+        return $this->_replace($value, $replaceValue, $found);
+    }
+
+    /**
+     * Replace at.
+     * @param  int         $key
+     * @param  any         $replaceValue
+     * @param  bool|null  &$found
+     * @return self
+     */
+    public function replaceAt(int $key, $replaceValue, bool &$found = null): self
+    {
+        return $this->_replaceAt($key, $replaceValue, $found);
+    }
+
+    /**
+     * Pad.
+     * @param  int      $times
+     * @param  any      $value
+     * @param  int|null $offset
+     * @return self
+     */
+    public function pad(int $times, $value, int $offset = null): self
+    {
+        return $this->_pad($times, $value, $offset);
+    }
 }

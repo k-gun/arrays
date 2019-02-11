@@ -143,7 +143,7 @@ trait ArrayTrait
 
     /**
      * Get.
-     * @param  int|strings $key
+     * @param  int|string  $key
      * @param  any|null    $valueDefault
      * @param  bool|null  &$found
      * @return any|null
@@ -163,7 +163,6 @@ trait ArrayTrait
      * Add.
      * @param  any $value
      * @return xo\ArrayInterface
-     *
      */
     protected final function _add($value): ArrayInterface
     {
