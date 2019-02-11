@@ -741,7 +741,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  int|null &$valueCount
      * @return ?float
      */
-    public function calcAvg(string $operator, bool $numericsOnly = true, int &$valueCount = null): ?float
+    public final function calcAvg(string $operator, bool $numericsOnly = true, int &$valueCount = null): ?float
     {
         $result = $this->calc($operator, $numericsOnly, $valueCount);
 
@@ -754,7 +754,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  int|null &$valueCount
      * @return int|float|null
      */
-    public function sum(bool $numericsOnly = true, int &$valueCount = null)
+    public final function sum(bool $numericsOnly = true, int &$valueCount = null)
     {
         return $this->calc('+', $numericsOnly, $valueCount);
     }
@@ -765,7 +765,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  int|null &$valueCount
      * @return ?float
      */
-    public function sumAvg(bool $numericsOnly = true, int &$valueCount = null): ?float
+    public final function sumAvg(bool $numericsOnly = true, int &$valueCount = null): ?float
     {
         return $this->calcAvg('+', $numericsOnly, $valueCount);
     }
