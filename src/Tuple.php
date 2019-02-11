@@ -41,7 +41,7 @@ class Tuple extends TypedArray
             'append', 'prepend', 'pop', 'unpop', 'shift', 'unshift', 'put', 'push', 'pull', 'find', 'findKey',
             'findIndex', 'replace', 'replaceAt', 'flip', 'pad', 'fill',
                 // and base methods
-                'empty', 'reset', 'map', 'filter', 'merge', 'reverse', 'shuffle'];
+                'reset', 'resetItems', 'empty', 'map', 'filter', 'merge', 'reverse', 'shuffle'];
 
         parent::__construct(Type::TUPLE, $items, $itemsType, $readOnly = true, $allowNulls);
     }
