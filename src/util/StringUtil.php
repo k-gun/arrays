@@ -24,13 +24,14 @@
  */
 declare(strict_types=1);
 
-namespace Froq\Util;
+namespace objects\util;
+
+use objects\util\Util;
 
 /**
- * @package    Froq
- * @subpackage Froq\Util
- * @object     Froq\Util\Strings
- * @author     Kerem Güneş <k-gun@mail.com>
+ * @package objects\util
+ * @object  objects\util\StringUtil
+ * @author  Kerem Güneş <k-gun@mail.com>
  */
 class StringUtil extends Util
 {
@@ -41,8 +42,7 @@ class StringUtil extends Util
      * @param  bool   $caseSensitive
      * @return bool
      */
-    public static function contains(string $source, string $search,
-        bool $caseSensitive = true): bool
+    public static function contains(string $source, string $search, bool $caseSensitive = true): bool
     {
         return (false !== ($caseSensitive ? strpos($source, $search) : stripos($source, $search)));
     }
@@ -54,8 +54,7 @@ class StringUtil extends Util
      * @param  bool   $caseSensitive
      * @return bool
      */
-    public static function containsAny(string $source, array $searches,
-        bool $caseSensitive = true): bool
+    public static function containsAny(string $source, array $searches, bool $caseSensitive = true): bool
     {
         foreach ($searches as $search) {
             if (self::contains($source, $search, $caseSensitive)) {
@@ -72,8 +71,7 @@ class StringUtil extends Util
      * @param  bool   $caseSensitive
      * @return bool
      */
-    public static function containsAll(string $source, array $searches,
-        bool $caseSensitive = true): bool
+    public static function containsAll(string $source, array $searches, bool $caseSensitive = true): bool
     {
         foreach ($searches as $search) {
             if (!self::contains($source, $search, $caseSensitive)) {

@@ -24,18 +24,18 @@
  */
 declare(strict_types=1);
 
-namespace objects\collection;
+namespace objects\util;
 
 use objects\Type;
 use objects\util\{Util, UtilException};
 use Closure;
 
 /**
- * @package objects\collection
- * @object  objects\collection\CollectionUtil
+ * @package objects\util
+ * @object  objects\util\ArrayUtil
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class CollectionUtil extends Util
+class ArrayUtil extends Util
 {
     /**
      * Key check.

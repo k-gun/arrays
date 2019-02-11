@@ -27,7 +27,7 @@ declare(strict_types=1);
 namespace objects\collection;
 
 use objects\{Type, TheObject};
-use objects\util\CollectionUtil;
+use objects\util\ArrayUtil;
 use objects\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
     MutationException, NullException};
 use objects\collection\CollectionException;
@@ -500,7 +500,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
      */
     public final function rand(int $size = 1, bool $useKeys = false)
     {
-        return CollectionUtil::rand($this->items(), $size, $useKeys);
+        return ArrayUtil::rand($this->items(), $size, $useKeys);
     }
 
     /**
@@ -516,7 +516,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
 
         $items = $this->items();
         if ($items != null) {
-            CollectionUtil::shuffle($items, $preserveKeys ?? Type::isMapLike($this));
+            ArrayUtil::shuffle($items, $preserveKeys ?? Type::isMapLike($this));
         }
 
         return $this->reset($items);
@@ -535,7 +535,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
         $this->readOnlyCheck();
 
         $items = $this->items();
-        return $this->reset(CollectionUtil::sort($items, $func, $ufunc, $flags));
+        return $this->reset(ArrayUtil::sort($items, $func, $ufunc, $flags));
     }
 
     /**
@@ -591,7 +591,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
      */
     public final function test(Closure $func): bool
     {
-        return CollectionUtil::test($this->toArray(), $func);
+        return ArrayUtil::test($this->items(), $func);
     }
 
     /**
@@ -601,7 +601,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
      */
     public final function testAll(Closure $func): bool
     {
-        return CollectionUtil::testAll($this->toArray(), $func);
+        return ArrayUtil::testAll($this->items(), $func);
     }
 
     /**
@@ -612,7 +612,7 @@ abstract class AbstractArray extends TheObject implements ArrayInterface, Counta
      */
     public final function keyCheck($key): void
     {
-        if ($message = CollectionUtil::keyCheck($key, false)) {
+        if ($message = ArrayUtil::keyCheck($key, false)) {
             throw new ArgumentTypeException($message);
         }
     }

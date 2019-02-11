@@ -27,7 +27,8 @@ declare(strict_types=1);
 namespace objects;
 
 use objects\StaticClass;
-use objects\collection\{AnyArray, Map, Set, Tuple, CollectionUtil};
+use objects\util\ArrayUtil;
+use objects\collection\{AnyArray, Map, Set, Tuple};
 use Error;
 
 /**
@@ -60,12 +61,12 @@ final /* static */ class Type extends StaticClass
         $typeBasic = self::isBasic($type); $isMapLike = $isSetLike = false;
         if (!$typeBasic) {
             if ($isMapLike = self::isMapLike($object)) {
-                if (!CollectionUtil::isAssociativeArray($items)) {
+                if (!ArrayUtil::isAssociativeArray($items)) {
                     $error = sprintf(self::$mapMessage, $type);
                     return false;
                 }
             } elseif ($isSetLike = self::isSetLike($object)) {
-                if (!CollectionUtil::isSequentialArray($items)) {
+                if (!ArrayUtil::isSequentialArray($items)) {
                     $error = sprintf(self::$setMessage, $type);
                     return false;
                 }
