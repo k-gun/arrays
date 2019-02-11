@@ -24,13 +24,13 @@
  */
 declare(strict_types=0);
 
-namespace arrays;
+namespace objects\collection;
 
 use Closure;
 
 /**
- * @package arrays
- * @object  arrays\ArrayTrait
+ * @package objects\collection
+ * @object  objects\collection\ArrayTrait
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 trait ArrayTrait

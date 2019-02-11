@@ -24,18 +24,18 @@
  */
 declare(strict_types=1);
 
-namespace arrays;
+namespace objects;
 
 /**
- * @package arrays
- * @object  arrays\Autoload
+ * @package objects
+ * @object  objects\Autoload
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 final class Autoload
 {
     /**
      * Instance.
-     * @var arrays\Autoload
+     * @var objects\Autoload
      */
     private static $instance;
 
@@ -80,10 +80,10 @@ final class Autoload
                 $object = '\\'. $object;
             }
 
-            $ns  = '\arrays';
+            $ns  = '\objects';
             $dir = __dir__;
 
-            // arrays objects only
+            // objects objects only
             if (strpos($object, $ns) !== 0) {
                 return;
             }

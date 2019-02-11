@@ -24,14 +24,14 @@
  */
 declare(strict_types=1);
 
-namespace objects\exception;
+namespace objects\util;
 
-use objects\exception\Exception;
+use objects\StaticClass;
 
 /**
- * @package objects\exception
- * @object  objects\exception\TypeException
+ * @package objects\util
+ * @object  objects\util\Util
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class TypeException extends Exception
+class Util extends StaticClass
 {}

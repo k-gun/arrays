@@ -24,34 +24,40 @@
  */
 declare(strict_types=1);
 
-namespace arrays;
+namespace objects\collection;
 
-use arrays\{Type, TypedArray};
+use objects\Type;
+use objects\collection\AbstractArray;
+use objects\exception\TypeException;
 
 /**
- * @package arrays
- * @object  arrays\Tuple
+ * @package objects\collection
+ * @object  objects\collection\Map
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class Tuple extends TypedArray
+class TypedArray extends AbstractArray
 {
-    public function __construct(array $items = null, string $itemsType = null, bool $allowNulls = false)
-    {
-        self::$notAllowedMethods = [
-            /* base methods */ 'reset', 'resetItems', 'empty', 'map', 'filter', 'merge', 'reverse', 'shuffle',
-            'search', 'searchLast', 'set', 'add', 'remove', 'removeAt', 'removeAll', 'append', 'prepend', 'pop',
-            'unpop', 'shift', 'unshift', 'put', 'push', 'pull', 'find', 'findKey', 'findIndex', 'replace', 'replaceAt',
-            'flip', 'pad', 'fill'
-        ];
+    protected $type;
+    protected $readOnly;
+    protected $allowNulls;
 
-        parent::__construct(Type::TUPLE, $items, $itemsType, $readOnly = true, $allowNulls);
+    public function __construct(string $type, array $items = null, string $itemsType = null,
+        bool $readOnly = false, bool $allowNulls = false)
+    {
+        $this->type = $type;
+        $this->readOnly = $readOnly;
+        $this->allowNulls = $allowNulls;
+
+        if ($type != Type::ANY && $items != null) {
+            if (!Type::validateItems($this, $items, $itemsType, $error)) {
+                throw new TypeException($error);
+            }
+        }
+
+        parent::__construct($type, $items);
     }
 
-    public function indexOf($value): ?int { return $this->_indexOf($value); }
-    public function lastIndexOf($value): ?int { return $this->_lastIndexOf($value); }
-
-    public function has($value): bool { return $this->_has($value); }
-    public function hasKey(int $key): bool { return $this->_hasKey($key); }
-
-    public function get($key, $valueDefault = null, bool &$ok = null) { return $this->_get($key, $valueDefault, $ok); }
+    public final function type(): string { return $this->type; }
+    public final function readOnly(): bool { return $this->readOnly; }
+    public final function allowNulls(): bool { return $this->allowNulls; }
 }

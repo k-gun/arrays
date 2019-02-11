@@ -24,14 +24,12 @@
  */
 declare(strict_types=1);
 
-namespace objects\exception;
-
-use objects\exception\Exception;
+namespace objects\collection;
 
 /**
- * @package objects\exception
- * @object  objects\exception\TypeException
+ * @package objects\collection
+ * @object  objects\collection\ArrayInterface
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class TypeException extends Exception
+interface ArrayInterface
 {}

@@ -24,13 +24,14 @@
  */
 declare(strict_types=1);
 
-namespace arrays;
+namespace objects\collection;
 
-use arrays\{Type, TypedArray};
+use objects\Type;
+use objects\collection\TypedArray;
 
 /**
- * @package arrays
- * @object  arrays\Map
+ * @package objects\collection
+ * @object  objects\collection\Map
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Map extends TypedArray

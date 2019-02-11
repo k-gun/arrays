@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace arrays\exception;
+namespace objects\exception;
 
-use arrays\exception\Exception;
+use objects\exception\Exception;
 
 /**
- * @package arrays\exception
- * @object  arrays\exception\MethodException
+ * @package objects\exception
+ * @object  objects\exception\MethodException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class MethodException extends Exception

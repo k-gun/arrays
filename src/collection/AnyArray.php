@@ -24,15 +24,15 @@
  */
 declare(strict_types=1);
 
-namespace arrays;
+namespace objects\collection;
 
-use arrays\{Type, TypedArray};
-use arrays\exception\TypeException;
+use objects\{Type, TypedArray};
+use objects\collection\CollectionException;
 use Closure;
 
 /**
- * @package arrays
- * @object  arrays\AnyArray
+ * @package objects\collection
+ * @object  objects\collection\AnyArray
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class AnyArray extends TypedArray
@@ -328,17 +328,18 @@ class AnyArray extends TypedArray
     /**
      * Flip.
      * @return self
-     * @throws arrays\exception\TypeException
+     * @throws objects\collection\CollectionException
      */
     public function flip(): self
     {
         $items = $this->items();
         foreach ($items as $key => $value) {
             if (!is_int($value) && !is_string($value)) {
-                throw new TypeException(sprintf('Cannot flip array, value is not int or string '.
+                throw new CollectionException(sprintf('Cannot flip array, value is not int or string '.
                     '[key: %s, value: %s]', $key, Type::export($value)));
             }
         }
+
         return $this->reset(array_flip($items));
     }
 

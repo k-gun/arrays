@@ -24,14 +24,14 @@
  */
 declare(strict_types=1);
 
-namespace arrays\exception;
+namespace objects\util;
 
-use arrays\exception\Exception;
+use objects\exception\Exception;
 
 /**
- * @package arrays\exception
- * @object  arrays\exception\ArrayException
+ * @package objects\util
+ * @object  objects\util\UtilException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class ArrayException extends Exception
+final class UtilException extends Exception
 {}

@@ -24,23 +24,25 @@
  */
 declare(strict_types=1);
 
-namespace arrays;
+namespace objects\collection;
 
-use arrays\{Util, Type, AnyArray, ArrayTrait, ArrayInterface, ArrayException};
-use arrays\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
+use objects\{Type, TheObject};
+use objects\util\CollectionUtil;
+use objects\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
     MutationException, NullException};
+use objects\collection\CollectionException;
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
- * @package arrays
- * @object  arrays\AbstractArray
+ * @package objects\collection
+ * @object  objects\collection\AbstractArray
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggregate
+abstract class AbstractArray extends TheObject implements ArrayInterface, Countable, IteratorAggregate
 {
     /**
      * ArrayTrait.
-     * @object arrays\ArrayTrait
+     * @object objects\collection\ArrayTrait
      */
     use ArrayTrait;
 
@@ -82,7 +84,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  string $method
      * @param  array  $methodArgs
      * @return any
-     * @throws arrays\MethodException
+     * @throws objects\exception\MethodException
      */
     public final function __call(string $method, array $methodArgs)
     {
@@ -100,7 +102,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  string   $method
      * @param  callable $methodFunc
      * @return void
-     * @throws arrays\MethodException
+     * @throws objects\exception\MethodException
      */
     public final function prototype(string $method, callable $methodFunc): void
     {
@@ -153,7 +155,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * Reset.
      * @param  array $items
      * @return self
-     * @throws arrays\MutationException
+     * @throws objects\exception\MutationException
      */
     public final function reset(array $items): self
     {
@@ -169,7 +171,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * Reset items (alias of reset()).
      * @param  array $items
      * @return self
-     * @throws arrays\MutationException
+     * @throws objects\exception\MutationException
      */
     public final function resetItems(array $items): self
     {
@@ -180,7 +182,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
     /**
      * Copy.
-     * @return arrays\ArrayInterface
+     * @return objects\collection\ArrayInterface
      */
     public final function copy(): ArrayInterface
     {
@@ -340,7 +342,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  callable $func
      * @param  bool     $breakable
      * @return self
-     * @throws arrays\MutationException
+     * @throws objects\exception\MutationException
      */
     public final function map(callable $func): self
     {
@@ -370,7 +372,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * Filter.
      * @param  callable|null $func
      * @return self
-     * @throws arrays\MutationException
+     * @throws objects\exception\MutationException
      */
     public final function filter(callable $func = null): self
     {
@@ -440,7 +442,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * Merge.
      * @param  self $array
      * @return self
-     * @throws arrays\MutationException,ArgumentException
+     * @throws objects\exception\MutationException,ArgumentException
      */
     public final function merge(self $array): self
     {
@@ -480,7 +482,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     /**
      * Reverse.
      * @return self
-     * @throws arrays\MutationException
+     * @throws objects\exception\MutationException
      */
     public final function reverse(): self
     {
@@ -498,14 +500,14 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function rand(int $size = 1, bool $useKeys = false)
     {
-        return Util::rand($this->items(), $size, $useKeys);
+        return CollectionUtil::rand($this->items(), $size, $useKeys);
     }
 
     /**
      * Shuffle.
      * @param  bool|null $preserveKeys
      * @return self
-     * @throws arrays\MutationException
+     * @throws objects\exception\MutationException
      */
     public final function shuffle(bool $preserveKeys = null): self
     {
@@ -514,7 +516,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
 
         $items = $this->items();
         if ($items != null) {
-            Util::shuffle($items, $preserveKeys ?? Type::isMapLike($this));
+            CollectionUtil::shuffle($items, $preserveKeys ?? Type::isMapLike($this));
         }
 
         return $this->reset($items);
@@ -526,14 +528,14 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  callable|null $ufunc
      * @param  int           $flags
      * @return self
-     * @throws arrays\MutationException
+     * @throws objects\exception\MutationException
      */
     public final function sort(callable $func = null, callable $ufunc = null, int $flags = 0): self
     {
         $this->readOnlyCheck();
 
         $items = $this->items();
-        return $this->reset(Util::sort($items, $func, $ufunc, $flags));
+        return $this->reset(CollectionUtil::sort($items, $func, $ufunc, $flags));
     }
 
     /**
@@ -589,7 +591,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function test(Closure $func): bool
     {
-        return Util::test($this->toArray(), $func);
+        return CollectionUtil::test($this->toArray(), $func);
     }
 
     /**
@@ -599,26 +601,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function testAll(Closure $func): bool
     {
-        return Util::testAll($this->toArray(), $func);
-    }
-
-    /**
-     * Get name.
-     * @return string
-     */
-    public final function getName(): string
-    {
-        return static::class;
-    }
-
-    /**
-     * Get short name.
-     * @return string
-     */
-    public final function getShortName(): string
-    {
-        return substr($name = $this->getName(),
-            (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
+        return CollectionUtil::testAll($this->toArray(), $func);
     }
 
     /**
@@ -629,7 +612,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function keyCheck($key): void
     {
-        if ($message = Util::keyCheck($key, false)) {
+        if ($message = CollectionUtil::keyCheck($key, false)) {
             throw new ArgumentTypeException($message);
         }
     }
@@ -652,7 +635,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * Method check.
      * @param  string $method
      * @return void
-     * @throws arrays\MethodException
+     * @throws objects\exception\MethodException
      */
     public final function methodCheck(string $method): void
     {
@@ -664,7 +647,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
     /**
      * Read only check.
      * @return void
-     * @throws arrays\MutationException
+     * @throws objects\exception\MutationException
      */
     public final function readOnlyCheck(): void
     {
@@ -739,7 +722,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  bool      $numericsOnly
      * @param  int|null &$valueCount
      * @return number|null
-     * @throws arrays\ArrayException
+     * @throws objects\collection\CollectionException
      */
     public final function calc(string $operator, bool $numericsOnly = true, int &$valueCount = null)
     {
@@ -758,7 +741,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
                     case '/': $result /= $value; break;
                     case '*': $result *= $value; break;
                     case '**': $result **= $value; break;
-                    default: throw new ArrayException("Unknown operator {$operator} given");
+                    default: throw new CollectionException("Unknown operator {$operator} given");
                 }
                 $valueCount++;
             }
@@ -808,7 +791,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @param  string     $command
      * @param  any    &...$arguments
      * @return void
-     * @throws arrays\MutationException,NullException,ArrayException
+     * @throws objects\exception\MutationException,NullException
+     * @throws objects\collection\CollectionException
      */
     private final function stackCommand(string $command, &...$arguments): void
     {
@@ -872,7 +856,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
                 @ $this->stack->offsetUnset($key);
                 break;
             default:
-                throw new ArrayException("Unknown command {$command}");
+                throw new CollectionException("Unknown command {$command}");
         }
     }
 }

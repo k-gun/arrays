@@ -24,20 +24,20 @@
  */
 declare(strict_types=1);
 
-namespace arrays;
+namespace objects;
 
-use arrays\StaticClassException;
+use objects\StaticClassException;
 
 /**
- * @package arrays
- * @object  arrays\StaticClass
+ * @package objects
+ * @object  objects\StaticClass
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class StaticClass
 {
     /**
      * Constructor.
-     * @throws arrays\StaticClassException
+     * @throws objects\StaticClassException
      */
     public final function __construct()
     {

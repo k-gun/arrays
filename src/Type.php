@@ -24,15 +24,15 @@
  */
 declare(strict_types=1);
 
-namespace arrays;
+namespace objects;
 
+use objects\StaticClass;
+use objects\collection\{AnyArray, Map, Set, Tuple, CollectionUtil};
 use Error;
-use arrays\{StaticClass, Map, Set, Tuple, AnyArray};
-use function arrays\{is_sequential_array, is_associative_array};
 
 /**
- * @package arrays
- * @object  arrays\Type
+ * @package objects
+ * @object  objects\Type
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 final /* static */ class Type extends StaticClass
@@ -60,12 +60,12 @@ final /* static */ class Type extends StaticClass
         $typeBasic = self::isBasic($type); $isMapLike = $isSetLike = false;
         if (!$typeBasic) {
             if ($isMapLike = self::isMapLike($object)) {
-                if (!is_associative_array($items)) {
+                if (!CollectionUtil::isAssociativeArray($items)) {
                     $error = sprintf(self::$mapMessage, $type);
                     return false;
                 }
             } elseif ($isSetLike = self::isSetLike($object)) {
-                if (!is_sequential_array($items)) {
+                if (!CollectionUtil::isSequentialArray($items)) {
                     $error = sprintf(self::$setMessage, $type);
                     return false;
                 }

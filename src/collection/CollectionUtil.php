@@ -24,24 +24,25 @@
  */
 declare(strict_types=1);
 
-namespace arrays;
+namespace objects\collection;
 
-use arrays\{StaticClass, Type, UtilException};
+use objects\Type;
+use objects\util\{Util, UtilException};
 use Closure;
 
 /**
- * @package arrays
- * @object  arrays\Util
+ * @package objects\collection
+ * @object  objects\collection\CollectionUtil
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-final /* static */ class Util extends StaticClass
+class CollectionUtil extends Util
 {
     /**
      * Key check.
      * @param  int|string $key
      * @param  bool       $throw
      * @return ?string
-     * @throws array\UtilException
+     * @throws objects\util\UtilException
      */
     public static function keyCheck($key, bool $throw = true): ?string
     {
@@ -56,6 +57,32 @@ final /* static */ class Util extends StaticClass
         }
 
         return $message ?? null;
+    }
+
+    /**
+     * Is sequential array.
+     * @param  array $array
+     * @return bool
+     */
+    public static function isSequentialArray(array $array): bool
+    {
+        return !$array || array_keys($array) === range(0, count($array) - 1);
+    }
+
+    /**
+     * Is associative array.
+     * @param  array $array
+     * @return bool
+     */
+    public static function isAssociativeArray(array $array): bool
+    {
+        if (count($array) !== count(array_filter(array_keys($array), 'is_string'))) {
+            return false;
+        }
+
+        // @link https://stackoverflow.com/a/6968499/362780
+        return !$array || ($array !== array_values($array)); // speed-wise
+        // $array = array_keys($array); return ($array !== array_keys($array)); // memory-wise:
     }
 
     /**
@@ -214,6 +241,7 @@ final /* static */ class Util extends StaticClass
      * @param  int    $size
      * @param  bool   $useKeys
      * @return any|null
+     * @throws objects\util\UtilException
      */
     public static function rand(array $items, int $size = 1, bool $useKeys = false)
     {
@@ -283,7 +311,7 @@ final /* static */ class Util extends StaticClass
      * @param  callable|null $ufunc
      * @param  int           $flags
      * @return array
-     * @throws arrays\UtilException
+     * @throws objects\util\UtilException
      */
     public static function sort(array &$array, callable $func = null, callable $ufunc = null, int $flags = 0): array
     {
@@ -296,6 +324,7 @@ final /* static */ class Util extends StaticClass
                 throw new UtilException("Second argument must be callable when usort,uasort,".
                     "uksort given");
             }
+
             $arguments = [&$array, $flags];
             if ($ufunc != null) {
                 if (in_array($func, ['sort', 'asort', 'ksort'])) {
@@ -303,6 +332,7 @@ final /* static */ class Util extends StaticClass
                 }
                 $arguments[1] = $ufunc; // replace flags with ufunc
             }
+
             call_user_func_array($func, $arguments);
         }
 
