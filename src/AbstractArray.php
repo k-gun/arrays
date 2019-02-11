@@ -26,9 +26,9 @@ declare(strict_types=1);
 
 namespace arrays;
 
-use arrays\{Util, Type, AnyArray, ArrayTrait, ArrayInterface};
-use arrays\exception\{ArrayException, TypeException, MethodException,
-    ArgumentException, ArgumentTypeException, MutationException, NullException};
+use arrays\{Util, Type, AnyArray, ArrayTrait, ArrayInterface, ArrayException};
+use arrays\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
+    MutationException, NullException};
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
