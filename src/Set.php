@@ -54,7 +54,7 @@ class Set extends TypedArray
     public function set(int $key, $value, int &$size = null): self { return $this->_set($key, $value, $size); }
     public function get(int $key, $valueDefault = null, bool &$ok = null) { return $this->_get($key, $valueDefault, $ok); }
 
-    public function add($value) { return $this->_add($value); }
+    public function add($value): self { return $this->_add($value); }
     public function remove($value, bool &$ok = null): self { return $this->_remove($value, $ok); }
     public function removeAt(int $key, bool &$ok = null): self { return $this->_removeAt($key, $ok); }
     public function removeAll(array $values, int &$count = null): self { return $this->_removeAll($values, $count); }
