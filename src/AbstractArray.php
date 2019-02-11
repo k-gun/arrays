@@ -126,6 +126,8 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      */
     public final function item($key)
     {
+        $this->keyCheck($key);
+
         return $this->stack[$key] ?? null;
     }
 
