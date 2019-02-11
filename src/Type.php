@@ -27,7 +27,7 @@ declare(strict_types=1);
 namespace arrays;
 
 use Error;
-use arrays\{Map, Set, Tuple, AnyArray};
+use arrays\{StaticClass, Map, Set, Tuple, AnyArray};
 use function arrays\{is_sequential_array, is_associative_array};
 
 /**
@@ -35,7 +35,7 @@ use function arrays\{is_sequential_array, is_associative_array};
  * @object  arrays\Type
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-final /* static */ class Type
+final /* static */ class Type extends StaticClass
 {
     /**
      * Types.
@@ -53,18 +53,18 @@ final /* static */ class Type
     private static $valueMessage = 'All values of %s() must be type of %s, %s given (offset: %s, value: %s)';
     private static $nullValueMessage = '%s() object do not accept null values, null given (offset: %s)';
 
-    public static function validateItems(object $array, array $items, string $itemsType = null, string &$error = null): bool
+    public static function validateItems(object $object, array $items, string $itemsType = null, string &$error = null): bool
     {
-        $type = $array->type();
-        $allowNulls = $array->allowNulls();
+        $type = $object->type();
+        $allowNulls = $object->allowNulls();
         $typeBasic = self::isBasic($type); $isMapLike = $isSetLike = false;
         if (!$typeBasic) {
-            if ($isMapLike = self::isMapLike($array)) {
+            if ($isMapLike = self::isMapLike($object)) {
                 if (!is_associative_array($items)) {
                     $error = sprintf(self::$mapMessage, $type);
                     return false;
                 }
-            } elseif ($isSetLike = self::isSetLike($array)) {
+            } elseif ($isSetLike = self::isSetLike($object)) {
                 if (!is_sequential_array($items)) {
                     $error = sprintf(self::$setMessage, $type);
                     return false;
@@ -77,13 +77,13 @@ final /* static */ class Type
             if ($value === null) {
                 if ($allowNulls) {
                     $offset++; continue; }
-                $error = sprintf(self::$nullValueMessage, $array->getShortName(), $offset);
+                $error = sprintf(self::$nullValueMessage, $object->getShortName(), $offset);
                 return false;
             }
             $valueType = self::get($value);
             if ($typeBasic) {
                 if ($valueType != $type) {
-                    $error = sprintf(self::$valueMessage, $array->getShortName(), $type, $valueType, $offset,
+                    $error = sprintf(self::$valueMessage, $object->getShortName(), $type, $valueType, $offset,
                         self::export($value));
                     return false;
                 }
@@ -92,18 +92,18 @@ final /* static */ class Type
                     $itemsTypeBasic = self::isBasic($itemsType);
                     if ($itemsTypeBasic) {
                         if ($valueType != $itemsType) {
-                            $error = sprintf(self::$valueMessage, $array->getShortName(), $itemsType, $valueType, $offset,
+                            $error = sprintf(self::$valueMessage, $object->getShortName(), $itemsType, $valueType, $offset,
                                 self::export($value));
                             return false;
                         }
                     } elseif (!is_a($value, $itemsType)) {
-                        $error = sprintf(self::$valueMessage, $array->getShortName(), $itemsType,
+                        $error = sprintf(self::$valueMessage, $object->getShortName(), $itemsType,
                             ($valueType == 'object' ? get_class($value) : $valueType), $offset, self::export($value));
                         return false;
                     }
                 }
             } elseif (!is_a($value, $type)) {
-                $error = sprintf(self::$valueMessage, $array->getShortName(), $type,
+                $error = sprintf(self::$valueMessage, $object->getShortName(), $type,
                     ($valueType == 'object' ? get_class($value) : $valueType), $offset, self::export($value));
                 return false;
             }
