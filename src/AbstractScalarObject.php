@@ -107,5 +107,15 @@ abstract class AbstractScalarObject extends AbstractObject
     {
         return $this->value === null;
     }
+
+    /**
+     * Equals to.
+     * @param  scalar $value
+     * @return bool
+     */
+    public final function equalTo($value): bool
+    {
+        return $this->value === $value;
+    }
 }
 

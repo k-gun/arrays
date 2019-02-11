@@ -45,9 +45,9 @@ class StringObject extends AbstractScalarObject
 
     /**
      * Constructor.
-     * @param string|null $value
+     * @param string $value
      */
-    public function __construct(string $value = null)
+    public function __construct(string $value)
     {
         parent::__construct($value);
     }
@@ -214,16 +214,6 @@ class StringObject extends AbstractScalarObject
     public final function containsAll(array $searches, bool $caseSensitive = true): bool
     {
         return StringUtil::containsAny((string) $this->value, $searches, $caseSensitive);
-    }
-
-    /**
-     * Equal to.
-     * @param  string $value
-     * @return bool
-     */
-    public final function equalTo(string $value): bool
-    {
-        return $this->value !== null && $this->value === $value;
     }
 
     /**
