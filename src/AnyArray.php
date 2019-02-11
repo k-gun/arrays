@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace arrays;
 
 use arrays\{Type, TypedArray};
+use arrays\exception\TypeException;
 use Closure;
 
 /**
@@ -44,16 +45,76 @@ class AnyArray extends TypedArray
         parent::__construct(Type::ANY, $items, $itemsType = null, $readOnly, $allowNulls);
     }
 
-    public function search($value) { return $this->_search($value); }
-    public function searchLast($value) { return $this->_searchLast($value); }
-    public function indexOf($value): ?int { return $this->_indexOf($value); }
-    public function lastIndexOf($value): ?int { return $this->_lastIndexOf($value); }
+    /**
+     * Search.
+     * @param  any $value
+     * @return int|string|null
+     */
+    public function search($value)
+    {
+        return $this->_search($value);
+    }
 
-    public function has($value): bool { return $this->_has($value); }
-    public function hasKey($key): bool { return $this->_hasKey($key); }
+    /**
+     * Search last.
+     * @param  any $value
+     * @return int|string|null
+     */
+    public function searchLast($value)
+    {
+        return $this->_searchLast($value);
+    }
 
-    public function set($key, $value, int &$size = null): self { return $this->_set($key, $value, $size); }
-    public function get($key, $valueDefault = null, bool &$ok = null) { return $this->_get($key, $valueDefault, $ok); }
+    /**
+     * Index of.
+     * @param  any $value
+     * @return ?int
+     */
+    public function indexOf($value): ?int
+    {
+        return $this->_indexOf($value);
+    }
+
+    /**
+     * Last index of.
+     * @param  any $value
+     * @return ?int
+     */
+    public function lastIndexOf($value): ?int
+    {
+        return $this->_lastIndexOf($value);
+    }
+
+    /**
+     * Has.
+     * @param  any $value
+     * @return bool
+     */
+    public function has($value): bool
+    {
+        return $this->_has($value);
+    }
+
+    /**
+     * Has key.
+     * @param  int|string $value
+     * @return bool
+     */
+    public function hasKey($key): bool
+    {
+        return $this->_hasKey($key);
+    }
+
+    /**
+     * Set.
+     * @param int|string $key
+     * @param [type]   $value
+     * @param int|null &$size
+     */
+    public function set($key, $value, int &$size = null): self
+    { return $this->_set($key, $value, $size); }
+    public function get($key, $valueDefault = null, bool &$ok = null)
+    { return $this->_get($key, $valueDefault, $ok); }
 
     public function add($value) { return $this->_add($value); }
     public function remove($value, bool &$ok = null): self { return $this->_remove($value, $ok); }
@@ -80,7 +141,16 @@ class AnyArray extends TypedArray
     public function replace($value, $replaceValue, bool &$ok = null): self { return $this->_replace($value, $replaceValue, $ok); }
     public function replaceAt($key, $replaceValue, bool &$ok = null): self { return $this->_replaceAt($key, $replaceValue, $ok); }
 
-    public function flip(): self { return $this->reset(array_flip($this->items())); }
+    public function flip(): self {
+        $items = $this->items();
+        foreach ($items as $key => $value) {
+            if (!is_int($value) && !is_string($value)) {
+                throw new TypeException(sprintf('Cannot flip array, value is not int or string '.
+                    '[key: %s, value: %s]', $key, Type::export($value)));
+            }
+        }
+        return $this->reset(array_flip($items));
+    }
     public function pad(int $times, $value): self { return $this->_pad($times, $value); }
     public function fill(int $times, $value, int $offset = 0): self { return $this->_fill($times, $value, $offset); }
 }
