@@ -84,5 +84,33 @@ abstract class AbstractScalarObject extends AbstractObject
     {
         return $this->valueType;
     }
+
+    /**
+     * Empty.
+     * @return void
+     */
+    public final function empty(): void
+    {
+        $this->value = null;
+        $this->valueType = null;
+    }
+
+    /**
+     * Is empty.
+     * @return bool
+     */
+    public final function isEmpty(): bool
+    {
+        return $this->value == null;
+    }
+
+    /**
+     * Is null.
+     * @return bool
+     */
+    public final function isNull(): bool
+    {
+        return $this->value === null;
+    }
 }
 
