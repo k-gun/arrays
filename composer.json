@@ -1,9 +1,9 @@
 {
-    "name": "k-gun/arrays",
+    "name": "k-gun/objects",
     "type": "library",
-    "homepage": "http://github.com/k-gun/arrays",
+    "homepage": "http://github.com/k-gun/objects",
     "description": "Arrays: An interface that provides to build strictly typed arrays such as Map, Set, Tuple or any type of TypedArray.",
-    "keywords": ["arrays", "map", "set", "tuple", "typedarray"],
+    "keywords": ["arrays", "strings", "numbers", "map", "set", "tuple", "typedarray", "arrayobject", "stringobject", "numberobject", "arrayutil"," ""stringutil", "numberutil"],
     "license": "MIT",
     "authors": [
         {"name": "Kerem Güneş", "email": "k-gun@mail.com"}
