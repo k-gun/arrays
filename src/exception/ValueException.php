@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace xobjects\exception;
+namespace xo\exception;
 
-use xobjects\exception\Exception;
+use xo\exception\Exception;
 
 /**
- * @package xobjects\exception
- * @object  xobjects\exception\ValueException
+ * @package xo\exception
+ * @object  xo\exception\ValueException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class ValueException extends Exception

@@ -24,14 +24,14 @@
  */
 declare(strict_types=0);
 
-namespace xobjects;
+namespace xo;
 
-use xobjects\ArrayInterface;
+use xo\ArrayInterface;
 use Closure;
 
 /**
- * @package xobjects
- * @object  xobjects\ArrayTrait
+ * @package xo
+ * @object  xo\ArrayTrait
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 trait ArrayTrait
@@ -132,7 +132,7 @@ trait ArrayTrait
      * @param  int|string $key
      * @param  any        $value
      * @param  int|null  &$size
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _set($key, $value, int &$size = null): ArrayInterface
     {
@@ -163,7 +163,7 @@ trait ArrayTrait
     /**
      * Add.
      * @param  any $value
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      *
      */
     protected final function _add($value): ArrayInterface
@@ -175,7 +175,7 @@ trait ArrayTrait
      * Remove.
      * @param  any        $value
      * @param  bool|null &$found
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _remove($value, bool &$found = null): ArrayInterface
     {
@@ -190,7 +190,7 @@ trait ArrayTrait
      * Remove at.
      * @param  int|string  $key
      * @param  bool|null  &$found
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _removeAt($key, bool &$found = null): ArrayInterface
     {
@@ -207,7 +207,7 @@ trait ArrayTrait
      * Remove all.
      * @param  array     $values
      * @param  int|null &$count
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _removeAll(array $values, int &$count = null): ArrayInterface
     {
@@ -225,7 +225,7 @@ trait ArrayTrait
      * Append.
      * @param  any       $value
      * @param  int|null &$size
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _append($value, int &$size = null): ArrayInterface
     {
@@ -236,7 +236,7 @@ trait ArrayTrait
      * Prepend.
      * @param  any       $value
      * @param  int|null &$size
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _prepend($value, &$size = null): ArrayInterface
     {
@@ -259,7 +259,7 @@ trait ArrayTrait
      * Unpop.
      * @param  any       $value
      * @param  int|null &$size
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _unpop($value, int &$size = null): ArrayInterface
     {
@@ -284,7 +284,7 @@ trait ArrayTrait
      * Unshift.
      * @param  any       $value
      * @param  int|null &$size
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _unshift($value, int &$size = null): ArrayInterface
     {
@@ -297,7 +297,7 @@ trait ArrayTrait
      * Put.
      * @param  int|string $key
      * @param  any        $value
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _put($key, $value): ArrayInterface
     {
@@ -311,7 +311,7 @@ trait ArrayTrait
      * Push.
      * @param  int|string $key
      * @param  any        $value
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _push($key, $value): ArrayInterface
     {
@@ -344,7 +344,7 @@ trait ArrayTrait
      * @param  any        $value
      * @param  any        $replaceValue
      * @param  bool|null &$found
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _replace($value, $replaceValue, bool &$found = null): ArrayInterface
     {
@@ -360,7 +360,7 @@ trait ArrayTrait
      * @param  int|string  $key
      * @param  any         $replaceValue
      * @param  bool|null  &$found
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _replaceAt($key, $replaceValue, bool &$found = null): ArrayInterface
     {
@@ -426,7 +426,7 @@ trait ArrayTrait
      * @param  int      $times
      * @param  any      $value
      * @param  int|null $offset
-     * @return xobjects\ArrayInterface
+     * @return xo\ArrayInterface
      */
     protected final function _pad(int $times, $value, int $offset = null): ArrayInterface
     {

@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace xobjects;
+namespace xo;
 
-use xobjects\AnyArray;
+use xo\AnyArray;
 
 /**
- * @package xobjects
- * @object  xobjects\Collection
+ * @package xo
+ * @object  xo\Collection
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Collection extends AnyArray

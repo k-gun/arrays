@@ -24,15 +24,15 @@
  */
 declare(strict_types=1);
 
-namespace xobjects\util;
+namespace xo\util;
 
-use xobjects\Type;
-use xobjects\util\{Util, UtilException};
+use xo\Type;
+use xo\util\{Util, UtilException};
 use Closure;
 
 /**
- * @package xobjects\util
- * @object  xobjects\util\ArrayUtil
+ * @package xo\util
+ * @object  xo\util\ArrayUtil
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class ArrayUtil extends Util
@@ -42,7 +42,7 @@ class ArrayUtil extends Util
      * @param  int|string $key
      * @param  bool       $throw
      * @return ?string
-     * @throws xobjects\util\UtilException
+     * @throws xo\util\UtilException
      */
     public static function keyCheck($key, bool $throw = true): ?string
     {
@@ -241,7 +241,7 @@ class ArrayUtil extends Util
      * @param  int    $size
      * @param  bool   $useKeys
      * @return any|null
-     * @throws xobjects\util\UtilException
+     * @throws xo\util\UtilException
      */
     public static function rand(array $items, int $size = 1, bool $useKeys = false)
     {
@@ -311,7 +311,7 @@ class ArrayUtil extends Util
      * @param  callable|null $ufunc
      * @param  int           $flags
      * @return array
-     * @throws xobjects\util\UtilException
+     * @throws xo\util\UtilException
      */
     public static function sort(array &$array, callable $func = null, callable $ufunc = null, int $flags = 0): array
     {

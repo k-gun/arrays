@@ -24,20 +24,20 @@
  */
 declare(strict_types=1);
 
-namespace xobjects;
+namespace xo;
 
-use xobjects\StaticClassException;
+use xo\StaticClassException;
 
 /**
- * @package xobjects
- * @object  xobjects\StaticClass
+ * @package xo
+ * @object  xo\StaticClass
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class StaticClass
 {
     /**
      * Constructor.
-     * @throws xobjects\StaticClassException
+     * @throws xo\StaticClassException
      */
     public final function __construct()
     {

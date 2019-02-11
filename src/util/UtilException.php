@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace xobjects\util;
+namespace xo\util;
 
-use xobjects\exception\Exception;
+use xo\exception\Exception;
 
 /**
- * @package xobjects\util
- * @object  xobjects\util\UtilException
+ * @package xo\util
+ * @object  xo\util\UtilException
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 final class UtilException extends Exception

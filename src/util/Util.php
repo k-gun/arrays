@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace xobjects\util;
+namespace xo\util;
 
-use xobjects\StaticClass;
+use xo\StaticClass;
 
 /**
- * @package xobjects\util
- * @object  xobjects\util\Util
+ * @package xo\util
+ * @object  xo\util\Util
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Util extends StaticClass

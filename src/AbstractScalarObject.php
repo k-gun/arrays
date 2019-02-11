@@ -24,14 +24,14 @@
  */
 declare(strict_types=1);
 
-namespace xobjects;
+namespace xo;
 
-use xobjects\{AbstractObject, Type};
-use xobjects\exception\ArgumentTypeException;
+use xo\{AbstractObject, Type};
+use xo\exception\ArgumentTypeException;
 
 /**
- * @package xobjects
- * @object  xobjects\AbstractScalarObject
+ * @package xo
+ * @object  xo\AbstractScalarObject
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 abstract class AbstractScalarObject extends AbstractObject

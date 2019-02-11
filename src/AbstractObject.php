@@ -24,11 +24,11 @@
  */
 declare(strict_types=1);
 
-namespace xobjects;
+namespace xo;
 
 /**
- * @package xobjects
- * @object  xobjects\AbstractObject
+ * @package xo
+ * @object  xo\AbstractObject
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 abstract class AbstractObject

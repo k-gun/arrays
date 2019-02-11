@@ -24,11 +24,11 @@
  */
 declare(strict_types=1);
 
-namespace xobjects;
+namespace xo;
 
 /**
- * @package xobjects
- * @object  xobjects\ArrayInterface
+ * @package xo
+ * @object  xo\ArrayInterface
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 interface ArrayInterface

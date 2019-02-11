@@ -24,14 +24,14 @@
  */
 declare(strict_types=1);
 
-namespace xobjects;
+namespace xo;
 
-use xobjects\{AbstractArray, Type};
-use xobjects\exception\TypeException;
+use xo\{AbstractArray, Type};
+use xo\exception\TypeException;
 
 /**
- * @package xobjects
- * @object  xobjects\Map
+ * @package xo
+ * @object  xo\Map
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class TypedArray extends AbstractArray

@@ -24,13 +24,13 @@
  */
 declare(strict_types=1);
 
-namespace xobjects;
+namespace xo;
 
-use xobjects\{TypedArray, Type};
+use xo\{TypedArray, Type};
 
 /**
- * @package xobjects
- * @object  xobjects\Set
+ * @package xo
+ * @object  xo\Set
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class Set extends TypedArray

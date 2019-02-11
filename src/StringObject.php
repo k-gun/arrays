@@ -24,15 +24,15 @@
  */
 declare(strict_types=1);
 
-namespace xobjects;
+namespace xo;
 
-use xobjects\AbstractScalarObject;
-use xobjects\exception\ArgumentException;
-use xobjects\util\StringUtil;
+use xo\AbstractScalarObject;
+use xo\util\StringUtil;
+use xo\exception\ArgumentException;
 
 /**
- * @package xobjects
- * @object  xobjects\StringObject
+ * @package xo
+ * @object  xo\StringObject
  * @author  Kerem Güneş <k-gun@mail.com>
  */
 class StringObject extends AbstractScalarObject
