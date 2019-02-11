@@ -28,10 +28,10 @@ namespace objects;
 
 /**
  * @package objects
- * @object  objects\TheObject
+ * @object  objects\AbstractObject
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class TheObject
+abstract class AbstractObject
 {
     /**
      * Get class.

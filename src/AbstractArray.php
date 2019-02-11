@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace objects;
 
-use objects\{Type, TheObject};
+use objects\{Type, AbstractObject};
 use objects\util\ArrayUtil;
 use objects\exception\{TypeException, MethodException, ArgumentException, ArgumentTypeException,
     MutationException, NullException};
@@ -38,7 +38,7 @@ use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
  * @object  objects\AbstractArray
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-abstract class AbstractArray extends TheObject implements ArrayInterface, Countable, IteratorAggregate
+abstract class AbstractArray extends AbstractObject implements ArrayInterface, Countable, IteratorAggregate
 {
     /**
      * ArrayTrait.
