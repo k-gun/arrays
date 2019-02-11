@@ -327,7 +327,7 @@ abstract class AbstractArray implements ArrayInterface, Countable, IteratorAggre
      * @return self
      * @throws arrays\MutationException
      */
-    public final function map(callable $func, bool $breakable = false): self
+    public final function map(callable $func): self
     {
         $this->readOnlyCheck();
 
