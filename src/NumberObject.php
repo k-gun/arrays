@@ -61,10 +61,12 @@ class NumberObject extends AbstractScalarObject
 
     /**
      * To float.
+     * @param  int $round null
      * @return float
      */
-    public function toFloat(): float
+    public function toFloat(int $round = null): float
     {
-        return (float) $this->value;
+        $value = (float) $this->value;
+        return $round !== null ? round($value, $round) : $value;
     }
 }
