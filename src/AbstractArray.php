@@ -780,12 +780,9 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @return number|null
      * @throws xo\ArrayException
      */
-    public final function calc(string $operator, bool $numericsOnly = true, int &$valueCount = null)
+    public final function calc(string $operator, int &$valueCount = null)
     {
-        $values = $this->values();
-        if ($numericsOnly) {
-            $values = array_filter($values, 'is_numeric');
-        }
+        $values = array_filter($this->values(), 'is_numeric');
 
         if ($values != null) {
             $result = array_shift($values);
@@ -809,37 +806,34 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     /**
      * Calc avg.
      * @param  string    $operator
-     * @param  bool      $numericsOnly
      * @param  int|null &$valueCount
      * @return ?float
      */
-    public final function calcAvg(string $operator, bool $numericsOnly = true, int &$valueCount = null): ?float
+    public final function calcAvg(string $operator, int &$valueCount = null): ?float
     {
-        $result = $this->calc($operator, $numericsOnly, $valueCount);
+        $result = $this->calc($operator, $valueCount);
 
         return $valueCount ? $result / $valueCount : null;
     }
 
     /**
      * Sum.
-     * @param  bool      $numericsOnly
      * @param  int|null &$valueCount
      * @return number|null
      */
-    public final function sum(bool $numericsOnly = true, int &$valueCount = null)
+    public final function sum(int &$valueCount = null)
     {
-        return $this->calc('+', $numericsOnly, $valueCount);
+        return $this->calc('+', $valueCount);
     }
 
     /**
      * Sum avg.
-     * @param  bool      $numericsOnly
      * @param  int|null &$valueCount
      * @return ?float
      */
-    public final function sumAvg(bool $numericsOnly = true, int &$valueCount = null): ?float
+    public final function sumAvg(int &$valueCount = null): ?float
     {
-        return $this->calcAvg('+', $numericsOnly, $valueCount);
+        return $this->calcAvg('+', $valueCount);
     }
 
     /**
