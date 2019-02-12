@@ -254,7 +254,8 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function copy(): ArrayInterface
     {
-        return clone $this;
+        // return a shadowed copy, clone $this will modify all things in
+        return unserialize(serialize(clone $this));
     }
 
     /**
