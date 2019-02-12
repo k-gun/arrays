@@ -294,6 +294,20 @@ trait ArrayTrait
     }
 
     /**
+     * Put.
+     * @param  int|string $key
+     * @param  any        $value
+     * @return xo\ArrayInterface
+     */
+    protected final function _put($key, $value): ArrayInterface
+    {
+        $this->keyValueCheck($key, $value);
+        $this->executeCommand('put', $key, $value);
+
+        return $this;
+    }
+
+    /**
      * Push.
      * @param  int|string $key
      * @param  any        $value
