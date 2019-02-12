@@ -148,11 +148,16 @@ class Type extends StaticClass
 
     /**
      * Get.
-     * @param  any $input
+     * @param  any  $input
+     * @param  bool $objectCheck
      * @return string
      */
-    public static function get($input): string
+    public static function get($input, bool $objectCheck = false): string
     {
+        if ($objectCheck && is_object($input)) {
+            return get_class($input);
+        }
+
         return strtr(gettype($input), [
             'NULL'    => 'null',
             'integer' => 'int',
