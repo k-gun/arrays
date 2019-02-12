@@ -177,9 +177,9 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
     /**
      * Items type.
-     * @return ?string
+     * @return string
      */
-    public final function itemsType(): ?string
+    public final function itemsType(): string
     {
         return $this->itemsType;
     }
