@@ -136,7 +136,7 @@ trait ArrayTrait
     protected final function _set($key, $value, int &$size = null): ArrayInterface
     {
         $this->keyCheck($key);
-        $this->stackCommand('set', $key, $value, $size);
+        $this->executeCommand('set', $key, $value, $size);
 
         return $this;
     }
@@ -153,7 +153,7 @@ trait ArrayTrait
         $this->keyCheck($key);
 
         if ($found = $this->_hasKey($key, false)) {
-            $this->stackCommand('get', $key, $value);
+            $this->executeCommand('get', $key, $value);
         }
 
         return $value ?? $valueDefault;
@@ -178,7 +178,7 @@ trait ArrayTrait
     protected final function _remove($value, bool &$found = null): ArrayInterface
     {
         if ($found = (null !== $key = $this->_search($value))) {
-            $this->stackCommand('unset', $key);
+            $this->executeCommand('unset', $key);
         }
 
         return $this;
@@ -195,7 +195,7 @@ trait ArrayTrait
         $this->keyCheck($key);
 
         if ($found = $this->_hasKey($key, false)) {
-            $this->stackCommand('unset', $key);
+            $this->executeCommand('unset', $key);
         }
 
         return $this;
@@ -211,7 +211,7 @@ trait ArrayTrait
     {
         foreach ($values as $value) {
             while (null !== $key = $this->_search($value)) {
-                $this->stackCommand('unset', $key);
+                $this->executeCommand('unset', $key);
                 $count++;
             }
         }
@@ -248,7 +248,7 @@ trait ArrayTrait
      */
     protected final function _pop(int &$size = null)
     {
-        $this->stackCommand('pop', $value, $size);
+        $this->executeCommand('pop', $value, $size);
 
         return $value;
     }
@@ -261,7 +261,7 @@ trait ArrayTrait
      */
     protected final function _unpop($value, int &$size = null): ArrayInterface
     {
-        $this->stackCommand('unpop', $value, $size);
+        $this->executeCommand('unpop', $value, $size);
 
         return $this;
     }
@@ -273,7 +273,7 @@ trait ArrayTrait
      */
     protected final function _shift(int &$size = null)
     {
-        $this->stackCommand('shift', $value, $size);
+        $this->executeCommand('shift', $value, $size);
 
         return $value;
     }
@@ -286,7 +286,7 @@ trait ArrayTrait
      */
     protected final function _unshift($value, int &$size = null): ArrayInterface
     {
-        $this->stackCommand('unshift', $value, $size);
+        $this->executeCommand('unshift', $value, $size);
 
         return $this;
     }
@@ -300,7 +300,7 @@ trait ArrayTrait
     protected final function _put($key, $value): ArrayInterface
     {
         $this->keyCheck($key);
-        $this->stackCommand('put', $key, $value);
+        $this->executeCommand('put', $key, $value);
 
         return $this;
     }
@@ -314,7 +314,7 @@ trait ArrayTrait
     protected final function _push($key, $value): ArrayInterface
     {
         $this->keyCheck($key);
-        $this->stackCommand('push', $key, $value);
+        $this->executeCommand('push', $key, $value);
 
         return $this;
     }
@@ -331,7 +331,7 @@ trait ArrayTrait
         $this->keyCheck($key);
 
         if ($found = $this->_hasKey($key, false)) {
-            $this->stackCommand('pull', $key, $value);
+            $this->executeCommand('pull', $key, $value);
         }
 
         return $value ?? $valueDefault;
