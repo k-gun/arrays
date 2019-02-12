@@ -701,7 +701,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     {
         $keyType = Type::get($key);
         if ($keyType != 'int' && $keyType != 'string') {
-            throw new KeyException("{$this->getName()}({$this->type}) accept int and string keys only,".
+            throw new KeyException("{$this->getName()} accept int and string keys only,".
                 " {$keyType} given");
         }
     }
@@ -717,7 +717,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         if ($this->itemsType && $this->itemsType != 'any') {
             $valueType = Type::get($value, true);
             if ($valueType != $this->itemsType) {
-                throw new ValueException("{$this->getName()}({$this->type}) accept {$this->itemsType} ".
+                throw new ValueException("{$this->getName()} accept {$this->itemsType} type ".
                     "values only, {$valueType} given");
             }
         }
