@@ -145,3 +145,17 @@ class Poll extends xo\AnyArray {
     }
 }
 ```
+
+#### Using String and Number Objects
+
+```php
+$string = new xo\StringObject('Hello, world!');
+var_dump($string->test('~hell~')); //=> bool(false)
+var_dump($string->test('~hell~i')); //=> bool(true)
+var_dump($string->startsWith('He')); //=> bool(true)
+
+$number = new NumberObject(1.555);
+var_dump($number->toInt()); //=> int(1)
+var_dump($number->toFloat()); //=> float(1.555)
+var_dump($number->toFloat(2)); //=> float(1.56)
+```
