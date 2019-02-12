@@ -843,12 +843,10 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function calc(string $operator, int &$valueCount = null)
     {
-        $values = array_filter($this->values(), 'is_numeric');
-
-        if ($values != null) {
-            $result = array_shift($values);
-            $valueCount = 1;
-            foreach ($values as $value) {
+        $result = null;
+        foreach ($this->generate() as $value) {
+            // numerics only
+            if (is_numeric($value)) {
                 switch ($operator) {
                     case '+': $result += $value; break;
                     case '-': $result -= $value; break;
@@ -860,8 +858,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
                 $valueCount++;
             }
         }
-
-        return $result ?? null;
+        return $result;
     }
 
     /**
