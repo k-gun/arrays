@@ -42,7 +42,7 @@ class NumberUtil extends Util
      * @param  int|null $precision
      * @return ?int
      */
-    public static function compare($a, $b, int $precision = null): ?int
+    public static final function compare($a, $b, int $precision = null): ?int
     {
         if (self::isNumber($a) && self::isNumber($b)) {
             $precision = $precision ?? 14; // @default=14
@@ -64,7 +64,7 @@ class NumberUtil extends Util
      * @param  int|null $precision
      * @return ?bool
      */
-    public static function equals($a, $b, int $precision = null): ?bool
+    public static final function equals($a, $b, int $precision = null): ?bool
     {
         return ($ret = self::compare($a, $b, $precision)) !== null ? !$ret
             : null; // error, not number(s)
@@ -75,7 +75,7 @@ class NumberUtil extends Util
      * @param  any $input
      * @return bool
      */
-    public final function isNumber($input): bool
+    public static final function isNumber($input): bool
     {
          return is_int($input) || is_float($input);
     }
@@ -86,7 +86,7 @@ class NumberUtil extends Util
      * @param  bool $complex
      * @return bool
      */
-    public final function isDigit($input, bool $complex = true): bool
+    public static final function isDigit($input, bool $complex = true): bool
     {
         if (is_int($input)) {
             return true;
@@ -106,7 +106,7 @@ class NumberUtil extends Util
      * @param  any $input
      * @return bool
      */
-    public static function isId($input): bool
+    public static final function isId($input): bool
     {
         return self::isNumber($input) && ($input > 0);
     }
@@ -116,7 +116,7 @@ class NumberUtil extends Util
      * @param  any $input
      * @return bool
      */
-    public static function isUInt($input): bool
+    public static final function isUInt($input): bool
     {
         return !is_float($input) && is_int($input) && ($input >= 0);
     }
@@ -126,7 +126,7 @@ class NumberUtil extends Util
      * @param  any $input
      * @return bool
      */
-    public static function isUFloat($input): bool
+    public static final function isUFloat($input): bool
     {
         return !is_int($input) && is_float($input) && ($input >= 0);
     }
@@ -136,7 +136,7 @@ class NumberUtil extends Util
      * @param  any $input
      * @return bool
      */
-    public static function isSigned($input): bool
+    public static final function isSigned($input): bool
     {
         return self::isNumber($input) && ($input <= 0);
     }
@@ -146,7 +146,7 @@ class NumberUtil extends Util
      * @param  any $input
      * @return bool
      */
-    public static function isUnsigned($input): bool
+    public static final function isUnsigned($input): bool
     {
         return self::isNumber($input) && ($input >= 0);
     }

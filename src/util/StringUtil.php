@@ -41,7 +41,7 @@ class StringUtil extends Util
      * @param  string $source2
      * @return int
      */
-    public static function compare(string $source1, string $source2): int
+    public static final function compare(string $source1, string $source2): int
     {
        return ($source1 > $source2) - ($source1 < $source2);
     }
@@ -53,7 +53,7 @@ class StringUtil extends Util
      * @param  bool   $caseSensitive
      * @return bool
      */
-    public static function contains(string $source, string $search, bool $caseSensitive = true): bool
+    public static final function contains(string $source, string $search, bool $caseSensitive = true): bool
     {
         return (false !== ($caseSensitive ? strpos($source, $search) : stripos($source, $search)));
     }
@@ -65,7 +65,7 @@ class StringUtil extends Util
      * @param  bool   $caseSensitive
      * @return bool
      */
-    public static function containsAny(string $source, array $searches, bool $caseSensitive = true): bool
+    public static final function containsAny(string $source, array $searches, bool $caseSensitive = true): bool
     {
         foreach ($searches as $search) {
             if (self::contains($source, $search, $caseSensitive)) {
@@ -82,7 +82,7 @@ class StringUtil extends Util
      * @param  bool   $caseSensitive
      * @return bool
      */
-    public static function containsAll(string $source, array $searches, bool $caseSensitive = true): bool
+    public static final function containsAll(string $source, array $searches, bool $caseSensitive = true): bool
     {
         foreach ($searches as $search) {
             if (!self::contains($source, $search, $caseSensitive)) {
@@ -98,7 +98,7 @@ class StringUtil extends Util
      * @param  string $search
      * @return bool
      */
-    public static function startsWith(string $source, string $search): bool
+    public static final function startsWith(string $source, string $search): bool
     {
         return ($search === substr($source, 0, strlen($search)));
     }
@@ -109,7 +109,7 @@ class StringUtil extends Util
      * @param  string $search
      * @return bool
      */
-    public static function endsWith(string $source, string $search): bool
+    public static final function endsWith(string $source, string $search): bool
     {
         return ($search === substr($source, -strlen($search)));
     }
@@ -122,7 +122,7 @@ class StringUtil extends Util
      * @param  int    $side
      * @return string
      */
-    public static function trimSearch(string $source, string $search, bool $caseSensitive = true,
+    public static final function trimSearch(string $source, string $search, bool $caseSensitive = true,
         int $side = 0): string
     {
         $search = preg_quote($search);

@@ -44,7 +44,7 @@ class ArrayUtil extends Util
      * @return ?string
      * @throws xo\util\UtilException
      */
-    public static function keyCheck($key, bool $throw = true): ?string
+    public static final function keyCheck($key, bool $throw = true): ?string
     {
         static $keyTypes = ['int', 'string'];
 
@@ -64,7 +64,7 @@ class ArrayUtil extends Util
      * @param  array $array
      * @return bool
      */
-    public static function isSequentialArray(array $array): bool
+    public static final function isSequentialArray(array $array): bool
     {
         return !$array || array_keys($array) === range(0, count($array) - 1);
     }
@@ -74,7 +74,7 @@ class ArrayUtil extends Util
      * @param  array $array
      * @return bool
      */
-    public static function isAssociativeArray(array $array): bool
+    public static final function isAssociativeArray(array $array): bool
     {
         if (count($array) !== count(array_filter(array_keys($array), 'is_string'))) {
             return false;
@@ -92,7 +92,7 @@ class ArrayUtil extends Util
      * @param  any        $valueDefault
      * @return any
      */
-    public static function set(array &$array, $key, $value): array
+    public static final function set(array &$array, $key, $value): array
     {
         self::keyCheck($key);
 
@@ -123,7 +123,7 @@ class ArrayUtil extends Util
      * @return any
      *
      */
-    public static function get(array $array, $key, $valueDefault = null)
+    public static final function get(array $array, $key, $valueDefault = null)
     {
         self::keyCheck($key);
 
@@ -155,7 +155,7 @@ class ArrayUtil extends Util
      * @param  any    $valueDefault
      * @return array
      */
-    public static function getAll(array $array, array $keys, $valueDefault = null): array
+    public static final function getAll(array $array, array $keys, $valueDefault = null): array
     {
         $values = [];
         foreach ($keys as $key) {
@@ -175,7 +175,7 @@ class ArrayUtil extends Util
      * @param  any        $valueDefault
      * @return any
      */
-    public static function pull(array &$array, $key, $valueDefault = null)
+    public static final function pull(array &$array, $key, $valueDefault = null)
     {
         self::keyCheck($key);
 
@@ -194,7 +194,7 @@ class ArrayUtil extends Util
      * @param  any    $valueDefault
      * @return array
      */
-    public static function pullAll(array &$array, array $keys, $valueDefault = null): array
+    public static final function pullAll(array &$array, array $keys, $valueDefault = null): array
     {
         $values = [];
         foreach ($keys as $key) {
@@ -213,7 +213,7 @@ class ArrayUtil extends Util
      * @param  Closure $func
      * @return bool
      */
-    public static function test(array $array, Closure $func): bool
+    public static final function test(array $array, Closure $func): bool
     {
         foreach ($array as $key => $value) {
             if ($func($value, $key)) { return true; }
@@ -227,7 +227,7 @@ class ArrayUtil extends Util
      * @param  Closure $func
      * @return bool
      */
-    public static function testAll(array $array, Closure $func): bool
+    public static final function testAll(array $array, Closure $func): bool
     {
         foreach ($array as $key => $value) {
             if (!$func($value, $key)) { return false; }
@@ -243,7 +243,7 @@ class ArrayUtil extends Util
      * @return any|null
      * @throws xo\util\UtilException
      */
-    public static function rand(array $items, int $size = 1, bool $useKeys = false)
+    public static final function rand(array $items, int $size = 1, bool $useKeys = false)
     {
         $count = count($items);
         if ($count == 0) {
@@ -282,7 +282,7 @@ class ArrayUtil extends Util
      * @param  bool   $preserveKeys
      * @return array
      */
-    public static function shuffle(array &$items, bool $preserveKeys = false): array
+    public static final function shuffle(array &$items, bool $preserveKeys = false): array
     {
         if (!$preserveKeys) {
             shuffle($items);
@@ -313,7 +313,7 @@ class ArrayUtil extends Util
      * @return array
      * @throws xo\util\UtilException
      */
-    public static function sort(array &$array, callable $func = null, callable $ufunc = null, int $flags = 0): array
+    public static final function sort(array &$array, callable $func = null, callable $ufunc = null, int $flags = 0): array
     {
         if ($func == null) {
             sort($array, $flags);
@@ -345,7 +345,7 @@ class ArrayUtil extends Util
      * @param  array $keys
      * @return array
      */
-    public static function include(array $array, array $keys): array
+    public static final function include(array $array, array $keys): array
     {
         return array_filter($array, function($_, $key) use($keys) {
             return in_array($key, $keys);
@@ -358,7 +358,7 @@ class ArrayUtil extends Util
      * @param  array $keys
      * @return array
      */
-    public static function exclude(array $array, array $keys): array
+    public static final function exclude(array $array, array $keys): array
     {
         return array_filter($array, function($_, $key) use($keys) {
             return !in_array($key, $keys);
@@ -371,7 +371,7 @@ class ArrayUtil extends Util
      * @param  any   $valueDefault
      * @return any|null
      */
-    public static function first(array $array, $valueDefault = null)
+    public static final function first(array $array, $valueDefault = null)
     {
         return array_values($array)[0] ?? $valueDefault;
     }
@@ -382,7 +382,7 @@ class ArrayUtil extends Util
      * @param  any   $valueDefault
      * @return any|null
      */
-    public static function last(array $array, $valueDefault = null)
+    public static final function last(array $array, $valueDefault = null)
     {
         return array_values($array)[count($array) - 1] ?? $valueDefault;
     }
@@ -394,7 +394,7 @@ class ArrayUtil extends Util
      * @param  any|null   $valueDefault
      * @return int
      */
-    public static function getInt(array $array, $key, $valueDefault = null): int
+    public static final function getInt(array $array, $key, $valueDefault = null): int
     {
         return (int) self::get($array, $key, $valueDefault);
     }
@@ -406,7 +406,7 @@ class ArrayUtil extends Util
      * @param  any|null   $valueDefault
      * @return float
      */
-    public static function getFloat(array $array, $key, $valueDefault = null): float
+    public static final function getFloat(array $array, $key, $valueDefault = null): float
     {
         return (float) self::get($array, $key, $valueDefault);
     }
@@ -418,7 +418,7 @@ class ArrayUtil extends Util
      * @param  any|null   $valueDefault
      * @return string
      */
-    public static function getString(array $array, $key, $valueDefault = null): string
+    public static final function getString(array $array, $key, $valueDefault = null): string
     {
         return (string) self::get($array, $key, $valueDefault);
     }
@@ -430,7 +430,7 @@ class ArrayUtil extends Util
      * @param  any|null   $valueDefault
      * @return bool
      */
-    public static function getBool(array $array, $key, $valueDefault = null): bool
+    public static final function getBool(array $array, $key, $valueDefault = null): bool
     {
         return (bool) self::get($array, $key, $valueDefault);
     }
