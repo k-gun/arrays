@@ -34,15 +34,6 @@ namespace xo;
 abstract class AbstractObject
 {
     /**
-     * To string magic.
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toString();
-    }
-
-    /**
      * Get class.
      * @return object
      */
