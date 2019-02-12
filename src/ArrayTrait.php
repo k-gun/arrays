@@ -41,7 +41,7 @@ trait ArrayTrait
      * @param  bool $reverse
      * @return ?array
      */
-    private final function _index($searchValue, bool $reverse): ?array
+    private final function index($searchValue, bool $reverse): ?array
     {
         if (!$reverse) {
             $index = 0;
@@ -70,7 +70,7 @@ trait ArrayTrait
      */
     protected final function _search($value)
     {
-        return $this->_index($value, false)[1] ?? null;
+        return $this->index($value, false)[1] ?? null;
     }
 
     /**
@@ -80,7 +80,7 @@ trait ArrayTrait
      */
     protected final function _searchLast($value)
     {
-        return $this->_index($value, true)[1] ?? null;
+        return $this->index($value, true)[1] ?? null;
     }
 
     /**
@@ -90,7 +90,7 @@ trait ArrayTrait
      */
     protected final function _indexOf($value): ?int
     {
-        return $this->_index($value, false)[0] ?? null;
+        return $this->index($value, false)[0] ?? null;
     }
 
     /**
@@ -100,7 +100,7 @@ trait ArrayTrait
      */
     protected final function _lastIndexOf($value): ?int
     {
-        return $this->_index($value, true)[0] ?? null;
+        return $this->index($value, true)[0] ?? null;
     }
 
     /**
