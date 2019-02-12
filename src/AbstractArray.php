@@ -28,7 +28,7 @@ namespace xo;
 
 use xo\{AbstractObject, Type, ArrayException};
 use xo\util\ArrayUtil;
-use xo\exception\{TypeException, MethodException, ArgumentException, KeyException,
+use xo\exception\{TypeException, MethodException, ArgumentException, KeyException, ValueException,
     MutationException, NullException};
 use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
 
@@ -713,10 +713,10 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function valueCheck($value): void
     {
-        if ($this->itemsType) {
+        if ($this->itemsType != null) {
             $valueType = Type::get($value, true);
             if ($valueType != $this->itemsType) {
-                throw new KeyException("{$this->getName()} accept {$this->itemsType} values only, {$valueType} given");
+                throw new ValueException("{$this->getName()} accept {$this->itemsType} values only, {$valueType} given");
             }
         }
     }
