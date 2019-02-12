@@ -9,3 +9,9 @@ All XO objects extends AbstractObject, so that makes possible to use some basic 
 ```bash
 composer require k-gun/xo
 ```
+
+### Using Array Objects
+
+Basically there are 4 type of array in XO;
+
+**Map: String key-ed objects derived from `AnyArray`.**
