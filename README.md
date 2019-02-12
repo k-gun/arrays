@@ -1,6 +1,6 @@
 XO is a library that provides some e(x)tended (o)bjects to build strictly typed arrays such as Map, Set, Tuple or any type of TypedArray's, and also String and Number objects that are not objects natively in PHP.
 
-You can use Map, Set and Tuple to build strict arrays and also use AnyArray (ArrayObject and Collection are just aliases of it) derived from AbstractArray that contains many native-equal array methods or StringObject and NumberObject to use AbstractScalarObject interface.
+You can use `Map`, `Set` and `Tuple` to build strict arrays and also use `AnyArray` (`ArrayObject` and `Collection` are just aliases of it) derived from `AbstractArray` that contains many native-equal array methods or `StringObject` and `NumberObject` to use `AbstractScalarObject` interface.
 
 All XO objects extends AbstractObject, so that makes possible to use some basic object methods like `getName()` or `getShortName()`.
 
@@ -23,9 +23,7 @@ Basically there are 5 types of array in XO;
 **TypedArray**: `Int` or `String` keyed object derived from **AbstractArray**.
 
 ```php
-use xo\TypedArray;
-
-$array = new TypedArray('IntArray', [1, 2, 3], 'int');
+$array = new xo\TypedArray('IntArray', [1, 2, 3], 'int');
 $array->sum(); //=> 6
 
 $array->append(4);
@@ -39,9 +37,7 @@ $array->append('4');
 **AnyArray**: `String` keyed object derived from **TypedArray**.
 
 ```php
-use xo\AnyArray;
-
-$map = new AnyArray(['a' => 1, 'b' => 2]);
+$map = new xo\AnyArray(['a' => 1, 'b' => 2]);
 $map->sum(); //=> 3
 
 // add new item
@@ -52,9 +48,7 @@ $map->sum(); //=> 6
 **Map**: `String` keyed object derived from **TypedArray**.
 
 ```php
-use xo\Map;
-
-$map = new Map(['a' => 1, 'b' => 2]);
+$map = new xo\Map(['a' => 1, 'b' => 2]);
 $map->sum(); //=> 3
 
 // this will throw a xo\exception\MethodException
@@ -69,9 +63,7 @@ $map->sum(); //=> 6
 **Set**: `Int` keyed object derived from **TypedArray**.
 
 ```php
-use xo\Set;
-
-$map = new Set(1, 2);
+$map = new xo\Set(1, 2);
 $map->sum(); //=> 3
 
 // add new item without key
@@ -85,9 +77,7 @@ $map->sum(); //=> 6
 **Tuple**: `Int` keyed and `read-only` object derived from **TypedArray**.
 
 ```php
-use xo\Tuple;
-
-$map = new Tuple(1, 2);
+$map = new xo\Tuple(1, 2);
 $map->sum(); //=> 3
 
 // this will throw a xo\exception\MethodException
@@ -100,9 +90,7 @@ But, off course, you can create new typed array objects via `TypedArray` directl
 Typed array example;
 
 ```php
-use xo\TypedArray;
-
-class IntArray extends TypedArray {
+class IntArray extends xo\TypedArray {
     public function __construct(array $items = null) {
         parent::__construct('IntArray', $items, 'int');
     }
@@ -117,27 +105,20 @@ $array->append('3'); //=> error
 Yet another example;
 
 ```php
-use xo\TypedArray;
-use xo\Set;
-use function xo\set;
-
-class Poll extends TypedArray {
+class Poll extends xo\TypedArray {
     public function __construct(array $items = null) {
         parent::__construct('Poll', $items, 'array');
     }
 
     public function getResults(): array {
-        return $this->copy()
-            ->map(function ($option) {
-                return round(array_sum($option) / count($option), 2);
-                // or
-                // return set($option)->sumAvg(2);
-                // return (new Set($option))->sumAvg(2);
-            })
-            ->sort('asort', function ($a, $b) {
-                return $a < $b;
-            })
-            ->toArray();
+        return $this->copy()->map(function ($option) {
+            return round(array_sum($option) / count($option), 2);
+            // or
+            // return xo\set($option)->sumAvg(2);
+            // return (new xo\Set($option))->sumAvg(2);
+        })->sort('asort', function ($a, $b) {
+            return $a < $b;
+        })->toArray();
     }
 }
 
@@ -146,5 +127,21 @@ $poll->put('option_1', [2, 2, 1]);
 $poll->put('option_2', [5, 1, 5]);
 $poll->put('option_3', [3, 5, 2]);
 
-var_dump($poll->getResults()); //=> array(3) { [option_2] => float(3.67) [option_3] => float(3.33) [option_1] => float(1.67) }
+var_export($poll->getResults()); //=> ['option_2' => 3.67, 'option_3' => 3.33, 'option_1' => 1.67]
+```
+
+If you want to make a untyped array, you can simply use `AnyArray`. So that will provide all methods as well likely on the other arrays.
+
+Here is another with `AnyArray` example like above;
+
+```php
+class Poll extends xo\AnyArray {
+    public function getResults(): array {
+        return $this->copy()->map(function ($option) {
+            return round(array_sum($option) / count($option), 2);
+        })->sort('asort', function ($a, $b) {
+            return $a < $b;
+        })->toArray();
+    }
+}
 ```
