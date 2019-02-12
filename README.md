@@ -4,14 +4,112 @@ You can use Map, Set and Tuple to build strict arrays and also use AnyArray (Arr
 
 All XO objects extends AbstractObject, so that makes possible to use some basic object methods like `getName()` or `getShortName()`.
 
-### Installation
+#### Installation
 
 ```bash
 composer require k-gun/xo
 ```
 
-### Using Array Objects
+Use can also download and use without Composer including `boot.php`.
 
-Basically there are 4 type of array in XO;
+```php
+include 'path_to_xo/boot.php';
+```
 
-**Map: String key-ed objects derived from `AnyArray`.**
+#### Using Array Objects
+
+Basically there are 5 types of array in XO;
+
+**TypedArray**: `Int` or `String` keyed object derived from **AbstractArray**.
+
+```php
+use xo\TypedArray;
+
+$array = new TypedArray('IntArray', [1, 2, 3], 'int');
+$array->sum(); //=> 6
+
+$array->append(4);
+$array->sum(); //=> 10
+
+// this will throw a xo\exception\MethodException
+// cos' append() does not take string value
+$array->append('4');
+```
+
+**AnyArray**: `String` keyed object derived from **TypedArray**.
+
+```php
+use xo\AnyArray;
+
+$map = new AnyArray(['a' => 1, 'b' => 2]);
+$map->sum(); //=> 3
+
+// add new item
+$map->append(3);
+$map->sum(); //=> 6
+```
+
+**Map**: `String` keyed object derived from **TypedArray**.
+
+```php
+use xo\Map;
+
+$map = new Map(['a' => 1, 'b' => 2]);
+$map->sum(); //=> 3
+
+// this will throw a xo\exception\MethodException
+// cos' append() does not take a key but only value
+$map->append(3);
+
+// add new item with key,value pairs using set(), or push() as well
+$map->set('c', 3);
+$map->sum(); //=> 6
+```
+
+**Set**: `Int` keyed object derived from **TypedArray**.
+
+```php
+use xo\Set;
+
+$map = new Set(1, 2);
+$map->sum(); //=> 3
+
+// add new item without key
+$map->append(3);
+
+// or with key,value pairs using set(), or push() as well
+$map->set(2, 3);
+$map->sum(); //=> 6
+```
+
+**Tuple**: `Int` keyed and `read-only` object derived from **TypedArray**.
+
+```php
+use xo\Tuple;
+
+$map = new Tuple(1, 2);
+$map->sum(); //=> 3
+
+// this will throw a xo\exception\MethodException
+// cos' append() is not allowed for Tuple objects
+$map->append(3);
+```
+
+But, off course, you can create new typed array objects via `TypedArray` directly like first example or defining new arrays that extend `TypedArray` or other objects such as `Map`, `Set`, `Tuple` or `AnyArray`.
+
+Typed array example;
+
+```php
+use xo\TypedArray;
+
+class IntArray extends TypedArray {
+    public function __construct(array $items = null) {
+        parent::__construct('IntArray', $items, 'int');
+    }
+}
+
+$array = new IntArray();
+$array->append(1);
+$array->append(2);
+$array->append('3'); //=> error
+```
