@@ -46,16 +46,28 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     use ArrayTrait;
 
     /**
-     * Stack.
+     * Items.
      * @var ArrayObject
      */
-    private $stack;
+    private $items;
+
+    /**
+     * Items type.
+     * @var string
+     */
+    private $itemsType;
 
     /**
      * Methods.
      * @var array
      */
     private static $methods = [];
+
+    /**
+     * Invisible methods.
+     * @var array
+     */
+    private static $invisibleMethods = [];
 
     /**
      * Not allowed methods.
@@ -65,17 +77,23 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
     /**
      * Constructor.
-     * @param string     $type
-     * @param array|null $items
+     * @param string      $type
+     * @param array|null  $items
+     * @param string|null $itemsType
      */
-    public function __construct(string $type, array $items = null)
+    public function __construct(string $type, array $items = null, string $itemsType = null)
     {
         $items = $items ?? [];
         if (Type::isMapLike($this)) {
             $items = Type::makeObject($items);
         }
 
-        $this->stack = new ArrayObject($items);
+        $this->items = new ArrayObject($items);
+        $this->itemsType = $itemsType;
+
+        self::$invisibleMethods = array_filter(get_class_methods($this), function ($method) {
+            return $method[0] == '_' && $method[1] != '_';
+        });
     }
 
     /**
@@ -90,6 +108,12 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         $this->methodCheck($method);
 
         if (!isset(self::$methods[$method])) {
+            // check invisible
+            $_method = '_'. $method;
+            if (in_array($_method, self::$invisibleMethods)) {
+                return $this->$_method(...$methodArgs);
+            }
+
             throw new MethodException("Method {$this->getShortName()}::{$method}() does not exist", 1);
         }
 
@@ -128,7 +152,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     {
         $this->keyCheck($key);
 
-        return $this->stack[$key] ?? null;
+        return $this->items[$key] ?? null;
     }
 
     /**
@@ -138,7 +162,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function items(bool $pair = false): array
     {
-        $ret = $this->stack->getArrayCopy();
+        $ret = $this->items->getArrayCopy();
 
         if ($pair) {
             $retTmp = [];
@@ -152,6 +176,15 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     }
 
     /**
+     * Items type.
+     * @return ?string
+     */
+    public final function itemsType(): ?string
+    {
+        return $this->itemsType;
+    }
+
+    /**
      * Reset.
      * @param  array $items
      * @return self
@@ -162,7 +195,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         $this->methodCheck('reset');
         $this->readOnlyCheck();
 
-        $this->stack->exchangeArray($items);
+        $this->items->exchangeArray($items);
 
         return $this;
     }
@@ -195,7 +228,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function copyArray(): array
     {
-        return $this->stack->getArrayCopy();
+        return $this->items->getArrayCopy();
     }
 
     /**
@@ -204,7 +237,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function size(): int
     {
-        return $this->stack->count();
+        return $this->items->count();
     }
 
     /**
@@ -223,7 +256,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function isEmpty(): bool
     {
-        return $this->stack->count() == 0;
+        return $this->items->count() == 0;
     }
 
     /**
@@ -232,7 +265,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function count(): int
     {
-        return $this->stack->count();
+        return $this->items->count();
     }
 
     /**
@@ -313,7 +346,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function toArray(bool $normalize = false): array
     {
-        $ret = $this->stack->getArrayCopy();
+        $ret = $this->items->getArrayCopy();
 
         // i do not remember why is this here..
         if ($normalize) {
@@ -397,23 +430,22 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
     /**
      * Diff.
-     * @param  iterable $stack2
+     * @param  iterable $items
      * @param  bool     $uniq
      * @return array
      */
-    public final function diff(iterable $stack2, bool $uniq = false): array
+    public final function diff(iterable $items, bool $uniq = false): array
     {
-        $stack1 = $this->items();
-        if ($stack2 instanceof Traversable) {
-            iterator_to_array($stack2);
+        if ($items instanceof Traversable) {
+            iterator_to_array($items);
         }
 
         if ($uniq) {
-            $stack1 = array_unique($stack1);
-            $stack2 = array_unique($stack2);
+            $items1 = array_unique($this->items());
+            $items2 = array_unique($items2);
         }
 
-        return array_diff($stack1, $stack2);
+        return array_diff($items1, $items2);
     }
 
     /**
@@ -669,8 +701,36 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     {
         $keyType = Type::get($key);
         if ($keyType != 'int' && $keyType != 'string') {
-            throw new KeyException("Arrays accept int and string keys only, {$keyType} given");
+            throw new KeyException("{$this->getName()} accept int and string keys only, {$keyType} given");
         }
+    }
+
+    /**
+     * Value check.
+     * @param  any $value
+     * @return void
+     * @throws xo\exception\KeyException
+     */
+    public final function valueCheck($value): void
+    {
+        if ($this->itemsType) {
+            $valueType = Type::get($value, true);
+            if ($valueType != $this->itemsType) {
+                throw new KeyException("{$this->getName()} accept {$this->itemsType} values only, {$valueType} given");
+            }
+        }
+    }
+
+    /**
+     * Key value check.
+     * @param  int|string $key
+     * @param  any        $value
+     * @return void
+     * @throws xo\exception\KeyException
+     */
+    public final function keyValueCheck($key, $value): void
+    {
+        $this->keyCheck($key); $this->valueCheck($value);
     }
 
     /**
@@ -723,13 +783,13 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     public final function generate(bool $reverse = false): Generator
     {
         if (!$reverse) {
-            foreach ($this->stack as $key => $value) {
+            foreach ($this->items as $key => $value) {
                 yield $key => $value;
             }
         } else {
-            $stack = $this->stack;
-            for (end($stack); (null !== $key = key($stack)); prev($stack)) {
-                yield $key => current($stack);
+            $items = $this->items;
+            for (end($items); (null !== $key = key($items)); prev($items)) {
+                yield $key => current($items);
             }
         }
     }
@@ -838,73 +898,73 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     }
 
     /**
-     * Stack command.
+     * Execute command.
      * @param  string     $command
      * @param  any    &...$arguments
      * @return void
      * @throws xo\exception\MutationException,NullException
      * @throws xo\ArrayException
      */
-    private final function stackCommand(string $command, &...$arguments): void
+    private final function executeCommand(string $command, &...$arguments): void
     {
         switch ($command) {
             case 'set':
                 $this->readOnlyCheck();
                 [$key, $value] = $arguments;
                 $this->nullCheck($value);
-                $this->stack->offsetSet($key, $value);
-                $arguments[2] = $this->stack->count();
+                $this->items->offsetSet($key, $value);
+                $arguments[2] = $this->items->count();
                 break;
             case 'get':
                 $key = $arguments[0];
-                $arguments[1] =@ $this->stack->offsetGet($key);
+                $arguments[1] =@ $this->items->offsetGet($key);
                 break;
             case 'unset':
                 $this->readOnlyCheck();
                 $key = $arguments[0];
-                @ $this->stack->offsetUnset($key);
+                @ $this->items->offsetUnset($key);
                 break;
             case 'pop':
             case 'shift':
                 $this->readOnlyCheck();
                 $key = ($command == 'pop') ? $this->lastKey() : $this->firstKey();
-                $arguments[0] =@ $this->stack->offsetGet($key);
-                @ $this->stack->offsetUnset($key);
-                $arguments[1] = $this->stack->count();
+                $arguments[0] =@ $this->items->offsetGet($key);
+                @ $this->items->offsetUnset($key);
+                $arguments[1] = $this->items->count();
                 break;
             case 'unpop':
                 $this->readOnlyCheck();
                 $value = $arguments[0];
                 $this->nullCheck($value);
-                $this->stack->offsetSet(null, $value);
-                $arguments[1] = $this->stack->count();
+                $this->items->offsetSet(null, $value);
+                $arguments[1] = $this->items->count();
                 break;
             case 'unshift':
                 $this->readOnlyCheck();
                 $value = $arguments[0];
                 $this->nullCheck($value);
                 $items = array_merge([$value], $this->items());
-                $this->stack->exchangeArray($items);
-                $arguments[1] = $this->stack->count();
+                $this->items->exchangeArray($items);
+                $arguments[1] = $this->items->count();
                 break;
             case 'put':
                 $this->readOnlyCheck();
                 [$key, $value] = $arguments;
                 $this->nullCheck($value);
-                $this->stack->offsetSet($key, $value);
+                $this->items->offsetSet($key, $value);
                 break;
             case 'push':
                 $this->readOnlyCheck();
                 [$key, $value] = $arguments;
                 $this->nullCheck($value);
-                @ $this->stack->offsetUnset($key);
-                $this->stack->offsetSet($key, $value);
+                @ $this->items->offsetUnset($key);
+                $this->items->offsetSet($key, $value);
                 break;
             case 'pull':
                 $this->readOnlyCheck();
                 $key = $arguments[0];
-                $arguments[1] =@ $this->stack->offsetGet($key);
-                @ $this->stack->offsetUnset($key);
+                $arguments[1] =@ $this->items->offsetGet($key);
+                @ $this->items->offsetUnset($key);
                 break;
             default:
                 throw new ArrayException("Unknown command {$command}");
