@@ -874,14 +874,15 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     /**
      * Calc.
      * @param  string    $operator
-     * @param  bool      $numericsOnly
+     * @param  int|null  $round
      * @param  int|null &$valueCount
      * @return number|null
      * @throws xo\ArrayException
      */
-    public final function calc(string $operator, int &$valueCount = null)
+    public final function calc(string $operator, int $round = null, int &$valueCount = null)
     {
         $result = null;
+
         foreach ($this->generate() as $value) {
             // numerics only
             if (is_numeric($value)) {
@@ -896,40 +897,53 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
                 $valueCount++;
             }
         }
+
+        if ($result !== null && $round !== null) {
+            $result = round($result, $round);
+        }
+
         return $result;
     }
 
     /**
      * Calc avg.
      * @param  string    $operator
+     * @param  int|null  $round
      * @param  int|null &$valueCount
      * @return ?float
      */
-    public final function calcAvg(string $operator, int &$valueCount = null): ?float
+    public final function calcAvg(string $operator, int $round = null, int &$valueCount = null): ?float
     {
-        $result = $this->calc($operator, $valueCount);
+        $result = $this->calc($operator, null, $valueCount);
+        $result = $valueCount ? $result / $valueCount : null;
 
-        return $valueCount ? $result / $valueCount : null;
+        if ($result !== null && $round !== null) {
+            $result = round($result, $round);
+        }
+
+        return $result;
     }
 
     /**
      * Sum.
+     * @param  int|null  $round
      * @param  int|null &$valueCount
      * @return number|null
      */
-    public final function sum(int &$valueCount = null)
+    public final function sum(int $round = null, int &$valueCount = null)
     {
-        return $this->calc('+', $valueCount);
+        return $this->calc('+', $round, $valueCount);
     }
 
     /**
      * Sum avg.
+     * @param  int|null  $round
      * @param  int|null &$valueCount
      * @return ?float
      */
-    public final function sumAvg(int &$valueCount = null): ?float
+    public final function sumAvg(int $round = null, int &$valueCount = null): ?float
     {
-        return $this->calcAvg('+', $valueCount);
+        return $this->calcAvg('+', $round, $valueCount);
     }
 
     /**
