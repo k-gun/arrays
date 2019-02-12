@@ -89,14 +89,14 @@ class Type extends StaticClass
     {
         $type = $object->type();
         $allowNulls = $object->allowNulls();
-        $typeBasic = self::isBasic($type); $isMapLike = $isSetLike = false;
+        $typeBasic = self::isBasic($type);
         if (!$typeBasic) {
-            if ($isMapLike = self::isMapLike($object)) {
+            if (self::isMapLike($object)) {
                 if (!ArrayUtil::isAssociativeArray($items)) {
                     $error = sprintf(self::$mapMessage, $type);
                     return false;
                 }
-            } elseif ($isSetLike = self::isSetLike($object)) {
+            } elseif (self::isSetLike($object)) {
                 if (!ArrayUtil::isSequentialArray($items)) {
                     $error = sprintf(self::$setMessage, $type);
                     return false;
@@ -120,26 +120,21 @@ class Type extends StaticClass
                         self::export($value));
                     return false;
                 }
-            } elseif ($isMapLike || $isSetLike) {
-                if ($itemsType != null) {
-                    $itemsTypeBasic = self::isBasic($itemsType);
-                    if ($itemsTypeBasic) {
-                        if ($valueType != $itemsType) {
-                            $error = sprintf(self::$valueMessage, $object->getShortName(), $itemsType, $valueType, $offset,
-                                self::export($value));
-                            return false;
-                        }
-                    } elseif (!is_a($value, $itemsType)) {
-                        $error = sprintf(self::$valueMessage, $object->getShortName(), $itemsType,
-                            ($valueType == 'object' ? get_class($value) : $valueType), $offset, self::export($value));
+            } elseif ($itemsType != null) {
+                $itemsTypeBasic = self::isBasic($itemsType);
+                if ($itemsTypeBasic) {
+                    if ($valueType != $itemsType) {
+                        $error = sprintf(self::$valueMessage, $object->getShortName(), $itemsType, $valueType, $offset,
+                            self::export($value));
                         return false;
                     }
+                } elseif (!is_a($value, $itemsType)) {
+                    $error = sprintf(self::$valueMessage, $object->getShortName(), $itemsType,
+                        ($valueType == 'object' ? get_class($value) : $valueType), $offset, self::export($value));
+                    return false;
                 }
-            } elseif (!is_a($value, $type)) {
-                $error = sprintf(self::$valueMessage, $object->getShortName(), $type,
-                    ($valueType == 'object' ? get_class($value) : $valueType), $offset, self::export($value));
-                return false;
             }
+
             $offset++;
         }
 
