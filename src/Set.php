@@ -39,18 +39,17 @@ class Set extends TypedArray
      * Constructor.
      * @param array|null  $items
      * @param string|null $itemsType
-     * @param string|null $type
      * @param bool        $readOnly
      * @param bool        $allowNulls
      */
-    public function __construct(array $items = null, string $itemsType = null, string $type = null,
+    public function __construct(array $items = null, string $itemsType = null,
         bool $readOnly = false, bool $allowNulls = false)
     {
         self::$notAllowedMethods = [
             /* base methods */ 'flip'
         ];
 
-        parent::__construct($type ?? Type::SET, $items, $itemsType, $readOnly, $allowNulls);
+        parent::__construct(Type::SET, $items, $itemsType, $readOnly, $allowNulls);
     }
 
     /**

@@ -39,11 +39,10 @@ class Map extends TypedArray
      * Constructor.
      * @param array|null  $items
      * @param string|null $itemsType
-     * @param string|null $type
      * @param bool        $readOnly
      * @param bool        $allowNulls
      */
-    public function __construct(array $items = null, string $itemsType = null, string $type = null,
+    public function __construct(array $items = null, string $itemsType = null,
         bool $readOnly = false, bool $allowNulls = false)
     {
         self::$notAllowedMethods = [
@@ -51,7 +50,7 @@ class Map extends TypedArray
             'add', 'append', 'prepend', 'unpop', 'unshift', 'flip', 'pad'
         ];
 
-        parent::__construct($type ?? Type::MAP, $items, $itemsType, $readOnly, $allowNulls);
+        parent::__construct(Type::MAP, $items, $itemsType, $readOnly, $allowNulls);
     }
 
     /**
