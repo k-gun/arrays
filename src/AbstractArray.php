@@ -466,8 +466,8 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
     /**
      * Chunk.
-     * @param  int    $size
-     * @param  bool   $preserveKeys
+     * @param  int  $size
+     * @param  bool $preserveKeys
      * @return array
      */
     public final function chunk(int $size, bool $preserveKeys = false): array
