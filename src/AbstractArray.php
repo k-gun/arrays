@@ -268,7 +268,9 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function first()
     {
-        return $this->values()[0] ?? null;
+        foreach ($this->generate() as $value) {
+            return $value;
+        }
     }
 
     /**
@@ -277,7 +279,9 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function firstKey()
     {
-        return $this->keys()[0] ?? null;
+        foreach ($this->generate() as $key => $_) {
+            return $key;
+        }
     }
 
     /**
@@ -286,7 +290,9 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function last()
     {
-        return $this->values()[$this->size() - 1] ?? null;
+        foreach ($this->generate(true) as $value) {
+            return $value;
+        }
     }
 
     /**
@@ -295,7 +301,9 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function lastKey()
     {
-        return $this->keys()[$this->size() - 1] ?? null;
+        foreach ($this->generate(true) as $key => $_) {
+            return $key;
+        }
     }
 
     /**
