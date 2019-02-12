@@ -56,7 +56,7 @@ class TypedArray extends AbstractArray
         $this->type = $type;
 
         if ($this->type != Type::ANY && $items != null) {
-            if (!Type::validateItems($this, $items, $itemsType, $error)) {
+            if (!Type::validateItems($this, $items, $itemsType, $allowNulls, $error)) {
                 throw new TypeException($error);
             }
         }
