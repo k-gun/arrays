@@ -36,6 +36,17 @@ use xo\util\Util;
 class StringUtil extends Util
 {
     /**
+     * Compare.
+     * @param  string $source1
+     * @param  string $source2
+     * @return int
+     */
+    public static function compare(string $source1, string $source2): int
+    {
+       return ($source1 > $source2) - ($source1 < $source2);
+    }
+
+    /**
      * Contains.
      * @param  string $source
      * @param  string $search

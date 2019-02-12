@@ -184,6 +184,16 @@ class StringObject extends AbstractScalarObject
     }
 
     /**
+     * Compare.
+     * @param  string $value
+     * @return int
+     */
+    public final function compare(string $value): int
+    {
+       return StringUtil::compare($this->value, $value);
+    }
+
+    /**
      * Contains.
      * @param  string $search
      * @param  bool   $caseSensitive
