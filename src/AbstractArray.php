@@ -46,6 +46,18 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     use ArrayTrait;
 
     /**
+     * Read only.
+     * @var bool
+     */
+    private $readOnly;
+
+    /**
+     * Allow nulls.
+     * @var bool
+     */
+    private $allowNulls;
+
+    /**
      * Items.
      * @var ArrayObject
      */
@@ -77,12 +89,17 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
     /**
      * Constructor.
-     * @param string      $type
      * @param array|null  $items
      * @param string|null $itemsType
+     * @param bool        $readOnly
+     * @param bool        $allowNulls
      */
-    public function __construct(string $type, array $items = null, string $itemsType = null)
+    public function __construct(array $items = null, string $itemsType = null,
+        bool $readOnly = false, bool $allowNulls = false)
     {
+        $this->readOnly = $readOnly;
+        $this->allowNulls = $allowNulls;
+
         $items = $items ?? [];
         if (Type::isMapLike($this)) {
             $items = Type::makeObject($items);
@@ -141,6 +158,24 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         }
 
         self::$methods[$method] = $methodFunc;
+    }
+
+    /**
+     * Read only.
+     * @return bool
+     */
+    public final function readOnly(): bool
+    {
+        return $this->readOnly;
+    }
+
+    /**
+     * Allow nulls.
+     * @return bool
+     */
+    public final function allowNulls(): bool
+    {
+        return $this->allowNulls;
     }
 
     /**
@@ -489,7 +524,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         $this->methodCheck('merge');
         $this->readOnlyCheck();
 
-        if ($array->type() != $this->type) {
+        if (isset($this->type) && $this->type != $array->type()) {
             throw new ArgumentException("Given {$array->getName()} not mergable with {$this->getName()}");
         }
 
