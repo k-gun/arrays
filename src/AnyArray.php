@@ -35,6 +35,11 @@ use xo\{TypedArray, Type, ArrayException};
  */
 class AnyArray extends TypedArray
 {
+    /**
+     * Constructor.
+     * @param array|null $items
+     * @param bool       $readOnly
+     */
     public function __construct(array $items = null, bool $readOnly = false)
     {
         // all allowed
