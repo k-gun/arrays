@@ -75,7 +75,7 @@ class TypedArray extends AbstractArray
             }
         }
 
-        parent::__construct($type, $items);
+        parent::__construct($type, $items, $itemsType);
     }
 
     /**
