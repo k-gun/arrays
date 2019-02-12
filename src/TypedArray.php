@@ -43,18 +43,6 @@ class TypedArray extends AbstractArray
     protected $type;
 
     /**
-     * Read only.
-     * @var bool
-     */
-    protected $readOnly;
-
-    /**
-     * Allow nulls.
-     * @var bool
-     */
-    protected $allowNulls;
-
-    /**
      * Constructor.
      * @param string      $type
      * @param array|null  $items
@@ -66,8 +54,6 @@ class TypedArray extends AbstractArray
         bool $readOnly = false, bool $allowNulls = false)
     {
         $this->type = $type;
-        $this->readOnly = $readOnly;
-        $this->allowNulls = $allowNulls;
 
         if ($type != Type::ANY && $items != null) {
             if (!Type::validateItems($this, $items, $itemsType, $error)) {
@@ -75,7 +61,7 @@ class TypedArray extends AbstractArray
             }
         }
 
-        parent::__construct($type, $items, $itemsType);
+        parent::__construct($items, $itemsType, $readOnly, $allowNulls);
     }
 
     /**
@@ -86,23 +72,4 @@ class TypedArray extends AbstractArray
     {
         return $this->type;
     }
-
-    /**
-     * Read only.
-     * @return bool
-     */
-    public final function readOnly(): bool
-    {
-        return $this->readOnly;
-    }
-
-    /**
-     * Allow nulls.
-     * @return bool
-     */
-    public final function allowNulls(): bool
-    {
-        return $this->allowNulls;
-    }
-
 }
