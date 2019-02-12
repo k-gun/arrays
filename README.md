@@ -113,3 +113,38 @@ $array->append(1);
 $array->append(2);
 $array->append('3'); //=> error
 ```
+
+Yet another example;
+
+```php
+use xo\TypedArray;
+use xo\Set;
+use function xo\set;
+
+class Poll extends TypedArray {
+    public function __construct(array $items = null) {
+        parent::__construct('Poll', $items, 'array');
+    }
+
+    public function getResults(): array {
+        return $this->copy()
+            ->map(function ($option) {
+                return round(array_sum($option) / count($option), 2);
+                // or
+                // return set($option)->sumAvg(2);
+                // return (new Set($option))->sumAvg(2);
+            })
+            ->sort('asort', function ($a, $b) {
+                return $a < $b;
+            })
+            ->toArray();
+    }
+}
+
+$poll = new Poll();
+$poll->put('option_1', [2, 2, 1]);
+$poll->put('option_2', [5, 1, 5]);
+$poll->put('option_3', [3, 5, 2]);
+
+var_dump($poll->getResults()); //=> array(3) { [option_2] => float(3.67) [option_3] => float(3.33) [option_1] => float(1.67) }
+```
