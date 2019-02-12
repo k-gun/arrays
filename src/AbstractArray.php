@@ -615,17 +615,6 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     }
 
     /**
-     * Sort key.
-     * @param  callable|null $ufunc
-     * @param  int           $flags
-     * @return self
-     */
-    public final function sortKey(callable $ufunc = null, int $flags = 0): self
-    {
-        return $this->sort('ksort', $ufunc, $flags);
-    }
-
-    /**
      * Sort natural.
      * @param  bool   $caseSensitive
      * @param  int    $flags
