@@ -245,17 +245,6 @@ class Set extends TypedArray
     }
 
     /**
-     * Put.
-     * @param  int $key
-     * @param  any $value
-     * @return self
-     */
-    public function put(int $key, $value): self
-    {
-        return $this->_put($key, $value);
-    }
-
-    /**
      * Push.
      * @param  int $key
      * @param  any $value

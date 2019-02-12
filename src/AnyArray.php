@@ -241,17 +241,6 @@ class AnyArray extends TypedArray
     }
 
     /**
-     * Put.
-     * @param  int|string $key
-     * @param  any        $value
-     * @return self
-     */
-    public function put($key, $value): self
-    {
-        return $this->_put($key, $value);
-    }
-
-    /**
      * Push.
      * @param  int|string $key
      * @param  any        $value

@@ -192,17 +192,6 @@ class Map extends TypedArray
     }
 
     /**
-     * Put.
-     * @param  string $key
-     * @param  any    $value
-     * @return self
-     */
-    public function put(string $key, $value): self
-    {
-        return $this->_put($key, $value);
-    }
-
-    /**
      * Push.
      * @param  string $key
      * @param  any    $value

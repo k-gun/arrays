@@ -294,20 +294,6 @@ trait ArrayTrait
     }
 
     /**
-     * Put.
-     * @param  int|string $key
-     * @param  any        $value
-     * @return xo\ArrayInterface
-     */
-    protected final function _put($key, $value): ArrayInterface
-    {
-        $this->keyValueCheck($key, $value);
-        $this->executeCommand('put', $key, $value);
-
-        return $this;
-    }
-
-    /**
      * Push.
      * @param  int|string $key
      * @param  any        $value
@@ -351,7 +337,7 @@ trait ArrayTrait
         $this->valueCheck($replaceValue);
 
         if ($found = (null !== $key = $this->_search($value))) {
-            $this->_put($key, $replaceValue);
+            $this->executeCommand('put', $key, $replaceValue);
         }
 
         return $this;
@@ -369,7 +355,7 @@ trait ArrayTrait
         $this->keyValueCheck($key, $value);
 
         if ($found = $this->_hasKey($key, false)) {
-            $this->_put($key, $replaceValue);
+            $this->executeCommand('put', $key, $replaceValue);
         }
 
         return $this;
