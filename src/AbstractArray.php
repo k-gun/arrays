@@ -89,7 +89,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         }
 
         $this->items = new ArrayObject($items);
-        $this->itemsType = $itemsType;
+        $this->itemsType = $itemsType ?? 'any';
 
         self::$invisibleMethods = array_filter(get_class_methods($this), function ($method) {
             return $method[0] == '_' && $method[1] != '_';
@@ -713,7 +713,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function valueCheck($value): void
     {
-        if ($this->itemsType != null) {
+        if ($this->itemsType && $this->itemsType != 'any') {
             $valueType = Type::get($value, true);
             if ($valueType != $this->itemsType) {
                 throw new ValueException("{$this->getName()} accept {$this->itemsType} values only, {$valueType} given");

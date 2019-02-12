@@ -120,7 +120,7 @@ class Type extends StaticClass
                         self::export($value));
                     return false;
                 }
-            } elseif ($itemsType != null) {
+            } elseif ($itemsType && $itemsType != 'any') {
                 $itemsTypeBasic = self::isBasic($itemsType);
                 if ($itemsTypeBasic) {
                     if ($valueType != $itemsType) {
