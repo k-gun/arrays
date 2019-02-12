@@ -135,7 +135,7 @@ trait ArrayTrait
      */
     protected final function _set($key, $value, int &$size = null): ArrayInterface
     {
-        $this->keyCheck($key);
+        $this->keyValueCheck($key, $value);
         $this->executeCommand('set', $key, $value, $size);
 
         return $this;
@@ -261,6 +261,7 @@ trait ArrayTrait
      */
     protected final function _unpop($value, int &$size = null): ArrayInterface
     {
+        $this->valueCheck($value);
         $this->executeCommand('unpop', $value, $size);
 
         return $this;
@@ -286,6 +287,7 @@ trait ArrayTrait
      */
     protected final function _unshift($value, int &$size = null): ArrayInterface
     {
+        $this->valueCheck($value);
         $this->executeCommand('unshift', $value, $size);
 
         return $this;
@@ -299,7 +301,7 @@ trait ArrayTrait
      */
     protected final function _put($key, $value): ArrayInterface
     {
-        $this->keyCheck($key);
+        $this->keyValueCheck($key, $value);
         $this->executeCommand('put', $key, $value);
 
         return $this;
@@ -313,7 +315,7 @@ trait ArrayTrait
      */
     protected final function _push($key, $value): ArrayInterface
     {
-        $this->keyCheck($key);
+        $this->keyValueCheck($key, $value);
         $this->executeCommand('push', $key, $value);
 
         return $this;
@@ -346,6 +348,8 @@ trait ArrayTrait
      */
     protected final function _replace($value, $replaceValue, bool &$found = null): ArrayInterface
     {
+        $this->valueCheck($replaceValue);
+
         if ($found = (null !== $key = $this->_search($value))) {
             $this->_put($key, $replaceValue);
         }
@@ -362,7 +366,7 @@ trait ArrayTrait
      */
     protected final function _replaceAt($key, $replaceValue, bool &$found = null): ArrayInterface
     {
-        $this->keyCheck($key);
+        $this->keyValueCheck($key, $value);
 
         if ($found = $this->_hasKey($key, false)) {
             $this->_put($key, $replaceValue);
@@ -380,6 +384,8 @@ trait ArrayTrait
      */
     protected final function _pad(int $times, $value, int $offset = null): ArrayInterface
     {
+        $this->valueCheck($value);
+
         if ($offset === null) {
             while ($times--) {
                 $this->_unpop($value);
