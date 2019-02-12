@@ -41,7 +41,8 @@ class Tuple extends TypedArray
      * @param string|null $itemsType
      * @param bool        $allowNulls
      */
-    public function __construct(array $items = null, string $itemsType = null, bool $allowNulls = false)
+    public function __construct(array $items = null, string $itemsType = null,
+        bool $allowNulls = false)
     {
         self::$notAllowedMethods = [
             /* base methods */ 'reset', 'resetItems', 'empty', 'map', 'filter', 'merge', 'reverse', 'shuffle',
