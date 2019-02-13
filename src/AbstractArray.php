@@ -76,12 +76,6 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     private static $methods = [];
 
     /**
-     * Invisible methods.
-     * @var array
-     */
-    private static $invisibleMethods = [];
-
-    /**
      * Not allowed methods.
      * @var array
      */
@@ -107,10 +101,6 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
         $this->items = new ArrayObject($items);
         $this->itemsType = $itemsType ?? 'any';
-
-        self::$invisibleMethods = array_filter(get_class_methods($this), function ($method) {
-            return $method[0] == '_' && $method[1] != '_';
-        });
     }
 
     /**
@@ -125,12 +115,6 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         $this->methodCheck($method);
 
         if (!isset(self::$methods[$method])) {
-            // check invisible
-            $_method = '_'. $method;
-            if (in_array($_method, self::$invisibleMethods)) {
-                return $this->$_method(...$methodArgs);
-            }
-
             throw new MethodException("Method {$this->getShortName()}::{$method}() does not exist", 1);
         }
 
