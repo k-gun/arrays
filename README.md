@@ -7,8 +7,9 @@ All XO objects extends `AbstractObject`, so that makes possible to use some basi
 ### In a Nutshell
 
 ```php
-// Define a typed array as Poll
+// Declare a typed array as Poll
 class Poll extends xo\Collection {
+    // Define a custom method
     public function getResults(): array {
         // Use copy(), so do not modify Poll instance
         return $this->copy()->map(function ($option) {
