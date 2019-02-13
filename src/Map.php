@@ -130,7 +130,7 @@ class Map extends TypedArray
      * @param  string     $key
      * @param  any|null   $valueDefault
      * @param  bool|null &$found
-     * @return any|null
+     * @return ?any
      */
     public function get(string $key, $valueDefault = null, bool &$found = null)
     {
@@ -217,7 +217,7 @@ class Map extends TypedArray
      * @param  string     $key
      * @param  any|null   $valueDefault
      * @param  bool|null &$found
-     * @return any|null
+     * @return ?any
      */
     public function pull(string $key, $valueDefault = null, bool &$found = null)
     {

@@ -98,7 +98,7 @@ class Tuple extends TypedArray
      * @param  int         $key
      * @param  any|null    $valueDefault
      * @param  bool|null  &$found
-     * @return any|null
+     * @return ?any
      */
     public function get($key, $valueDefault = null, bool &$found = null)
     {

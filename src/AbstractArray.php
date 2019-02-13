@@ -181,7 +181,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     /**
      * Item.
      * @param  int|string $key
-     * @return any|null
+     * @return ?any
      */
     public final function item($key)
     {
@@ -333,7 +333,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
     /**
      * First.
-     * @return any|null
+     * @return ?any
      */
     public final function first()
     {
@@ -355,7 +355,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
     /**
      * Last.
-     * @return any|null
+     * @return ?any
      */
     public final function last()
     {
@@ -674,7 +674,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     /**
      * Find.
      * @param  Closure $func
-     * @return any|null
+     * @return ?any
      */
     public final function find(Closure $func)
     {
@@ -834,7 +834,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     /**
      * Min.
      * @param  bool $numericsOnly
-     * @return any|null
+     * @return ?any
      */
     public final function min(bool $numericsOnly = false)
     {
@@ -849,7 +849,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     /**
      * Max.
      * @param  bool $numericsOnly
-     * @return any|null
+     * @return ?any
      */
     public final function max(bool $numericsOnly = false)
     {

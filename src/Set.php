@@ -129,7 +129,7 @@ class Set extends TypedArray
      * @param  int         $key
      * @param  any|null    $valueDefault
      * @param  bool|null  &$found
-     * @return any|null
+     * @return ?any
      */
     public function get(int $key, $valueDefault = null, bool &$found = null)
     {
@@ -270,7 +270,7 @@ class Set extends TypedArray
      * @param  int         $key
      * @param  any|null    $valueDefault
      * @param  bool|null  &$found
-     * @return any|null
+     * @return ?any
      */
     public function pull(int $key, $valueDefault = null, bool &$found = null)
     {

@@ -125,7 +125,7 @@ class AnyArray extends TypedArray
      * @param  int|string  $key
      * @param  any|null    $valueDefault
      * @param  bool|null  &$found
-     * @return any
+     * @return ?any
      */
     public function get($key, $valueDefault = null, bool &$found = null)
     {
@@ -267,7 +267,7 @@ class AnyArray extends TypedArray
      * @param  int|string $key
      * @param  any|null   $valueDefault
      * @param  bool|null &$found
-     * @return any|null
+     * @return ?any
      */
     public function pull($key, $valueDefault = null, bool &$found = null)
     {

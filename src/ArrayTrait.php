@@ -146,7 +146,7 @@ trait ArrayTrait
      * @param  int|string  $key
      * @param  any|null    $valueDefault
      * @param  bool|null  &$found
-     * @return any|null
+     * @return ?any
      */
     protected final function _get($key, $valueDefault = null, bool &$found = null)
     {
@@ -326,7 +326,7 @@ trait ArrayTrait
      * @param  int|string  $key
      * @param  any|null    $valueDefault
      * @param  bool|null  &$found
-     * @return any|null
+     * @return ?any
      */
     protected final function _pull($key, $valueDefault = null, bool &$found = null)
     {

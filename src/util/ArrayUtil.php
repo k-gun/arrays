@@ -240,7 +240,7 @@ class ArrayUtil extends Util
      * @param  array  $items
      * @param  int    $size
      * @param  bool   $useKeys
-     * @return any|null
+     * @return ?any
      * @throws xo\util\UtilException
      */
     public static final function rand(array $items, int $size = 1, bool $useKeys = false)
@@ -369,7 +369,7 @@ class ArrayUtil extends Util
      * First.
      * @param  array $array
      * @param  any   $valueDefault
-     * @return any|null
+     * @return ?any
      */
     public static final function first(array $array, $valueDefault = null)
     {
@@ -380,7 +380,7 @@ class ArrayUtil extends Util
      * Last.
      * @param  array $array
      * @param  any   $valueDefault
-     * @return any|null
+     * @return ?any
      */
     public static final function last(array $array, $valueDefault = null)
     {
