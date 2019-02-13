@@ -347,7 +347,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `TypedArray`
 
     ```
-    class TypedArray extends AbstractArray {}
+    class xo\TypedArray extends xo\AbstractArray {}
 
     protected string $type;
 
@@ -361,7 +361,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `AnyArray`
 
     ```
-    class AnyArray extends TypedArray {}
+    class xo\AnyArray extends xo\TypedArray {}
 
     protected static array $notAllowedMethods = []
 
@@ -398,7 +398,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `Map`
 
     ```
-    class Map extends TypedArray {}
+    class xo\Map extends xo\TypedArray {}
 
     protected static array $notAllowedMethods = ['flip', 'add', 'append', 'prepend', 'unpop',
         'unshift', 'flip', 'pad']
@@ -429,7 +429,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `Set`
 
     ```
-    class Set extends TypedArray {}
+    class xo\Set extends xo\TypedArray {}
 
     protected static array $notAllowedMethods = ['flip']
 
@@ -465,7 +465,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `Tuple`
 
     ```
-    class Tuple extends TypedArray {}
+    class xo\Tuple extends xo\TypedArray {}
 
     protected static array $notAllowedMethods = ['reset', 'resetItems', 'empty', 'map', 'filter', 'merge',
         'reverse', 'shuffle', 'search', 'searchLast', 'set', 'add', 'remove', 'removeAt', 'removeAll',
@@ -485,14 +485,14 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 
     ```
     // these are just aliased classes
-    class ArrayObject extends AnyArray {}
-    class Collection extends AnyArray {}
+    class xo\ArrayObject extends xo\AnyArray {}
+    class xo\Collection extends xo\AnyArray {}
     ```
 
 - #### `AbstractScalarObject`
 
     ```
-    abstract class AbstractScalarObject extends AbstractObject {}
+    abstract class xo\AbstractScalarObject extends xo\AbstractObject {}
 
     protected scalar $value;
     protected string $valueType;
@@ -504,12 +504,13 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public final valueType(): string
     public final equalTo(scalar $value): bool
     public final size(bool $multiByte = false): int
+    public toString(): string
     ```
 
 - #### `StringObject`
 
     ```
-    class StringObject extends AbstractScalarObject {}
+    class xo\StringObject extends xo\AbstractScalarObject {}
 
     public string const TRIM_CHARS = " \t\n\r\0\x0B"
 
@@ -540,7 +541,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `NumberObject`
 
     ```
-    class NumberObject extends AbstractScalarObject {}
+    class xo\NumberObject extends xo\AbstractScalarObject {}
 
     public __construct(numeric $value)
         throws xo\exception\ArgumentTypeException
@@ -554,7 +555,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `StaticClass`
 
     ```
-    static class StaticClass {}
+    static class xo\StaticClass {}
 
     public final __construct()
         throws xo\StaticClassException
@@ -563,7 +564,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `Type`
 
     ```
-    static final class Type extends StaticClass {}
+    static final class xo\Type extends xo\StaticClass {}
 
     public const ANY = 'Any'
     public const MAP = 'Map'
@@ -572,22 +573,58 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 
     public static validateItems(object $object, string $type, array $items, string $itemsType = null,
         bool $allowNulls, string &$error = null): bool
-    public static function get(any $input, bool $objectCheck = false): string
-    public static function export(any $input): string
-    public static function makeArray(any $input): array
-    public static function makeObject(any $input): object
-    public static function isBasic(string $type): bool
-    public static function isDigit(any $input, bool $complex = true): bool
-    public static function isTuple(any $input): bool
-    public static function isMapLike(any $input): bool
-    public static function isSetLike(any $input): bool
+    public static get(any $input, bool $objectCheck = false): string
+    public static export(any $input): string
+    public static makeArray(any $input): array
+    public static makeObject(any $input): object
+    public static isBasic(string $type): bool
+    public static isDigit(any $input, bool $complex = true): bool
+    public static isTuple(any $input): bool
+    public static isMapLike(any $input): bool
+    public static isSetLike(any $input): bool
     ```
 
 
 - #### `Util`
 
     ```
-    static class Util extends StaticClass {}
+    static class xo\util\Util extends xo\StaticClass {}
+    ```
+
+- #### `ArrayUtil`
+
+    ```
+    static class xo\util\ArrayUtil extends xo\util\Util {}
+
+    public static final keyCheck(int|string $key): ?string
+        throws xo\util\UtilException
+    public static final isSequentialArray(array $array): bool
+    public static final isAssociativeArray(array $array): bool
+    public static final set(array &$array, int|string $key, any $value): array
+        throws xo\util\UtilException
+    public static final get(array $array, int|string $key, any $valueDefault = null): ?any
+        throws xo\util\UtilException
+    public static final getAll(array $array, array[int|string] $keys, any $valueDefault = null): array
+        throws xo\util\UtilException
+    public static final pull(array &$array, int|string $key, any $valueDefault = null): ?any
+        throws xo\util\UtilException
+    public static final pullAll(array &$array, array[int|string] $keys, any $valueDefault = null): array
+        throws xo\util\UtilException
+    public static final test(array $array, Closure $func): bool
+    public static final testAll(array $array, Closure $func): bool
+    public static final rand(array $items, int $size = 1, bool $useKeys = false)
+        throws xo\util\UtilException
+    public static final shuffle(array &$items, bool $preserveKeys = false): array
+    public static final sort(array &$array, callable $func = null, callable $ufunc = null, int $flags = 0): array
+        throws xo\util\UtilException
+    public static final include(array $array, array $keys): array
+    public static final exclude(array $array, array $keys): array
+    public static final first(array $array, any $valueDefault = null): ?any
+    public static final last(array $array, any $valueDefault = null): ?any
+    public static final getInt(array $array, int|string $key, int $valueDefault = null): int
+    public static final getFloat(array $array, int|string $key, float $valueDefault = null): float
+    public static final getString(array $array, int|string $key, string $valueDefault = null): string
+    public static final getBool(array $array, int|string $key, bool $valueDefault = null): bool
     ```
 
 ### Shortcut Functions
