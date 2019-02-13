@@ -85,7 +85,7 @@ $map->sum(); //=> 3
 $map->append(3);
 ```
 
-But, off course, you can create new typed array objects via `TypedArray` directly like first example or defining new arrays that extend `TypedArray` or other objects such as `Map`, `Set`, `Tuple` or `AnyArray`.
+But, off course, you can create new typed array objects via `TypedArray` directly like in first example or defining new arrays that extend `TypedArray` or other objects such as `Map`, `Set`, `Tuple` or `AnyArray`.
 
 Typed array example;
 
@@ -132,7 +132,7 @@ var_export($poll->getResults()); //=> ['option_2' => 3.67, 'option_3' => 3.33, '
 
 If you want to make a untyped array, you can simply use `AnyArray`. So that will provide all methods as well likely on the other arrays.
 
-Here is another with `AnyArray` example like above;
+Here is another example with `AnyArray` like above;
 
 ```php
 class Poll extends xo\AnyArray {
