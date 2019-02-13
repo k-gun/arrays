@@ -352,7 +352,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 
     public __construct(string $type, array $items = null, string $itemsType = null,
         bool $readOnly = false, bool $allowNulls = false)
-        throws xo\exception\TypeException
+        throw xo\exception\TypeException
 
     public final type(): string
     ```
