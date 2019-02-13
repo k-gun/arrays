@@ -286,7 +286,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     private xo\ArrayObject $items
     private string $itemsType
     private static array $methods
-    private static array $invisibleMethods
+
     protected static array $notAllowedMethods
 
     public __construct(array $items = null, string $itemsType = null,
