@@ -204,7 +204,7 @@ class Set extends TypedArray
     /**
      * Pop.
      * @param  int|null &$size
-     * @return any
+     * @return ?any
      */
     public function pop(int &$size = null)
     {
@@ -225,7 +225,7 @@ class Set extends TypedArray
     /**
      * Shift.
      * @param  int|null &$size
-     * @return any
+     * @return ?any
      */
     public function shift(int &$size = null)
     {

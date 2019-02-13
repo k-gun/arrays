@@ -244,7 +244,7 @@ trait ArrayTrait
     /**
      * Pop.
      * @param  int|null &$size
-     * @return any
+     * @return ?any
      */
     protected final function _pop(int &$size = null)
     {
@@ -270,7 +270,7 @@ trait ArrayTrait
     /**
      * Shift.
      * @param  int|null &$size
-     * @return any
+     * @return ?any
      */
     protected final function _shift(int &$size = null)
     {

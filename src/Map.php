@@ -173,7 +173,7 @@ class Map extends TypedArray
     /**
      * Pop.
      * @param  int|null &$size
-     * @return any
+     * @return ?any
      */
     public function pop(int &$size = null)
     {
@@ -183,7 +183,7 @@ class Map extends TypedArray
     /**
      * Shift.
      * @param  int|null &$size
-     * @return any
+     * @return ?any
      */
     public function shift(int &$size = null)
     {

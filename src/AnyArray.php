@@ -201,7 +201,7 @@ class AnyArray extends TypedArray
     /**
      * Pop.
      * @param  bool|null &$size
-     * @return any
+     * @return ?any
      */
     public function pop(int &$size = null)
     {
@@ -222,7 +222,7 @@ class AnyArray extends TypedArray
     /**
      * Shift.
      * @param  bool|null &$size
-     * @return any
+     * @return ?any
      */
     public function shift(int &$size = null)
     {
