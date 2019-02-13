@@ -47,6 +47,22 @@ class StringUtil extends Util
     }
 
     /**
+     * Compare locale.
+     * @param  string $locale
+     * @param  string $source1
+     * @param  string $source2
+     * @return int
+     */
+    public static final function compareLocale(string $locale, string $source1, string $source2): int
+    {
+        $localeDefault = setlocale(LC_COLLATE, '');
+        setlocale(LC_COLLATE, $locale);
+        $result = strcoll($source1, $source2);
+        setlocale(LC_COLLATE, $localeDefault); // reset locale
+        return $result;
+    }
+
+    /**
      * Contains.
      * @param  string $source
      * @param  string $search

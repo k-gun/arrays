@@ -194,6 +194,17 @@ class StringObject extends AbstractScalarObject
     }
 
     /**
+     * Compare locale.
+     * @param  string $locale
+     * @param  string $value
+     * @return int
+     */
+    public final function compareLocale(string $locale, string $value): int
+    {
+        return StringUtil::compare($locale, $this->value, $value);
+    }
+
+    /**
      * Contains.
      * @param  string $search
      * @param  bool   $caseSensitive
