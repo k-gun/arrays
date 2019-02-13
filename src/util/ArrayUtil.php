@@ -82,6 +82,7 @@ class ArrayUtil extends Util
      * @param  int|string $key
      * @param  any        $valueDefault
      * @return any
+     * @throws xo\util\UtilException
      */
     public static final function set(array &$array, $key, $value): array
     {
@@ -112,7 +113,7 @@ class ArrayUtil extends Util
      * @param  int|string $key
      * @param  any        $valueDefault
      * @return any
-     *
+     * @throws xo\util\UtilException
      */
     public static final function get(array $array, $key, $valueDefault = null)
     {
@@ -165,6 +166,7 @@ class ArrayUtil extends Util
      * @param  int|string $key
      * @param  any        $valueDefault
      * @return any
+     * @throws xo\util\UtilException
      */
     public static final function pull(array &$array, $key, $valueDefault = null)
     {
