@@ -79,8 +79,8 @@ class ArrayUtil extends Util
     /**
      * Set (with dot notation support for sub-array paths).
      * @param  array      &$array
-     * @param  int|string $key
-     * @param  any        $valueDefault
+     * @param  int|string  $key
+     * @param  any         $valueDefault
      * @return any
      * @throws xo\util\UtilException
      */
@@ -111,8 +111,8 @@ class ArrayUtil extends Util
      * Get (with dot notation support for sub-array paths).
      * @param  array      $array
      * @param  int|string $key
-     * @param  any        $valueDefault
-     * @return any
+     * @param  any|null   $valueDefault
+     * @return ?any
      * @throws xo\util\UtilException
      */
     public static final function get(array $array, $key, $valueDefault = null)
@@ -142,9 +142,9 @@ class ArrayUtil extends Util
 
     /**
      * Get all (shortcuts like: list(..) = Util::getAll(..)).
-     * @param  array  $array
-     * @param  array  $keys (aka paths)
-     * @param  any    $valueDefault
+     * @param  array    $array
+     * @param  array    $keys (aka paths)
+     * @param  any|null $valueDefault
      * @return array
      * @throws xo\util\UtilException
      */
@@ -165,8 +165,8 @@ class ArrayUtil extends Util
      * Pull.
      * @param  array      &$array
      * @param  int|string $key
-     * @param  any        $valueDefault
-     * @return any
+     * @param  any|null   $valueDefault
+     * @return ?any
      * @throws xo\util\UtilException
      */
     public static final function pull(array &$array, $key, $valueDefault = null)
@@ -183,9 +183,9 @@ class ArrayUtil extends Util
 
     /**
      * Pull all.
-     * @param  array  &$array
-     * @param  array  $keys
-     * @param  any    $valueDefault
+     * @param  array    &$array
+     * @param  array     $keys
+     * @param  any|null  $valueDefault
      * @return array
      * @throws xo\util\UtilException
      */
@@ -362,8 +362,8 @@ class ArrayUtil extends Util
 
     /**
      * First.
-     * @param  array $array
-     * @param  any   $valueDefault
+     * @param  array    $array
+     * @param  any|null $valueDefault
      * @return ?any
      */
     public static final function first(array $array, $valueDefault = null)
@@ -373,8 +373,8 @@ class ArrayUtil extends Util
 
     /**
      * Last.
-     * @param  array $array
-     * @param  any   $valueDefault
+     * @param  array    $array
+     * @param  any|null $valueDefault
      * @return ?any
      */
     public static final function last(array $array, $valueDefault = null)
