@@ -546,8 +546,8 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public __construct(numeric $value)
         throws xo\exception\ArgumentTypeException
 
-    public toInt(): int
-    public toFloat(int $round = null): float
+    public final toInt(): int
+    public final toFloat(int $round = null): float
     ```
 
 ### Static and Util Objects
