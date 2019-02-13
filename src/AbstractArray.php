@@ -292,7 +292,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      */
     public final function isEmpty(): bool
     {
-        return $this->items->count() == 0;
+        return !$this->items->count();
     }
 
     /**
