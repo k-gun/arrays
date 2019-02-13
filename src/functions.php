@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace xo;
 
-use xo\{Map, Set, Tuple};
+use xo\{Map, Set, Tuple, Collection, StringObject, NumberObject};
 
 /**
  * Map.
@@ -56,4 +56,34 @@ function set(...$arguments): Set
 function tuple(...$arguments): Tuple
 {
     return new Tuple(...$arguments);
+}
+
+/**
+ * Collection.
+ * @param  any ...$arguments
+ * @return xo\Collection
+ */
+function collection(...$arguments): Collection
+{
+    return new Collection(...$arguments);
+}
+
+/**
+ * String.
+ * @param  string $value
+ * @return xo\StringObject
+ */
+function string($value): StringObject
+{
+    return new StringObject($value);
+}
+
+/**
+ * Number.
+ * @param  numeric $value
+ * @return xo\NumberObject
+ */
+function number($value): NumberObject
+{
+    return new NumberObject($value);
 }
