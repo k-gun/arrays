@@ -312,7 +312,7 @@ class ArrayUtil extends Util
     {
         if ($func == null) {
             sort($array, $flags);
-        } elseif ($func instanceof \Closure) {
+        } elseif ($func instanceof Closure) {
             usort($array, $func);
         } elseif (is_string($func)) {
             if ($func[0] == 'u' && $ufunc == null) {
