@@ -619,6 +619,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  bool   $caseSensitive
      * @param  int    $flags
      * @return self
+     * @throws xo\exception\MutationException
      */
     public final function sortNatural(bool $caseSensitive = true, int $flags = 0): self
     {
@@ -637,6 +638,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  callable|null $ufunc
      * @param  int           $flags
      * @return self
+     * @throws xo\exception\MutationException
      */
     public final function sortLocale(string $locale, callable $func = null, callable $ufunc = null,
         int $flags = 0): self
