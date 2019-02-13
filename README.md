@@ -344,7 +344,8 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     ```
 
 - #### `TypedArray`
-    ```
+
+    ```php
     class TypedArray extends AbstractArray {}
 
     protected string $type;
