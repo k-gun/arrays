@@ -79,15 +79,16 @@ class Type extends StaticClass
     /**
      * Validate items.
      * @param  object       $object
+     * @param  string       $type
      * @param  array        $items
      * @param  string|null  $itemsType
+     * @param  bool         $allowNulls
      * @param  string|null &$error
      * @return bool
      */
-    public static function validateItems(object $object, array $items, string $itemsType = null,
+    public static function validateItems(object $object, string $type, array $items, string $itemsType = null,
         bool $allowNulls, string &$error = null): bool
     {
-        $type = $object->type();
         $typeBasic = self::isBasic($type);
         if (!$typeBasic) {
             if (self::isMapLike($object)) {
