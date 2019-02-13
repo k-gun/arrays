@@ -340,6 +340,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         foreach ($this->generate() as $value) {
             return $value;
         }
+        return null;
     }
 
     /**
@@ -351,6 +352,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         foreach ($this->generate() as $key => $_) {
             return $key;
         }
+        return null;
     }
 
     /**
@@ -362,6 +364,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         foreach ($this->generate(true) as $value) {
             return $value;
         }
+        return null;
     }
 
     /**
@@ -373,6 +376,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
         foreach ($this->generate(true) as $key => $_) {
             return $key;
         }
+        return null;
     }
 
     /**
