@@ -13,8 +13,8 @@ class Poll extends xo\Collection {
     public function getResults(): array {
         // Use copy(), so do not modify Poll instance
         return $this->copy()->map(function ($option) {
-            // Sum and calculate avarage of option values
-            return round(array_sum($option) / count($option), 2);
+            // Use set() shortcut and sum avarage of option values
+            return xo\set($option)->sumAvg(2);
         })->sort('asort', function ($a, $b) {
             // Use reverse sort preserving keys
             return $a < $b;
