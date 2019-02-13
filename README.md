@@ -4,7 +4,7 @@ You can use `Map`, `Set` and `Tuple` to build strict arrays and also use `AnyArr
 
 All XO objects extends AbstractObject, so that makes possible to use some basic object methods like `getName()` or `getShortName()`.
 
-#### Installation
+### Installation
 
 ```bash
 composer require k-gun/xo
