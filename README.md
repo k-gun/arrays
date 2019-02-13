@@ -224,21 +224,119 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 
 ### Objects, Methods and Properties
 
-- #### ``abstract class xo\AbstractObject``
+- #### ``AbstractObject``
     ```
+    abstract class xo\AbstractObject {}
+
     public final getClass(): object
     public final getName(): string
     public final getShortName(): string
     public final clone(): object
-    public final equals(object $object): bool
+    public final equals(object $object): bool @throws xo\exception\MethodException
     public toValue(): ?any
     public toString(): string
     ```
-- #### ``abstract class AbstractArray extends AbstractObject implements ArrayInterface, Countable, IteratorAggregate``
+- #### ``AbstractArray``
     ```
-    use ArrayTrait @object xo\ArrayTrait
-    private $readOnly @var bool
-    private $allowNulls @var bool
-    private $items @var ArrayObject
-    private $itemsType @var string
+    abstract class xo\AbstractArray
+        extends xo\AbstractObject
+            implements xo\ArrayInterface, Countable, IteratorAggregate {}
+
+    use xo\ArrayTrait
+
+    private bool $readOnly
+    private bool $allowNulls
+    private xo\ArrayObject $items
+    private string $itemsType
+    private static array $methods
+    private static array $invisibleMethods
+    protected static array $notAllowedMethods
+
+    public __construct(array $items = null, string $itemsType = null,
+        bool $readOnly = false, bool $allowNulls = false)
+
+    public final __call(string $method, array $methodArgs): any
+        throws xo\exception\MethodException
+
+    public final prototype(string $method, callable $methodFunc): void
+        throws xo\exception\MethodException
+    public final readOnly(): bool
+    public final allowNulls(): bool
+    public final item($key)
+    public final items(bool $pair = false): array
+    public final itemsType(): string
+    public final reset(array $items): self
+        throws xo\exception\MutationException
+    public final resetItems(array $items): self
+        throws xo\exception\MutationException
+    public final copy(): xo\ArrayInterface
+    public final copyArray(): array
+    public final size(): int
+    public final empty(): void
+    public final isEmpty(): bool
+    public final count(): int
+    public final countValues(): array
+    public final keys(): array
+    public final values(): array
+    public final first()
+    public final firstKey()
+    public final last()
+    public final lastKey()
+    public final toArray(bool $normalize = false): array
+    public final toObject(): object
+    public final toJson(): string
+    public final map(callable $func): self
+        throws xo\exception\MutationException
+    public final reduce($initialValue = null, callable $func = null): any
+    public final filter(callable $func = null): self
+        throws xo\exception\MutationException
+    public final diff(iterable $items, bool $uniq = false): array
+    public final uniq(): array
+    public final ununiq(): array
+    public final uniqs(): array
+    public final merge(self $array): self
+        throws xo\exception\MutationException,ArgumentException
+    public final chunk(int $size, bool $preserveKeys = false): array
+    public final slice(int $offset, int $size = null, bool $preserveKeys = false): array
+    public final reverse(): self
+    public final rand(int $size = 1, bool $useKeys = false)
+    public final shuffle(bool $preserveKeys = null): self
+        throws xo\exception\MutationException
+    public final sort(callable $func = null, callable $ufunc = null, int $flags = 0): self
+        throws xo\exception\MutationException
+    public final sortNatural(bool $caseSensitive = true, int $flags = 0): self
+        throws xo\exception\MutationException
+    public final sortLocale(string $locale, callable $func = null, callable $ufunc = null, int $flags = 0): self
+        throws xo\exception\MutationException
+    public final test(Closure $func): bool
+    public final testAll(Closure $func): bool
+    public final find(Closure $func)
+    public final findKey(Closure $func)
+    public final findIndex(Closure $func): ?int
+    public final keyCheck($key): void
+        throws xo\exception\KeyException
+    public final valueCheck($value): void
+        throws xo\exception\ValueException
+    public final keyValueCheck($key, $value): void
+        throws xo\exception\KeyException,ValueException
+    public final nullCheck($value): void
+        throws xo\exception\NullException
+    public final methodCheck(string $method): void
+        throws xo\exception\MethodException
+    public final readOnlyCheck(): void
+        throws xo\exception\MutationException
+    public final generate(bool $reverse = false): Generator
+    public final getIterator(): Generator
+    public final min(bool $numericsOnly = false): ?any
+    public final max(bool $numericsOnly = false): ?any
+    public final calc(string $operator, int $round = null, int &$valueCount = null): ?number
+        throws xo\ArrayException
+    public final calcAvg(string $operator, int $round = null, int &$valueCount = null): ?float
+        throws xo\ArrayException
+    public final sum(int $round = null, int &$valueCount = null): ?number
+    public final sumAvg(int $round = null, int &$valueCount = null): ?float
+
+    private final executeCommand(string $command, &...$arguments): void
+        throws xo\ArrayException
+        throws xo\exception\MutationException,NullException
     ```
