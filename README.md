@@ -30,7 +30,7 @@ $array->append(4);
 $array->sum(); //=> 10
 
 // this will throw a xo\exception\MethodException
-// cos' append() does not take string value
+// 'cos append() does not take string value
 $array->append('4');
 ```
 
@@ -52,7 +52,7 @@ $map = new xo\Map(['a' => 1, 'b' => 2]);
 $map->sum(); //=> 3
 
 // this will throw a xo\exception\MethodException
-// cos' append() does not take a key but only value
+// 'cos append() does not take a key but only value
 $map->append(3);
 
 // add new item with key,value pairs using set(), or push() as well
@@ -81,7 +81,7 @@ $map = new xo\Tuple(1, 2);
 $map->sum(); //=> 3
 
 // this will throw a xo\exception\MethodException
-// cos' append() is not allowed for Tuple objects
+// 'cos append() is not allowed for Tuple objects
 $map->append(3);
 ```
 
@@ -146,6 +146,68 @@ class Poll extends xo\AnyArray {
 }
 ```
 
+#### Custom Arrays
+
+Creating custom arrays;
+
+```php
+class User {
+    private $id;
+    public function __construct(int $id = null) {
+        $this->id = $id;
+    }
+}
+
+class Users extends xo\TypedArray {
+    public function __construct(array $items = null) {
+        parent::__construct('Users', $items, User::class);
+    }
+}
+
+$users = new Users();
+$users->add(new User(1));
+$users->add(new User(2));
+$users->add(new User(null));
+
+var_dump($users->copy()->filter(function (User $user) {
+    return !is_null($user->id);
+})->count()); //=> int(2)
+
+// this will throw a xo\exception\ValueException
+// 'cos Users accepts User type values only
+$users->add('boom!');
+```
+
+Besides, it also possible with `Set` or `Map`;
+
+```php
+class Users extends xo\Set {
+    public function __construct(array $items = null) {
+        parent::__construct($items, User::class);
+    }
+}
+
+$users = new Users();
+$users->add(new User(1));
+$users->add(new User(2));
+$users->add(new User(null));
+...
+
+// or
+
+class Users extends xo\Map {
+    public function __construct(array $items = null) {
+        parent::__construct($items, User::class);
+    }
+}
+
+$users = new Users();
+$users->put(1, new User(1));
+$users->put(2, new User(2));
+$users->put('null', new User(null));
+...
+```
+
 #### Using String and Number Objects
 
 ```php
@@ -154,7 +216,7 @@ var_dump($string->test('~hell~')); //=> bool(false)
 var_dump($string->test('~hell~i')); //=> bool(true)
 var_dump($string->startsWith('He')); //=> bool(true)
 
-$number = new NumberObject(1.555);
+$number = new xo\NumberObject(1.555);
 var_dump($number->toInt()); //=> int(1)
 var_dump($number->toFloat()); //=> float(1.555)
 var_dump($number->toFloat(2)); //=> float(1.56)
