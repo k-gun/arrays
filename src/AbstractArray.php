@@ -901,6 +901,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  int|null  $round
      * @param  int|null &$valueCount
      * @return ?float
+     * @throws xo\ArrayException
      */
     public final function calcAvg(string $operator, int $round = null, int &$valueCount = null): ?float
     {
