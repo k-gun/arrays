@@ -45,10 +45,16 @@ class StringObject extends AbstractScalarObject
 
     /**
      * Constructor.
-     * @param string $value
+     * @param  string $value
+     * @throws xo\exception\ArgumentTypeException
      */
-    public function __construct(string $value)
+    public function __construct($value)
     {
+        if (!is_string($value)) {
+            throw new ArgumentTypeException("{$this->getShortName()}() value must be string, ".
+                "invalid value given");
+        }
+
         parent::__construct($value);
     }
 

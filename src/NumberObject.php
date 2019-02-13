@@ -45,7 +45,7 @@ class NumberObject extends AbstractScalarObject
     {
         if (!is_numeric($value)) {
             throw new ArgumentTypeException("{$this->getShortName()}() value must be numeric, ".
-                "non-numeric value given");
+                "invalid value given");
         }
 
         parent::__construct($value);
