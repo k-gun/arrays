@@ -48,6 +48,10 @@ class NumberObject extends AbstractScalarObject
                 "invalid value given");
         }
 
+        if (is_string($value)) {
+            $value = strpos($value, '.') !== false ? (float) $value : (int) $value;
+        }
+
         parent::__construct($value);
     }
 

@@ -98,11 +98,6 @@ abstract class AbstractObject
      */
     public function toString(): string
     {
-        if (property_exists($this, 'value')) {
-            if (is_null($this->value) || is_scalar($this->value)) {
-                return (string) $this->value;
-            }
-        }
         return sprintf('object(%s)#%s', $this->getName(), spl_object_id($this));
     }
 }

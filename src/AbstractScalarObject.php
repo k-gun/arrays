@@ -101,5 +101,18 @@ abstract class AbstractScalarObject extends AbstractObject
         $value = (string) $this->value;
         return !$multiByte ? strlen($value) : mb_strlen($value);
     }
+
+    /**
+     * To string.
+     * @return string
+     */
+    public function toString(): string
+    {
+        $value = $this->value;
+        if ($this->valueType == 'float') {
+            $value = json_encode($value, JSON_PRESERVE_ZERO_FRACTION);
+        }
+        return (string) $value;
+    }
 }
 
