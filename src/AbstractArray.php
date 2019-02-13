@@ -866,7 +866,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  string    $operator
      * @param  int|null  $round
      * @param  int|null &$valueCount
-     * @return number|null
+     * @return ?number
      * @throws xo\ArrayException
      */
     public final function calc(string $operator, int $round = null, int &$valueCount = null)
@@ -918,7 +918,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Sum.
      * @param  int|null  $round
      * @param  int|null &$valueCount
-     * @return number|null
+     * @return ?number
      */
     public final function sum(int $round = null, int &$valueCount = null)
     {
