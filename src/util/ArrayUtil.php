@@ -386,10 +386,10 @@ class ArrayUtil extends Util
      * Get int.
      * @param  array      $array
      * @param  int|string $key
-     * @param  any|null   $valueDefault
+     * @param  int|null   $valueDefault
      * @return int
      */
-    public static final function getInt(array $array, $key, $valueDefault = null): int
+    public static final function getInt(array $array, $key, int $valueDefault = null): int
     {
         return (int) self::get($array, $key, $valueDefault);
     }
@@ -398,22 +398,22 @@ class ArrayUtil extends Util
      * Get float.
      * @param  array      $array
      * @param  int|string $key
-     * @param  any|null   $valueDefault
+     * @param  float|null $valueDefault
      * @return float
      */
-    public static final function getFloat(array $array, $key, $valueDefault = null): float
+    public static final function getFloat(array $array, $key, float $valueDefault = null): float
     {
         return (float) self::get($array, $key, $valueDefault);
     }
 
     /**
      * Get string.
-     * @param  array      $array
-     * @param  int|string $key
-     * @param  any|null   $valueDefault
+     * @param  array       $array
+     * @param  int|string  $key
+     * @param  string|null $valueDefault
      * @return string
      */
-    public static final function getString(array $array, $key, $valueDefault = null): string
+    public static final function getString(array $array, $key, string $valueDefault = null): string
     {
         return (string) self::get($array, $key, $valueDefault);
     }
@@ -422,10 +422,10 @@ class ArrayUtil extends Util
      * Get bool.
      * @param  array      $array
      * @param  int|string $key
-     * @param  any|null   $valueDefault
+     * @param  bool|null  $valueDefault
      * @return bool
      */
-    public static final function getBool(array $array, $key, $valueDefault = null): bool
+    public static final function getBool(array $array, $key, bool $valueDefault = null): bool
     {
         return (bool) self::get($array, $key, $valueDefault);
     }
