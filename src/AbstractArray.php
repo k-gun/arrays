@@ -461,7 +461,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
             return strlen((string) $value);
         };
 
-        return $this->reset(array_filter($this->items(), $func, 2));
+        return $this->reset(array_filter($this->items(), $func, 1));
     }
 
     /**
