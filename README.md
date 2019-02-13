@@ -655,8 +655,27 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public static final containsAll(string $source, array $searches, bool $caseSensitive = true): bool
     public static final startsWith(string $source, string $search): bool
     public static final endsWith(string $source, string $search): bool
-    public static final trimSearch(string $source, string $search, bool $caseSensitive = true, int $side = 0): string
+    public static final trimSearch(string $source, string $search, bool $caseSensitive = true,
+        int $side = 0): string
     ```
+
+### Exceptions
+
+    class xo\exception\Exception extends Exception {}
+
+    class xo\ArrayException extends xo\exception\Exception {}
+    class xo\StaticClassException extends xo\exception\Exception {}
+
+    class xo\util\UtilException extends xo\exception\Exception {}
+
+    class xo\exception\ArgumentException extends xo\exception\Exception {}
+    class xo\exception\ArgumentTypeException extends xo\exception\Exception {}
+    class xo\exception\KeyException extends xo\exception\Exception {}
+    class xo\exception\ValueException extends xo\exception\Exception {}
+    class xo\exception\MethodException extends xo\exception\Exception {}
+    class xo\exception\MutationException extends xo\exception\Exception {}
+    class xo\exception\NullException extends xo\exception\Exception {}
+    class xo\exception\TypeException extends xo\exception\Exception {}
 
 ### Shortcut Functions
 
