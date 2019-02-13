@@ -627,6 +627,37 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public static final getBool(array $array, int|string $key, bool $valueDefault = null): bool
     ```
 
+- #### `NumberUtil`
+
+    ```
+    static class xo\util\NumberUtil extends xo\util\Util {}
+
+    public static final compare(number $a, number $b, int $precision = null): ?int
+    public static final equals(number $a, number $b, int $precision = null): ?bool
+    public static final isNumber(any $input): bool
+    public static final isDigit(any $input, bool $complex = true): bool
+    public static final isId(any $input): bool
+    public static final isUInt(any $input): bool
+    public static final isUFloat(any $input): bool
+    public static final isSigned(any $input): bool
+    public static final isUnsigned(any $input): bool
+    ```
+
+- #### `StringUtil`
+
+    ```
+    static class xo\util\StringUtil extends xo\util\Util {}
+
+    public static final compare(string $source1, string $source2): int
+    public static final compareLocale(string $locale, string $source1, string $source2): int
+    public static final contains(string $source, string $search, bool $caseSensitive = true): bool
+    public static final containsAny(string $source, array $searches, bool $caseSensitive = true): bool
+    public static final containsAll(string $source, array $searches, bool $caseSensitive = true): bool
+    public static final startsWith(string $source, string $search): bool
+    public static final endsWith(string $source, string $search): bool
+    public static final trimSearch(string $source, string $search, bool $caseSensitive = true, int $side = 0): string
+    ```
+
 ### Shortcut Functions
 
     map(...$arguments): xo\Map
