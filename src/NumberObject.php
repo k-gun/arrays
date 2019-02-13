@@ -38,7 +38,8 @@ class NumberObject extends AbstractScalarObject
 {
     /**
      * Constructor.
-     * @param numeric $value
+     * @param  numeric $value
+     * @throws xo\exception\ArgumentTypeException
      */
     public function __construct($value)
     {

@@ -51,6 +51,7 @@ abstract class AbstractScalarObject extends AbstractObject
     /**
      * Construct.
      * @param scalar $value
+     * @throws xo\exception\ArgumentTypeException
      */
     public function __construct($value)
     {
