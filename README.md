@@ -16,7 +16,7 @@ Use can also download and use without Composer including `boot.php`.
 include 'path_to_xo/boot.php';
 ```
 
-#### Using Array Objects
+### Using Array Objects
 
 Basically there are 5 types of array in XO;
 
@@ -146,7 +146,7 @@ class Poll extends xo\AnyArray {
 }
 ```
 
-#### Custom Arrays
+### Custom Arrays
 
 Creating custom arrays;
 
@@ -208,7 +208,7 @@ $users->put('null', new User(null));
 ...
 ```
 
-#### Using String and Number Objects
+### Using String and Number Objects
 
 ```php
 $string = new xo\StringObject('Hello, world!');
@@ -221,3 +221,24 @@ var_dump($number->toInt()); //=> int(1)
 var_dump($number->toFloat()); //=> float(1.555)
 var_dump($number->toFloat(2)); //=> float(1.56)
 ```
+
+### Objects, Methods and Properties
+
+- #### ``abstract class xo\AbstractObject``
+    ```
+    public final getClass(): object
+    public final getName(): string
+    public final getShortName(): string
+    public final clone(): object
+    public final equals(object $object): bool
+    public toValue(): ?any
+    public toString(): string
+    ```
+- #### ``abstract class AbstractArray extends AbstractObject implements ArrayInterface, Countable, IteratorAggregate``
+    ```
+    use ArrayTrait @object xo\ArrayTrait
+    private $readOnly @var bool
+    private $allowNulls @var bool
+    private $items @var ArrayObject
+    private $itemsType @var string
+    ```
