@@ -554,7 +554,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `StaticClass`
 
     ```
-    class StaticClass {}
+    static class StaticClass {}
 
     public final __construct()
         throws xo\StaticClassException
@@ -563,7 +563,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 - #### `Type`
 
     ```
-    class class Type extends StaticClass {}
+    static final class Type extends StaticClass {}
 
     public const ANY = 'Any'
     public const MAP = 'Map'
@@ -581,6 +581,13 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public static function isTuple(any $input): bool
     public static function isMapLike(any $input): bool
     public static function isSetLike(any $input): bool
+    ```
+
+
+- #### `Util`
+
+    ```
+    static class Util extends StaticClass {}
     ```
 
 ### Shortcut Functions
