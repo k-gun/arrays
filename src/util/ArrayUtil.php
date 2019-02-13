@@ -39,11 +39,10 @@ class ArrayUtil extends Util
     /**
      * Key check.
      * @param  int|string $key
-     * @param  bool       $throw
      * @return ?string
      * @throws xo\util\UtilException
      */
-    public static final function keyCheck($key, bool $throw = true): ?string
+    public static final function keyCheck($key): ?string
     {
         if (!is_int($key) && !is_string($key)) {
             throw new UtilException(sprintf('Arrays accept int and string keys only, %s given',
