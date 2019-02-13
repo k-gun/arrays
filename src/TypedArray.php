@@ -44,22 +44,23 @@ class TypedArray extends AbstractArray
 
     /**
      * Constructor.
-     * @param string      $type
-     * @param array|null  $items
-     * @param string|null $itemsType
-     * @param bool        $readOnly
-     * @param bool        $allowNulls
+     * @param  string      $type
+     * @param  array|null  $items
+     * @param  string|null $itemsType
+     * @param  bool        $readOnly
+     * @param  bool        $allowNulls
+     * @throws xo\exception\TypeException
      */
     public function __construct(string $type, array $items = null, string $itemsType = null,
         bool $readOnly = false, bool $allowNulls = false)
     {
-        $this->type = $type;
-
-        if ($this->type != Type::ANY && $items != null) {
+        if ($type != Type::ANY && $items != null) {
             if (!Type::validateItems($this, $items, $itemsType, $allowNulls, $error)) {
                 throw new TypeException($error);
             }
         }
+
+        $this->type = $type;
 
         parent::__construct($items, $itemsType, $readOnly, $allowNulls);
     }
