@@ -3,7 +3,7 @@
     "type": "library",
     "homepage": "http://github.com/k-gun/xo",
     "description": "A few well e(x)tended (o)bjects that make easy to build strictly typed arrays such as Map, Set, Tuple or any type of TypedArray, and also String and Number's.",
-    "keywords": ["arrays", "strings", "numbers", "map", "set", "tuple", "typedarray", "arrayobject", "stringobject", "numberobject", "arrayutil"," ""stringutil", "numberutil"],
+    "keywords": ["arrays", "strings", "numbers", "map", "set", "tuple", "typedarray", "arrayobject", "stringobject", "numberobject", "arrayutil", "stringutil", "numberutil"],
     "license": "MIT",
     "authors": [
         {"name": "Kerem Güneş", "email": "k-gun@mail.com"}
