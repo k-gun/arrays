@@ -946,8 +946,8 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  string     $command
      * @param  any    &...$arguments
      * @return void
-     * @throws xo\ArrayException
      * @throws xo\exception\MutationException,NullException
+     * @throws xo\ArrayException
      */
     private final function executeCommand(string $command, &...$arguments): void
     {
