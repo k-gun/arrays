@@ -226,21 +226,22 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 
 - #### `AbstractObject`
 
-    ```php
+    ```
     abstract class xo\AbstractObject {}
 
     public final getClass(): object
     public final getName(): string
     public final getShortName(): string
     public final clone(): object
-    public final equals(object $object): bool @throws xo\exception\MethodException
+    public final equals(object $object): bool
+        throws xo\exception\MethodException
     public toValue(): ?any
     public toString(): string
     ```
 
 - #### `AbstractArray`
 
-    ```php
+    ```
     abstract class xo\AbstractArray extends xo\AbstractObject
         implements xo\ArrayInterface, Countable, IteratorAggregate {}
 
@@ -345,21 +346,21 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 
 - #### `TypedArray`
 
-    ```php
+    ```
     class TypedArray extends AbstractArray {}
 
     protected string $type;
 
     public __construct(string $type, array $items = null, string $itemsType = null,
         bool $readOnly = false, bool $allowNulls = false)
-        throw xo\exception\TypeException
+        throws xo\exception\TypeException
 
     public final type(): string
     ```
 
 - #### `AnyArray`
 
-    ```php
+    ```
     class AnyArray extends TypedArray {}
 
     protected static array $notAllowedMethods = []
@@ -396,7 +397,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 
 - #### `Map`
 
-    ```php
+    ```
     class Map extends TypedArray {}
 
     protected static array $notAllowedMethods = ['flip', 'add', 'append', 'prepend', 'unpop',
