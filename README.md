@@ -224,8 +224,9 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 
 ### Objects, Methods and Properties
 
-- #### ``AbstractObject``
-    ```
+- #### `AbstractObject`
+
+    ```php
     abstract class xo\AbstractObject {}
 
     public final getClass(): object
@@ -236,11 +237,12 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public toValue(): ?any
     public toString(): string
     ```
-- #### ``AbstractArray``
-    ```
-    abstract class xo\AbstractArray
-        extends xo\AbstractObject
-            implements xo\ArrayInterface, Countable, IteratorAggregate {}
+
+- #### `AbstractArray`
+
+    ```php
+    abstract class xo\AbstractArray extends xo\AbstractObject
+        implements xo\ArrayInterface, Countable, IteratorAggregate {}
 
     use xo\ArrayTrait
 
@@ -262,7 +264,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
         throws xo\exception\MethodException
     public final readOnly(): bool
     public final allowNulls(): bool
-    public final item($key)
+    public final item($key): ?any
     public final items(bool $pair = false): array
     public final itemsType(): string
     public final reset(array $items): self
@@ -278,10 +280,10 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public final countValues(): array
     public final keys(): array
     public final values(): array
-    public final first()
-    public final firstKey()
-    public final last()
-    public final lastKey()
+    public final first(): ?any
+    public final firstKey(): int|string|null
+    public final last(): ?any
+    public final lastKey(): int|string|null
     public final toArray(bool $normalize = false): array
     public final toObject(): object
     public final toJson(): string
@@ -310,16 +312,16 @@ var_dump($number->toFloat(2)); //=> float(1.56)
         throws xo\exception\MutationException
     public final test(Closure $func): bool
     public final testAll(Closure $func): bool
-    public final find(Closure $func)
-    public final findKey(Closure $func)
+    public final find(Closure $func): ?any
+    public final findKey(Closure $func): int|string|null
     public final findIndex(Closure $func): ?int
-    public final keyCheck($key): void
+    public final keyCheck(int|string $key): void
         throws xo\exception\KeyException
-    public final valueCheck($value): void
+    public final valueCheck(any $value): void
         throws xo\exception\ValueException
-    public final keyValueCheck($key, $value): void
+    public final keyValueCheck(int|string $key, any $value): void
         throws xo\exception\KeyException,ValueException
-    public final nullCheck($value): void
+    public final nullCheck(any $value): void
         throws xo\exception\NullException
     public final methodCheck(string $method): void
         throws xo\exception\MethodException
@@ -337,6 +339,87 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public final sumAvg(int $round = null, int &$valueCount = null): ?float
 
     private final executeCommand(string $command, &...$arguments): void
-        throws xo\ArrayException
         throws xo\exception\MutationException,NullException
+        throws xo\ArrayException
+    ```
+
+- #### `TypedArray`
+    ```
+    class TypedArray extends AbstractArray {}
+
+    protected string $type;
+
+    public __construct(string $type, array $items = null, string $itemsType = null,
+        bool $readOnly = false, bool $allowNulls = false)
+        throws xo\exception\TypeException
+
+    public final type(): string
+    ```
+
+- #### `AnyArray`
+
+    ```php
+    class AnyArray extends TypedArray {}
+
+    protected static array $notAllowedMethods = []
+
+    public __construct(array $items = null, bool $readOnly = false)
+
+    public search(any $value): int|string|null
+    public searchLast(any $value): int|string|null
+    public indexOf(any $value): ?int
+    public lastIndexOf(any $value): ?int
+    public has(any $value): bool
+    public hasKey(int|string $key): bool
+    public set(int|string $key, any $value, int &$size = null): self
+    public get(int|string $key, any $valueDefault = null, bool &$found = null): ?any
+    public add(any $value): self
+    public remove(any $value, bool &$found = null): self
+    public removeAt(int|string $key, bool &$found = null): self
+    public removeAll(array $values, int &$count = null): self
+    public append(any $value, int &$size = null): self
+    public prepend(any $value, int &$size = null): self
+    public pop(int &$size = null): ?any
+    public unpop(any $value, int &$size = null): self
+    public shift(int &$size = null): ?any
+    public unshift(any $value, int &$size = null): self
+    public put(int|string $key, any $value): self
+    public push(int|string $key, any $value): self
+    public pull(int|string $key, any $valueDefault = null, bool &$found = null): ?any
+    public replace(any $value, any $replaceValue, bool &$found = null): self
+    public replaceAt(int|string $key, any $replaceValue, bool &$found = null): self
+    public flip(): self
+        throws xo\ArrayException
+    public pad(int $times, any $value, int $offset = null): self
+    ```
+
+- #### `Map`
+
+    ```php
+    class Map extends TypedArray {}
+
+    protected static array $notAllowedMethods = ['flip', 'add', 'append', 'prepend', 'unpop',
+        'unshift', 'flip', 'pad']
+
+    public function __construct(array $items = null, string $itemsType = null,
+        bool $readOnly = false, bool $allowNulls = false)
+
+    public search(any $value): int|string|null
+    public searchLast(any $value): int|string|null
+    public indexOf(any $value): ?int
+    public lastIndexOf(any $value): ?int
+    public has(any $value): bool
+    public hasKey(string $key): bool
+    public set(string $key, any $value, int &$size = null): self
+    public get(string $key, any $valueDefault = null, bool &$found = null): ?any
+    public remove(any $value, bool &$found = null): self
+    public removeAt(string $key, bool &$found = null): self
+    public removeAll(array $values, int &$count = null): self
+    public pop(int &$size = null): ?any
+    public shift(int &$size = null): ?any
+    public put(string $key, any $value): self
+    public push(string $key, any $value): self
+    public pull(string $key, any $valueDefault = null, bool &$found = null): ?any
+    public replace(any $value, any $replaceValue, bool &$found = null): self
+    public replaceAt(string $key, any $replaceValue, bool &$found = null): self
     ```
