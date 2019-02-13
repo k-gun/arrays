@@ -754,7 +754,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  int|string $key
      * @param  any        $value
      * @return void
-     * @throws xo\exception\KeyException
+     * @throws xo\exception\KeyException,ValueException
      */
     public final function keyValueCheck($key, $value): void
     {
