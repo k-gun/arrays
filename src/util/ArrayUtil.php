@@ -187,6 +187,7 @@ class ArrayUtil extends Util
      * @param  array  $keys
      * @param  any    $valueDefault
      * @return array
+     * @throws xo\util\UtilException
      */
     public static final function pullAll(array &$array, array $keys, $valueDefault = null): array
     {
