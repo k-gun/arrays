@@ -7,14 +7,17 @@ All XO objects extends `AbstractObject`, so that makes possible to use some basi
 ### In a Nutshell
 
 ```php
+use xo\Collection;
+use function xo\set;
+
 // Declare a typed array as Poll
-class Poll extends xo\Collection {
+class Poll extends Collection {
     // Define a custom method
     public function getResults(): array {
         // Use copy(), so do not modify Poll instance
         return $this->copy()->map(function ($option) {
             // Use set() shortcut and sum avarage of option values
-            return xo\set($option)->sumAvg(2);
+            return set($option)->sumAvg(2);
         })->sort('asort', function ($a, $b) {
             // Use reverse sort preserving keys
             return $a < $b;
