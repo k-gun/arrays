@@ -2,7 +2,31 @@ XO is a library that provides some e(x)tended (o)bjects to build strictly typed 
 
 You can use `Map`, `Set` and `Tuple` to build strict arrays and also use `AnyArray` (`ArrayObject` and `Collection` are just aliases of it) derived from `AbstractArray` that contains many native-equal array methods or `StringObject` and `NumberObject` to use `AbstractScalarObject` interface.
 
-All XO objects extends AbstractObject, so that makes possible to use some basic object methods like `getName()` or `getShortName()`.
+All XO objects extends `AbstractObject`, so that makes possible to use some basic object methods like `getName()` or `getShortName()`.
+
+### In a Nutshell
+
+```php
+class Poll extends xo\Collection {
+    public function getResults(): array {
+        return $this->copy()->map(function ($option) {
+            return xo\set($option)->sumAvg(2);
+        })->sort('asort', function ($a, $b) {
+            return $a < $b;
+        })->toArray();
+    }
+}
+
+$poll = new Poll([
+    'option_1' => [2, 2, 1],
+    'option_2' => [5, 1, 5],
+    'option_3' => [3, 5, 2]
+]);
+
+var_export($poll->getResults()); //=> ['option_2' => 3.67, 'option_3' => 3.33, 'option_1' => 1.67]
+```
+
+---
 
 ### Installation
 
