@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace xo\util;
 
-use xo\Type;
 use xo\util\{Util, UtilException};
 use Closure;
 
@@ -46,17 +45,10 @@ class ArrayUtil extends Util
      */
     public static final function keyCheck($key, bool $throw = true): ?string
     {
-        static $keyTypes = ['int', 'string'];
-
-        $keyType = Type::get($key);
-        if (!in_array($keyType, $keyTypes)) {
-            $message = "Arrays accept int and string keys only, {$keyType} given";
-            if ($throw) {
-                throw new UtilException($message);
-            }
+        if (!is_int($key) && !is_string($key)) {
+            throw new UtilException(sprintf('Arrays accept int and string keys only, %s given',
+                gettype($key)));
         }
-
-        return $message ?? null;
     }
 
     /**
