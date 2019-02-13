@@ -35,7 +35,7 @@ use Error;
  * @object  xo\Type
  * @author  Kerem Güneş <k-gun@mail.com>
  */
-class Type extends StaticClass
+final class Type extends StaticClass
 {
     /**
      * Types.
