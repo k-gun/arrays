@@ -222,7 +222,7 @@ var_dump($number->toFloat()); //=> float(1.555)
 var_dump($number->toFloat(2)); //=> float(1.56)
 ```
 
-### Objects, Methods and Properties
+### Objects, Object Methods and Properties
 
 - #### `AbstractObject`
 
@@ -403,7 +403,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     protected static array $notAllowedMethods = ['flip', 'add', 'append', 'prepend', 'unpop',
         'unshift', 'flip', 'pad']
 
-    public function __construct(array $items = null, string $itemsType = null,
+    public __construct(array $items = null, string $itemsType = null,
         bool $readOnly = false, bool $allowNulls = false)
 
     public search(any $value): int|string|null
@@ -425,3 +425,169 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public replace(any $value, any $replaceValue, bool &$found = null): self
     public replaceAt(string $key, any $replaceValue, bool &$found = null): self
     ```
+
+- #### `Set`
+
+    ```
+    class Set extends TypedArray {}
+
+    protected static array $notAllowedMethods = ['flip']
+
+    public __construct(array $items = null, string $itemsType = null,
+        bool $readOnly = false, bool $allowNulls = false)
+
+    public search(any $value): int|string|null
+    public searchLast(any $value): int|string|null
+    public indexOf(any $value): ?int
+    public lastIndexOf(any $value): ?int
+    public has(any $value): bool
+    public hasKey(int $key): bool
+    public set(int $key, any $value, int &$size = null): self
+    public get(int $key, any $valueDefault = null, bool &$found = null): ?any
+    public add(any $value): self
+    public remove(any $value, bool &$found = null): self
+    public removeAt(int $key, bool &$found = null): self
+    public removeAll(array $values, int &$count = null): self
+    public append(any $value, int &$size = null): self
+    public prepend(any $value, int &$size = null): self
+    public pop(int &$size = null): ?any
+    public unpop(any $value, int &$size = null): self
+    public shift(int &$size = null): ?any
+    public unshift(any $value, int &$size = null): self
+    public put(int $key, any $value): self
+    public push(int $key, any $value): self
+    public pull(int $key, any $valueDefault = null, bool &$found = null): ?any
+    public replace(any $value, any $replaceValue, bool &$found = null): self
+    public replaceAt(int $key, any $replaceValue, bool &$found = null): self
+    public pad(int $times, any $value, int $offset = null): self
+    ```
+
+- #### `Tuple`
+
+    ```
+    class Tuple extends TypedArray {}
+
+    protected static array $notAllowedMethods = ['reset', 'resetItems', 'empty', 'map', 'filter', 'merge',
+        'reverse', 'shuffle', 'search', 'searchLast', 'set', 'add', 'remove', 'removeAt', 'removeAll',
+        'append', 'prepend', 'pop', 'unpop', 'shift', 'unshift', 'put', 'push', 'pull', 'replace', 'replaceAt',
+        'flip', 'pad']
+
+    public __construct(array $items = null, string $itemsType = null, bool $allowNulls = false)
+
+    public indexOf(any $value): ?int
+    public lastIndexOf(any $value): ?int
+    public has(any $value): bool
+    public hasKey(int $key): bool
+    public get(int $key, any $valueDefault = null, bool &$found = null): ?any
+    ```
+
+- #### `ArrayObject` and `Collection`
+
+    ```
+    // these are just aliased classes
+    class ArrayObject extends AnyArray {}
+    class Collection extends AnyArray {}
+    ```
+
+- #### `AbstractScalarObject`
+
+    ```
+    abstract class AbstractScalarObject extends AbstractObject {}
+
+    protected scalar $value;
+    protected string $valueType;
+
+    public __construct(scalar $value)
+        throws xo\exception\ArgumentTypeException
+
+    public final value(): scalar
+    public final valueType(): string
+    public final equalTo(scalar $value): bool
+    public final size(bool $multiByte = false): int
+    ```
+
+- #### `StringObject`
+
+    ```
+    class StringObject extends AbstractScalarObject {}
+
+    public string const TRIM_CHARS = " \t\n\r\0\x0B"
+
+    public __construct(string $value)
+        throws xo\exception\ArgumentTypeException
+
+    public final test(string $pattern): ?bool
+    public final match(string $pattern, int $flags = 0): ?array
+    public final matchAll(string $pattern, int $flags = 0): ?array
+    public final indexOf(string $search, bool $caseSensitive = true): ?int
+    public final lastIndexOf(string $search, bool $caseSensitive = true): ?int
+
+    public final trim(string $chars = null, int $side = 0): string
+    public final trimLeft(string $chars = null): string
+    public final trimRight(string $chars = null): string
+    public final trimSearch(string $search, bool $caseSensitive = true, int $side = 0): string
+    public final trimSearches(array[string] $searches, bool $caseSensitive = true, int $side = 0): string
+
+    public final compare(string $value): int
+    public final compareLocale(string $locale, string $value): int
+    public final contains(string $search, bool $caseSensitive = true): bool
+    public final containsAny(array[string] $searches, bool $caseSensitive = true): bool
+    public final containsAll(array[string] $searches, bool $caseSensitive = true): bool
+    public final startsWith(string $search): bool
+    public final endsWith(string $search): bool
+    ```
+
+- #### `NumberObject`
+
+    ```
+    class NumberObject extends AbstractScalarObject {}
+
+    public __construct(numeric $value)
+        throws xo\exception\ArgumentTypeException
+
+    public toInt(): int
+    public toFloat(int $round = null): float
+    ```
+
+### Static and Util Objects
+
+- #### `StaticClass`
+
+    ```
+    class StaticClass {}
+
+    public final __construct()
+        throws xo\StaticClassException
+    ```
+
+- #### `Type`
+
+    ```
+    class class Type extends StaticClass {}
+
+    public const ANY = 'Any'
+    public const MAP = 'Map'
+    public const SET = 'Set'
+    public const TUPLE = 'Tuple'
+
+    public static validateItems(object $object, string $type, array $items, string $itemsType = null,
+        bool $allowNulls, string &$error = null): bool
+    public static function get(any $input, bool $objectCheck = false): string
+    public static function export(any $input): string
+    public static function makeArray(any $input): array
+    public static function makeObject(any $input): object
+    public static function isBasic(string $type): bool
+    public static function isDigit(any $input, bool $complex = true): bool
+    public static function isTuple(any $input): bool
+    public static function isMapLike(any $input): bool
+    public static function isSetLike(any $input): bool
+    ```
+
+### Shortcut Functions
+
+    map(...$arguments): xo\Map
+    set(...$arguments): xo\Set
+    tuple(...$arguments): xo\Tuple
+    collection(...$arguments): xo\Collection
+    string(string $value): xo\StringObject
+    number(numeric $value): xo\NumberObject
