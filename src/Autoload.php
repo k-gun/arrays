@@ -78,20 +78,16 @@ final class Autoload
         }
 
         self::$isRegistered = spl_autoload_register(function($object) {
-            if ($object[0] != '\\') {
-                $object = '\\'. $object;
-            }
-
-            $ns  = '\xo';
-            $dir = __dir__;
+            $namespace = __namespace__;
+            $directory = __dir__;
 
             // xo objects only
-            if (strpos($object, $ns) !== 0) {
+            if (strpos($object, $namespace) !== 0) {
                 return;
             }
 
-            $object = substr($object, strlen($ns) + 1);
-            $objectFile = strtr("{$dir}/{$object}.php", ['\\' => '/']);
+            $object = substr($object, strlen($namespace) + 1);
+            $objectFile = strtr("{$directory}/{$object}.php", ['\\' => '/']);
 
             if (!file_exists($objectFile)) {
                 throw new RuntimeException("Object file '{$objectFile}' not found");
