@@ -90,5 +90,16 @@ abstract class AbstractScalarObject extends AbstractObject
     {
         return $this->value === $value;
     }
+
+    /**
+     * Size
+     * @param  bool $multiByte
+     * @return int
+     */
+    public final function size(bool $multiByte = false): int
+    {
+        $value = (string) $this->value;
+        return !$multiByte ? strlen($value) : mb_strlen($value);
+    }
 }
 
