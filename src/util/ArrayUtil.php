@@ -146,6 +146,7 @@ class ArrayUtil extends Util
      * @param  array  $keys (aka paths)
      * @param  any    $valueDefault
      * @return array
+     * @throws xo\util\UtilException
      */
     public static final function getAll(array $array, array $keys, $valueDefault = null): array
     {
