@@ -631,7 +631,7 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     public final function sortLocale(string $locale, callable $func = null, callable $ufunc = null,
         int $flags = 0): self
     {
-        $localeDefault = setlocale(LC_COLLATE, '');
+        $localeDefault = setlocale(LC_COLLATE, 0);
         setlocale(LC_COLLATE, $locale);
         $this->sort($func, $ufunc, $flags += SORT_LOCALE_STRING);
         setlocale(LC_COLLATE, $localeDefault); // reset locale

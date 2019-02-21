@@ -55,7 +55,7 @@ class StringUtil extends Util
      */
     public static final function compareLocale(string $locale, string $source1, string $source2): int
     {
-        $localeDefault = setlocale(LC_COLLATE, '');
+        $localeDefault = setlocale(LC_COLLATE, 0);
         setlocale(LC_COLLATE, $locale);
         $result = strcoll($source1, $source2);
         setlocale(LC_COLLATE, $localeDefault); // reset locale
