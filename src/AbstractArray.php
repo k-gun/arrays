@@ -26,11 +26,11 @@ declare(strict_types=1);
 
 namespace xo;
 
-use xo\{AbstractObject, Type, ArrayException};
+use xo\{AbstractObject, Type, ArrayInterface, ArrayException};
 use xo\util\ArrayUtil;
 use xo\exception\{TypeException, MethodException, ArgumentException, KeyException, ValueException,
     MutationException, NullException};
-use Countable, IteratorAggregate, ArrayObject, Generator, Closure;
+use Countable, Traversable, IteratorAggregate, ArrayObject, Generator, Closure;
 
 /**
  * @package xo
@@ -405,16 +405,25 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
     /**
      * Map.
      * @param  callable $func
-     * @param  bool     $breakable
+     * @param  bool     $useKeys
      * @return self
      * @throws xo\exception\MutationException
      */
-    public final function map(callable $func): self
+    public final function map(callable $func, bool $useKeys = false): self
     {
         $this->methodCheck('map');
         $this->readOnlyCheck();
 
-        return $this->reset(array_map($func, $this->items()));
+        $items = $this->items();
+        if (!$useKeys) {
+            $items = array_map($func, $items);
+        } else {
+            foreach ($items as $key => $value) {
+                $items[$key] = $func($key, $value);
+            }
+        }
+
+        return $this->reset($items);
     }
 
     /**
@@ -456,50 +465,62 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Diff.
      * @param  iterable $items
      * @param  bool     $uniq
-     * @return array
+     * @return self
      */
-    public final function diff(iterable $items, bool $uniq = false): array
+    public final function diff(iterable $items, bool $uniq = false): self
     {
         if ($items instanceof Traversable) {
-            iterator_to_array($items);
+            $items = iterator_to_array($items);
         }
 
+        $items1 = $this->items();
+        $items2 = $items;
         if ($uniq) {
-            $items1 = array_unique($this->items());
+            $items1 = array_unique($items1);
             $items2 = array_unique($items2);
         }
 
-        return array_diff($items1, $items2);
+        return $this->reset(array_diff($items1, $items2));
     }
 
     /**
      * Uniq.
-     * @return array
+     * @return self
      */
-    public final function uniq(): array
+    public final function uniq(): self
     {
-        return array_unique($this->items());
+        return $this->reset(array_unique($this->items()));
     }
 
     /**
      * Ununiq.
-     * @return array
+     * @return self
      */
-    public final function ununiq(): array
+    public final function ununiq(): self
     {
         $items = $this->items();
-        return array_filter($items, function ($value, $key) use ($items) {
+
+        return $this->reset(array_filter($items, function ($value, $key) use ($items) {
             return array_search($value, $items) !== $key;
-        }, 1);
+        }, 1));
     }
 
     /**
      * Uniqs.
-     * @return array
+     * @return self
      */
-    public final function uniqs(): array
+    public final function uniqs(): self
     {
-        return array_diff($this->uniq(), $this->ununiq());
+        $items = $this->items();
+        $uniqs = array_filter($items, function ($value, $key) use ($items) {
+            return array_search($value, $items) === $key;
+        }, 1);
+        $ununiqs = array_filter($items, function ($value, $key) use ($items) {
+            return array_search($value, $items) !== $key;
+        }, 1);
+
+        return $this->reset(count($uniqs) > count($ununiqs)
+            ? array_diff($uniqs, $ununiqs) : array_diff($ununiqs, $uniqs));
     }
 
     /**
@@ -524,11 +545,11 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * Chunk.
      * @param  int  $size
      * @param  bool $preserveKeys
-     * @return array
+     * @return self
      */
-    public final function chunk(int $size, bool $preserveKeys = false): array
+    public final function chunk(int $size, bool $preserveKeys = false): self
     {
-        return array_chunk($this->items(), $size, $preserveKeys);
+        return $this->reset(array_chunk($this->items(), $size, $preserveKeys));
     }
 
     /**
@@ -536,11 +557,11 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
      * @param  int      $offset
      * @param  int|null $size
      * @param  bool     $preserveKeys
-     * @return array
+     * @return self
      */
-    public final function slice(int $offset, int $size = null, bool $preserveKeys = false): array
+    public final function slice(int $offset, int $size = null, bool $preserveKeys = false): self
     {
-        return array_slice($this->items(), $offset, $size, $preserveKeys);
+        return $this->reset(array_slice($this->items(), $offset, $size, $preserveKeys));
     }
 
     /**
@@ -600,6 +621,18 @@ abstract class AbstractArray extends AbstractObject implements ArrayInterface, C
 
         $items = $this->items();
         return $this->reset(ArrayUtil::sort($items, $func, $ufunc, $flags));
+    }
+
+    /**
+     * Sort key.
+     * @param  callable|null $ufunc
+     * @param  int           $flags
+     * @return self
+     * @throws xo\exception\MutationException
+     */
+    public final function sortKey(callable $ufunc = null, int $flags = 0): self
+    {
+        return $this->sort('ksort', $ufunc, $flags);
     }
 
     /**
