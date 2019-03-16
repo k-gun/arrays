@@ -57,7 +57,8 @@ class ArrayUtil extends Util
      */
     public static final function isSequentialArray(array $array): bool
     {
-        return !$array || array_keys($array) === range(0, count($array) - 1);
+        $keys = array_keys($array);
+        return !$array || $keys === range(min($keys), max($keys));
     }
 
     /**
