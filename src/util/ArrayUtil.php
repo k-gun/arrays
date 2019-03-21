@@ -120,6 +120,10 @@ class ArrayUtil extends Util
     {
         self::keyCheck($key);
 
+        if (empty($array)) {
+            return $valueDefault;
+        }
+
         if (array_key_exists($key, $array)) { // direct access
             $value = $array[$key];
         } else {
