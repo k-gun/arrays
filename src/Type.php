@@ -207,11 +207,11 @@ final class Type extends StaticClass
 
     /**
      * Is digit
-     * @param  [type] $input
-     * @param  bool   $complex
+     * @param  any  $input
+     * @param  bool $negatives
      * @return bool
      */
-    public static function isDigit($input, bool $complex = true): bool
+    public static function isDigit($input, bool $negatives = false): bool
     {
         return NumberUtil::isDigit($input);
     }

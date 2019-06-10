@@ -612,7 +612,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public static makeArray(any $input): array
     public static makeObject(any $input): object
     public static isBasic(string $type): bool
-    public static isDigit(any $input, bool $complex = true): bool
+    public static isDigit(any $input, bool $negatives = false): bool
     public static isTuple(any $input): bool
     public static isMapLike(any $input): bool
     public static isSetLike(any $input): bool
@@ -669,7 +669,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
     public static final compare(number $a, number $b, int $precision = null): ?int
     public static final equals(number $a, number $b, int $precision = null): ?bool
     public static final isNumber(any $input): bool
-    public static final isDigit(any $input, bool $complex = true): bool
+    public static final isDigit(any $input, bool $negatives = false): bool
     public static final isId(any $input): bool
     public static final isUInt(any $input): bool
     public static final isUFloat(any $input): bool
