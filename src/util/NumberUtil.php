@@ -82,33 +82,32 @@ class NumberUtil extends Util
 
     /**
      * Is digit.
-     * @param  any $input
-     * @param  bool $complex
+     * @param  any  $input
+     * @param  bool $negatives
      * @return bool
      */
-    public static final function isDigit($input, bool $complex = true): bool
+    public static final function isDigit($input, bool $negatives = false): bool
     {
-        if (is_int($input)) {
-            return true;
-        } elseif (is_string($input) && ctype_digit($input)) {
-            return true;
-        } elseif ($complex && is_numeric($input)) {
-            $input = (string) $input;
-            if (strpos($input, '.') === false && ($input < 0)) {
-                return true;
-            }
+        if (!is_numeric($input) || !!is_float($input)) {
+            return false;
         }
-        return false;
+        if (is_string($input) && strstr($input, '.')) {
+            return false;
+        }
+        if (!$negatives && $input < 0) {
+            return false;
+        }
+        return true;
     }
 
     /**
-     * Is id (useful for any (db) object id checking).
+     * Is id (useful for any (db) object id check).
      * @param  any $input
      * @return bool
      */
     public static final function isId($input): bool
     {
-        return self::isNumber($input) && ($input > 0);
+        return (is_int($input) || ctype_digit($input)) && ($input > 0);
     }
 
     /**
@@ -118,7 +117,7 @@ class NumberUtil extends Util
      */
     public static final function isUInt($input): bool
     {
-        return !is_float($input) && is_int($input) && ($input >= 0);
+        return is_int($input) && ($input >= 0);
     }
 
     /**
@@ -128,7 +127,7 @@ class NumberUtil extends Util
      */
     public static final function isUFloat($input): bool
     {
-        return !is_int($input) && is_float($input) && ($input >= 0);
+        return is_float($input) && ($input >= 0);
     }
 
     /**
