@@ -107,7 +107,7 @@ class NumberUtil extends Util
      */
     public static final function isId($input): bool
     {
-        return (is_int($input) || ctype_digit($input)) && ($input > 0);
+        return $input && ((is_int($input) || ctype_digit($input)) && ($input > 0));
     }
 
     /**
