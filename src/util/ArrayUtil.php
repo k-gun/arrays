@@ -110,9 +110,9 @@ class ArrayUtil extends Util
 
     /**
      * Get (with dot notation support for sub-array paths).
-     * @param  array      $array
-     * @param  int|string $key
-     * @param  any|null   $valueDefault
+     * @param  array            $array
+     * @param  int|string|array $key
+     * @param  any|null         $valueDefault
      * @return ?any
      * @throws xo\util\UtilException
      */
@@ -124,12 +124,17 @@ class ArrayUtil extends Util
             return $valueDefault;
         }
 
-        if (array_key_exists($key, $array)) { // direct access
+        if (is_array($key)) {
+            $value = [];
+            foreach ($key as $ke) { // one dim ok, no deep throat..
+                $value[$ke] = $array[$ke] ?? $valueDefault;
+            }
+        } elseif (array_key_exists($key, $array)) { // direct access
             $value = $array[$key];
         } else {
             $keys = explode('.', (string) $key);
             if (count($keys) <= 1) { // direct access
-                $value = $array[$key] ?? null;
+                $value = $array[$key] ?? $valueDefault;
             } else { // path access (with dot notation)
                 $value = &$array;
                 foreach ($keys as $key) {
