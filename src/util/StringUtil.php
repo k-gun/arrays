@@ -147,4 +147,47 @@ class StringUtil extends Util
 
         return (string) preg_replace($pattern, '', $source);
     }
+
+    /**
+     * Is utf.
+     * @param  ?string $source
+     * @param  int     $bits
+     * @return bool
+     */
+    public static final function isUtf(?string $source, int $bits = 8): bool
+    {
+        // 0x00 - 0x10FFFF @link https://en.wikipedia.org/wiki/Code_point
+        return !!($source && mb_check_encoding($source, 'UTF-'. $bits));
+    }
+
+    /**
+     * Is ascii.
+     * @param  ?string $source
+     * @return bool
+     */
+    public static final function isAscii(?string $source): bool
+    {
+        // 0x00 - 0x7F (or extended 0xFF) @link https://en.wikipedia.org/wiki/Code_point
+        return !!($source && mb_check_encoding($source, 'ASCII'));
+    }
+
+    /**
+     * Is binary.
+     * @param  ?string $source
+     * @return bool
+     */
+    public static final function isBinary(?string $source): bool
+    {
+        return !!($source && ctype_print($source));
+    }
+
+    /**
+     * Is base64.
+     * @param  ?string $source
+     * @return bool
+     */
+    public static final function isBase64(?string $source): bool
+    {
+        return !!($source && base64_encode(base64_decode($source, true)) == $source);
+    }
 }
