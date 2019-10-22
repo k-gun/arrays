@@ -153,6 +153,7 @@ class StringUtil extends Util
      * @param  ?string $source
      * @param  int     $bits
      * @return bool
+     * @since  1.4
      */
     public static final function isUtf(?string $source, int $bits = 8): bool
     {
@@ -164,6 +165,7 @@ class StringUtil extends Util
      * Is ascii.
      * @param  ?string $source
      * @return bool
+     * @since  1.4
      */
     public static final function isAscii(?string $source): bool
     {
@@ -175,6 +177,7 @@ class StringUtil extends Util
      * Is binary.
      * @param  ?string $source
      * @return bool
+     * @since  1.4
      */
     public static final function isBinary(?string $source): bool
     {
@@ -185,6 +188,7 @@ class StringUtil extends Util
      * Is base64.
      * @param  ?string $source
      * @return bool
+     * @since  1.4
      */
     public static final function isBase64(?string $source): bool
     {
