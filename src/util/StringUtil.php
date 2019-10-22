@@ -181,7 +181,7 @@ class StringUtil extends Util
      */
     public static final function isBinary(?string $source): bool
     {
-        return !!($source && ctype_print($source));
+        return !!($source && !ctype_print($source));
     }
 
     /**
@@ -192,6 +192,6 @@ class StringUtil extends Util
      */
     public static final function isBase64(?string $source): bool
     {
-        return !!($source && base64_encode(base64_decode($source, true)) == $source);
+        return !!($source && base64_encode(''. base64_decode($source, true)) == $source);
     }
 }
