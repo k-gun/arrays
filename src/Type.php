@@ -152,7 +152,9 @@ final class Type extends StaticClass
         $type = gettype($input);
 
         if ($classes && $type == 'object') {
-            return get_class($input);
+            $class = get_class($input);
+            // return 'object' for silly stdClass stuff
+            return ($class != 'stdClass') ? $class : 'object';
         }
 
         return strtr($type, [
