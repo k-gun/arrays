@@ -57,8 +57,20 @@ abstract class AbstractObject
      */
     public final function getShortName(): string
     {
-        return substr($name = static::class,
-            (false !== $nssPos = strpos($name, '\\')) ? $nssPos + 1 : 0);
+        $name = static::class;
+
+        return substr($name, (false !== $pos = strpos($name, '\\')) ? $pos + 1 : 0);
+    }
+
+    /**
+     * Get name space.
+     * @return string
+     */
+    public final function getNameSpace(): string
+    {
+        $name = static::class;
+
+        return substr($name, 0, (false !== $pos = strpos($name, '\\')) ? $pos : 0);
     }
 
     /**
