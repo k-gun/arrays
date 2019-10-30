@@ -65,6 +65,7 @@ abstract class AbstractObject
     /**
      * Get name space.
      * @return string
+     * @since  1.5
      */
     public final function getNameSpace(): string
     {
