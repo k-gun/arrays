@@ -90,7 +90,7 @@ abstract class AbstractObject
      */
     public final function equals(object $object): bool
     {
-        return $object == $this;
+        return $this === $object;
     }
 
     /**

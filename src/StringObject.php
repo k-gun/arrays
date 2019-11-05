@@ -65,8 +65,8 @@ class StringObject extends AbstractScalarObject
      */
     public final function test(string $pattern): ?bool
     {
-        return (false !== $result =@ preg_match($pattern, $this->value))
-            ? !!$result : null; // error
+        return (false !== ($result = preg_match($pattern, $this->value)))
+            ? true : null; // error
     }
 
     /**
@@ -77,7 +77,7 @@ class StringObject extends AbstractScalarObject
      */
     public final function match(string $pattern, int $flags = 0): ?array
     {
-        return (false !== $result =@ preg_match($pattern, $this->value, $matches, $flags))
+        return (false !== ($result = preg_match($pattern, $this->value, $matches, $flags)))
             ? $matches : null; // error
     }
 
@@ -89,7 +89,7 @@ class StringObject extends AbstractScalarObject
      */
     public final function matchAll(string $pattern, int $flags = 0): ?array
     {
-        return (false !== $result =@ preg_match_all($pattern, $this->value, $matches, $flags))
+        return (false !== ($result = preg_match_all($pattern, $this->value, $matches, $flags)))
             ? $matches : null; // error
     }
 
@@ -105,8 +105,8 @@ class StringObject extends AbstractScalarObject
             throw new ArgumentException('Empty search value given');
         }
 
-        return (false !== $index = ($caseSensitive ? strpos((string) $this->value, $search)
-            : stripos((string) $this->value, $search))) ? $index : null;
+        return (false !== ($index = ($caseSensitive ? strpos((string) $this->value, $search)
+            : stripos((string) $this->value, $search)))) ? $index : null;
     }
 
     /**
@@ -121,8 +121,8 @@ class StringObject extends AbstractScalarObject
             throw new ArgumentException('Empty search value given');
         }
 
-        return (false !== $index = ($caseSensitive ? strrpos((string) $this->value, $search)
-            : strripos((string) $this->value, $search))) ? $index : null;
+        return (false !== ($index = ($caseSensitive ? strrpos((string) $this->value, $search)
+            : strripos((string) $this->value, $search)))) ? $index : null;
     }
 
     /**
@@ -136,8 +136,8 @@ class StringObject extends AbstractScalarObject
         $value = (string) $this->value;
         $chars = $chars ?? self::TRIM_CHARS;
 
-        return $side == 0 ? trim($value, $chars) : (
-            $side == 1 ? ltrim($value, $chars) : rtrim($value, $chars));
+        return $side == 0 ? trim($value, $chars) : ($side == 1 ? ltrim($value, $chars)
+            : rtrim($value, $chars));
     }
 
     /**

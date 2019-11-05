@@ -536,7 +536,7 @@ var_dump($number->toFloat(2)); //=> float(1.56)
 
     public final value(): scalar
     public final valueType(): string
-    public final equalTo(scalar $value): bool
+    public final equalsTo(scalar $value): bool
     public final size(bool $multiByte = false): int
     public toString(): string
     ```

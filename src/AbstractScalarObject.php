@@ -86,7 +86,7 @@ abstract class AbstractScalarObject extends AbstractObject
      * @param  scalar $value
      * @return bool
      */
-    public final function equalTo($value): bool
+    public final function equalsTo($value): bool
     {
         return $this->value === $value;
     }
@@ -99,6 +99,7 @@ abstract class AbstractScalarObject extends AbstractObject
     public final function size(bool $multiByte = false): int
     {
         $value = (string) $this->value;
+
         return !$multiByte ? strlen($value) : mb_strlen($value);
     }
 
@@ -112,6 +113,7 @@ abstract class AbstractScalarObject extends AbstractObject
         if ($this->valueType == 'float') {
             $value = json_encode($value, JSON_PRESERVE_ZERO_FRACTION);
         }
+
         return (string) $value;
     }
 }

@@ -49,7 +49,7 @@ class NumberObject extends AbstractScalarObject
         }
 
         if (is_string($value)) {
-            $value = strpos($value, '.') !== false ? (float) $value : (int) $value;
+            $value = (strpos($value, '.') !== false) ? (float) $value : (int) $value;
         }
 
         parent::__construct($value);
@@ -72,6 +72,7 @@ class NumberObject extends AbstractScalarObject
     public final function toFloat(int $round = null): float
     {
         $value = (float) $this->value;
-        return $round !== null ? round($value, $round) : $value;
+
+        return ($round !== null) ? round($value, $round) : $value;
     }
 }
