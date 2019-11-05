@@ -59,7 +59,7 @@ abstract class AbstractObject
     {
         $name = static::class;
 
-        return substr($name, (false !== $pos = strpos($name, '\\')) ? $pos + 1 : 0);
+        return substr($name, (false !== $pos = strrpos($name, '\\')) ? $pos + 1 : 0);
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class AbstractObject
     {
         $name = static::class;
 
-        return substr($name, 0, (false !== $pos = strpos($name, '\\')) ? $pos : 0);
+        return substr($name, 0, (false !== $pos = strrpos($name, '\\')) ? $pos : 0);
     }
 
     /**
