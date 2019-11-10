@@ -145,9 +145,10 @@ final class Type extends StaticClass
      * Get.
      * @param  any  $input
      * @param  bool $classes
+     * @param  bool $scalars
      * @return string
      */
-    public static function get($input, bool $classes = false): string
+    public static function get($input, bool $classes = false, bool $scalars = false): string
     {
         $type = gettype($input);
 
@@ -157,12 +158,16 @@ final class Type extends StaticClass
             return ($class != 'stdClass') ? $class : 'object';
         }
 
-        return strtr($type, [
-            'NULL'    => 'null',
-            'integer' => 'int',
-            'double'  => 'float',
-            'boolean' => 'bool'
+        $ret = strtr($type, [
+            'NULL'   => 'null',  'integer' => 'int',
+            'double' => 'float', 'boolean' => 'bool'
         ]);
+
+        if ($scalars && in_array($ret, ['int', 'float', 'string', 'bool'])) {
+            return 'scalar';
+        }
+
+        return $ret;
     }
 
     /**
