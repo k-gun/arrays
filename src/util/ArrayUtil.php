@@ -79,7 +79,7 @@ class ArrayUtil extends Util
 
     /**
      * Set (with dot notation support for sub-array paths).
-     * @param  array      &$array
+     * @param  array       &$array
      * @param  int|string  $key
      * @param  any         $valueDefault
      * @return any
@@ -98,11 +98,30 @@ class ArrayUtil extends Util
             } else { // path access (with dot notation)
                 $current = &$array;
                 foreach($keys as $key) {
+                    if (isset($current[$key])) {
+                        $current[$key] = (array) $current[$key];
+                    }
                     $current = &$current[$key];
                 }
                 $current = $value;
                 unset($current);
             }
+        }
+
+        return $array;
+    }
+
+    /**
+     * Set all.
+     * @param  array &$array
+     * @param  array $data
+     * @return array
+     * @since  1.8
+     */
+    public static final function setAll(array &$array, array $data): array
+    {
+        foreach ($data as $key => $value) {
+            self::set($array, $key, $value);
         }
 
         return $array;
